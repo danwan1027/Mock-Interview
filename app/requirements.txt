@@ -1,0 +1,6 @@
+Flask
+mysql-connector
+opencv-python
+pyaudio
+wave
+moviepy

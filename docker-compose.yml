@@ -1,12 +1,18 @@
 version: '3.8'
 services:
- web:
+  web:
     build: ./app
     ports:
       - "5001:5001"
+    volumes:
+      - ./app:/app  # Mounts the code into the container, enabling live updates
     depends_on:
       - db
- db:
+    environment:
+      - FLASK_ENV=development  # Set Flask environment to development to enable debug mode
+      - DEBUG=True  # Make sure this is set to True
+
+  db:
     image: mysql:5.7
     environment:
       MYSQL_ROOT_PASSWORD: root

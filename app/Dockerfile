@@ -4,13 +4,15 @@ FROM python:3.9
 # Set the working directory in the container
 WORKDIR /app
 
-# Install portaudio development headers
-RUN apt-get update && apt-get install -y portaudio19-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*  # Clean up to reduce image size
+# Install necessary system libraries for OpenCV and audio processing
+RUN apt-get update && apt-get install -y \
+    portaudio19-dev \
+    libgl1-mesa-dev \
+    libgl1-mesa-glx \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*  # Clean up to reduce image size
 
 # Upgrade pip and install required Python packages
-# Copy the requirements file first to leverage Docker cache
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt

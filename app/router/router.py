@@ -1,20 +1,18 @@
 from flask import jsonify, redirect, render_template
 import models.crud_example as crud
+import app.models.ray.deepface_test as deepface_fun
 
 def init_routes(app):
+
     @app.route('/')
     def index():
         # return jsonify({'Employee Data': crud.read_employee_data()})
         return render_template('index.html')
     
-    @app.route('/a')
-    def url_for_a():
-        return render_template('ray/test_deepface.html')
-
     @app.route('/deepface')
     def deepface():
-        # return jsonify({'Employee Data': crud.read_employee_data()})
-        return render_template('index.html')
+        #run code in models.ray.deepface.py
+        return render_template('ray/test_deepface.html')
 
     @app.route('/create', methods=['GET'])
     def create():

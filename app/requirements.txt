@@ -4,3 +4,4 @@ opencv-python
 pyaudio
 wave
 moviepy
+deepface

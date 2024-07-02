@@ -32,7 +32,7 @@ mac的指令我沒測過
     deactivate
     ```
 * vscode右下角好像也可以進行上面的操作
-![image](https://hackmd.io/_uploads/HJclOe1DC.png)
+![image](https://i.imgur.com/whIbRj7.png)
 > 你們弄到這裡架構應該會跟這裡一樣
 
 ### 4. 下載相關套件

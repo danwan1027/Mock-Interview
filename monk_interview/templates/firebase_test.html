@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monk Interview</title>
+</head>
+<body>
+    <h1>firebase test</h1>
+    <h2>add user</h2>
+    <form action="/adduser" method="post">
+        <input type="text" name="username" placeholder="username">
+        <input type="email" name="email" placeholder="Enter email">
+        <input type="password" name="password" placeholder="Enter password">
+        <button type="submit">Register</button>
+    </form>
+    <h2>Upload Your PDF</h2>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="pdfFile" accept=".pdf">
+        <button type="submit">Upload</button>
+    </form>
+</body>
+</html>

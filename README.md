@@ -55,7 +55,7 @@ python run.py
 * __Model__: 和MVC的Model一樣，處理與資料相關的所有事務(如何存取、如何確認有效性、包含哪些行為以及資料之間的關係等)。
 * __Template__: html那些東西。
 * __View__: 處理業務邏輯、封裝結果的部分，負責處理 URL 與 callback 函式之間的關係，每一個view都代表一個簡單的Python function。
-![image](https://hackmd.io/_uploads/Bktkcg1DA.png)
+![image](https://imgur.com/a/Ema8Cfi)
 
 ### 資料夾和檔案介紹
 

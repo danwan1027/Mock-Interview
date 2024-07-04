@@ -8,7 +8,7 @@ git clone https://github.com/danwan1027/Mock-Interview.git
 ```
 
 ### 2. 去line裡面下載instance資料夾
-放在MONK-INTERVIEW底下(不是小的那個)
+放在MOCK-INTERVIEW底下(不是小的那個)
 
 ### 3. 建立虛擬環境(非必要)
 不一定要用，避免套件跟本機環境打架而已
@@ -36,7 +36,7 @@ mac的指令我沒測過
 > 你們弄到這裡架構應該會跟這裡一樣
 
 ### 4. 下載相關套件
-進到MONK-INTERVIEW(不是小的那個)
+進到MOCK-INTERVIEW(不是小的那個)
 ```
 pip install -r requirements.txt
 ```
@@ -66,20 +66,20 @@ python run.py
 | config/development.py   |   開發環境的配置   |
 | config/production.py   |   正式環境的配置   |
 | instance/config.py   |   資料庫私鑰之類不可上傳的東西   |
-| monk_interview/__init __.py   |   把環境配置還有monk_interview所有的東西整合初始化   |
-| monk_interview/models/   |   就是各個model   |
-| monk_interview/models/__init __.py   |  整合model    |
-| monk_interview/static/   |   放css, js, 圖片的地方   |
-| monk_interview/templates/   |   html那些東西放這裡(可以用Jinja2，應該類似thymeleaf)   |
-| monk_interview/views/   |   各個view(原本的router拆開而已)   |
-| monk_interview/views/__init __.py   |   整合view   |
+| mock_interview/__init __.py   |   把環境配置還有mock_interview所有的東西整合初始化   |
+| mock_interview/models/   |   就是各個model   |
+| mock_interview/models/__init __.py   |  整合model    |
+| mock_interview/static/   |   放css, js, 圖片的地方   |
+| mock_interview/templates/   |   html那些東西放這裡(可以用Jinja2，應該類似thymeleaf)   |
+| mock_interview/views/   |   各個view(原本的router拆開而已)   |
+| mock_interview/views/__init __.py   |   整合view   |
 
 ## 新增自己的model或view
 ### model
 直接在models資料夾裡面新增你的model就可以開始寫了，不用額外設定
 ### view
 這個比較麻煩一點，一樣先在views資料夾底下新增你的view，以home為例:
-1. 在monk_interview/views/裡面新增一個home.py
+1. 在mock_interview/views/裡面新增一個home.py
     * 特別注意blueprint的部分，它是用來管理各個view的，每個view有一個blueprint，最後要註冊到__init __.py裡面
     * <yourblueprint>表示你自己取的blueprint的名字，我建議跟檔名一樣
     ```python
@@ -93,7 +93,7 @@ python run.py
     def index():
         return render_template('index.html')
     ```
-2.  修改**monk_interview/views/__init __.py**
+2.  修改**mock_interview/views/__init __.py**
     ```python
     from flask import Blueprint
 

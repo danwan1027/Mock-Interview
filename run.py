@@ -1,4 +1,4 @@
-from monk_interview import create_app
+from mock_interview import create_app
 
 app = create_app()
 

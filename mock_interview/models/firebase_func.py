@@ -1,6 +1,8 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
+from firebase_admin.firestore import SERVER_TIMESTAMP
 from instance import config
+from datetime import datetime
 
 firebase_config = {
     "type": config.type,
@@ -34,34 +36,48 @@ def addUser(username, password, email):
       # "profile_image": profile_image
     }
     db.collection("User").add(user)
-    # doc_ref.set(doc)
 
 
 
 # Interviews
 # 新增interview
-def addInterview(college, created_at, department, duration, interview_date, resume, updated_at, user_id):
-    blob = bucket.blob('test/test.pdf')
+def addInterview(college:str, department:str, duration:int, resume, user_id:str):
+
+    interview = db.collection('Interviews').document()
+
+    created_at = interview_date = updated_at = SERVER_TIMESTAMP
+
+    blob = bucket.blob(user_id + '/' + interview.id + '.pdf')
     blob.upload_from_string(resume.read(), content_type='application/pdf')
-    resume = blob.public_url  # 待測試
-    interview = {
-        "college": college, 
-        "created_at": created_at,
-        "department": department,
-        "duration": duration,
-        "interview_date": interview_date,
-        "resume": resume,
-        "updated_at": updated_at, 
-        "user_id": user_id
-    }
-    db.collection("Interviews").add(interview)
+    blob.make_public()
+    resume = blob.public_url
 
+    interview.set({
+        'college': college, 
+        'created_at': created_at,
+        'department': department,
+        'duration': duration,
+        'interview_date': interview_date,
+        'resume': resume,
+        'updated_at': updated_at, 
+        'user_id': user_id,
+    })
 
+    
+
+# def test():
+#     a = db.collection('a').document()
+#     a.set
+
+def getInterview():
+    a = db.collection("Interviews").document("dQMdnLnjNjqhgDVmRlO7").get()
+    print(a.to_dict()['created_at'])
+    return a
 
 
 # Emotion_Recognition
 # 新增Emotion_Recognition
-def addEmotionRecognition(emotion, emotion_suggestion, intensity, interview_id, timestamp):
+def addEmotionRecognition(emotion, emotion_suggestion, intensity, interview_id, timestamp=SERVER_TIMESTAMP):
     emo = {
       "emotion": emotion,
       "emotion_suggestion": emotion_suggestion, 

@@ -6,6 +6,7 @@ firebase_test = Blueprint('firebase_test', __name__)
 @firebase_test.route('/firebase')
 def firebase():
     # db.test()
+    db.getUserID('aa@gmail.com')
     return render_template('firebase_test.html')
 
 @firebase_test.route('/upload', methods=['GET', 'POST'])

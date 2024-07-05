@@ -37,10 +37,17 @@ def addUser(username, password, email):
     }
     db.collection("User").add(user)
 
+# 刪除user
+def delUser(user_id:str):
+    user = db.collection('User').document(user_id)
+    user.delete()
+
 def getUserID(email):
     docs = db.collection('User').where('email', '==', email).stream()
     for doc in docs:
         print('{} => {}'.format(doc.id, doc.to_dict()))
+
+
 
 
 
@@ -67,6 +74,11 @@ def addInterview(college:str, department:str, duration:int, resume, user_id:str)
         'updated_at': updated_at, 
         'user_id': user_id,
     })
+
+# 刪除interview
+def delInterview(interview_id:str):
+    interview = db.collection('Interviews').document(interview_id)
+    interview.delete()
 
     
 
@@ -95,6 +107,11 @@ def addEmotionRecognition(emotion:str, emotion_suggestion:str, intensity:str, in
         "timestamp": timestamp,
     })
 
+# 刪除Emotion_Recognition
+def delEmotionRecognition(Emotion_Recognition_id:str):
+    emo = db.collection('Emotion_Recognition').document(Emotion_Recognition_id)
+    emo.delete()
+
 # Eye_Gaze_Tracking
 # 新增Eye_Gaze_Tracking
 def addEyeGaze(duration:int, eye_contact:bool, gaze_coordinates:str, gaze_suggestion:str, interview_id:str):
@@ -108,6 +125,11 @@ def addEyeGaze(duration:int, eye_contact:bool, gaze_coordinates:str, gaze_sugges
         "gaze_suggestion": gaze_suggestion,
         "interview_id": interview_id,
     })
+
+# 刪除Eye_Gaze_Tracking
+def delEyeGaze(eye_gaze_id:str):
+    eye_gaze = db.collection('Eye_Gaze_Tracking').document(eye_gaze_id)
+    eye_gaze.delete()
 
 
 # Feedback
@@ -124,6 +146,11 @@ def addFeedback(comments:str, rating:int, interview_id:str, user_id:str):
         "interview_id": interview_id,
         "user_id": user_id,
     })
+
+# 刪除Feedback
+def delFeedback(feedback_id:str):
+    feedback = db.collection('Feedback').document(feedback_id)
+    feedback.delete()
 
 
 # Question_history
@@ -142,6 +169,11 @@ def addQuestionHistory(chatgpt_analysis:str, question_id:str, user_id:str, user_
         "user_score": user_score,
     })
 
+# 刪除Question_history
+def delQuestionHistory(history_id:str):
+    history = db.collection('Question_history').document(history_id)
+    history.delete()
+
 
 # Voice_Transcriptions
 # 新增Emotion_Recognition
@@ -157,6 +189,11 @@ def addVoiceTranscriptions(audio_file, speech_speed:List[int], transcript:str, i
         "interview_id": interview_id,
         "timestamp": timestamp,
     })
+
+# 刪除Voice_Transcriptions
+def delVoiceTranscriptions(voice_id:str):
+    voice = db.collection('Voice_Transcriptions').document(voice_id)
+    voice.delete()
 
 
 
@@ -176,4 +213,9 @@ def addQuestions(question_department:str, question_school:str, interview_id:str,
         "qusetion_text": qusetion_text, 
         "user_id": user_id,
     })
+
+# 刪除Questions
+def delQuestions(question_id:str):
+    question = db.collection('Questions').document(question_id)
+    question.delete()
     

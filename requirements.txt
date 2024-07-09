@@ -1,3 +1,6 @@
 Flask==3.0.3
 google-cloud-firestore==2.16.1
 firebase-admin==6.5.0
+opencv-python==4.9.0.80
+dlib==19.24.4
+deepface==0.0.91

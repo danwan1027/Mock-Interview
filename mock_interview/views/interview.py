@@ -1,4 +1,4 @@
-from flask import Blueprint,render_template, Response
+from flask import Blueprint, render_template, Response
 import cv2
 
 interview = Blueprint('interview', __name__)
@@ -11,15 +11,20 @@ def index():
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-
-
-
-cap = cv2.VideoCapture(0)
+@interview.route('/start_camera')
+def start_camera():
+    global cap
+    cap = cv2.VideoCapture(0)
+    return 'Camera started'
+    
+cap = None
 face_classifier = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 def gen_frames():
-    
+    global cap
     while True:
+        if cap is None:
+            continue
         success, frame = cap.read()
         if not success:
             break

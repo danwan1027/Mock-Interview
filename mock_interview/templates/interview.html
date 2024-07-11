@@ -12,10 +12,22 @@
                 })
                 .catch(error => console.error('Error starting camera:', error));
         }
+        function endInterview() {
+            fetch('/end_interview')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('video-stream').src = "";
+                })
+                .catch(error => console.error('Error ending interview:', error));
+        }
+        
     </script>
 </head>
 <body>
     <button onclick="startCamera()">開始面試</button>
+    <button onclick="endInterview()">結束面試</button>
     <img id="video-stream" class="video-stream" src="">
+
 </body>
 </html>

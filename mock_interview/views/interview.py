@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, Response
+from flask import Blueprint, render_template, Response,jsonify
 import cv2
 import os
 import dlib
@@ -22,6 +22,36 @@ def start_camera():
     global cap
     cap = cv2.VideoCapture(0)
     return 'Camera started'
+
+@interview.route('/end_interview')
+def end_interview():
+    global cap, total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count, total_frames, looking_at_camera_frames
+    if cap:
+        cap.release()
+        cap = None
+    
+    # Print statistics
+    if total_emotion_count > 0:
+        print(
+            "\ntotal_emotion_count: ", total_emotion_count * 100, "\n",
+            "angry percent: ", angry_count / total_emotion_count * 100, "%\n",
+            "disgust percent: ", disgust_count / total_emotion_count * 100, "%\n",
+            "fear percent: ", fear_count / total_emotion_count * 100, "%\n",
+            "happy percent: ", happy_count / total_emotion_count * 100, "%\n",
+            "sad percent: ", sad_count / total_emotion_count * 100, "%\n",
+            "surprise percent: ", surprise_count / total_emotion_count * 100, "%\n",
+            "neutral percent: ", neutral_count / total_emotion_count * 100, "%\n"
+        )
+    if total_frames > 0:
+        percentage_looking_at_camera = (looking_at_camera_frames / total_frames) * 100
+        print(f"\nPercentage of time looking at the camera: {percentage_looking_at_camera:.2f}%")
+    
+    # Reset counters
+    total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count = (0, 0, 0, 0, 0, 0, 0, 0)
+    total_frames = 0
+    looking_at_camera_frames = 0
+
+    return 'Interview ended and data printed'
 
 
     
@@ -116,11 +146,12 @@ def gen_frames():
     global total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count
     while True:
         ret, frame = cap.read()
-        frame = cv2.resize(frame, (683, 384))
 
-        if not ret:
+        if not ret or frame is None:
             print("Can't receive frame (stream end?). Exiting ...")
             break
+
+        frame = cv2.resize(frame, (683, 384))
         
         # Emotion detection start------------------
         try:

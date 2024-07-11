@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Face Detection with OpenCV</title>
+    <script>
+        function startCamera() {
+            fetch('/start_camera')
+                .then(response => response.text())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('video-stream').src = "/video_feed";
+                })
+                .catch(error => console.error('Error starting camera:', error));
+        }
+    </script>
+</head>
+<body>
+    <button onclick="startCamera()">開始面試</button>
+    <img id="video-stream" class="video-stream" src="">
+</body>
+</html>

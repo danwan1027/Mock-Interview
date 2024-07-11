@@ -43,6 +43,12 @@ def end_interview():
         'percentage_looking_at_camera': round(looking_at_camera_frames / total_frames * 100) if total_frames > 0 else 0
     }
     
+    #維綸要在這裡拿圖像辨識參數
+    #參數包含：
+    #總共偵測幾次情緒 total_emotion_count
+    #六種情緒比例 angry_percent,disgust_percent,fear_percent,happy_percent,sad_percent,surprise_percent,neutral_percent
+    #眼睛看鏡頭/不看鏡頭的時間比例 percentage_looking_at_camera
+    
     # Reset counters
     total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count = (0, 0, 0, 0, 0, 0, 0, 0)
     total_frames = 0

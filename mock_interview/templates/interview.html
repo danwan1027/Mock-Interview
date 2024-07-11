@@ -12,22 +12,38 @@
                 })
                 .catch(error => console.error('Error starting camera:', error));
         }
+
         function endInterview() {
             fetch('/end_interview')
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(data => {
                     console.log(data);
                     document.getElementById('video-stream').src = "";
+                    displayStatistics(data);
                 })
                 .catch(error => console.error('Error ending interview:', error));
         }
-        
+
+        function displayStatistics(data) {
+            let stats = `
+                <p>Total Emotion Count: ${data.total_emotion_count}</p>
+                <p>Angry Percent: ${data.angry_percent}%</p>
+                <p>Disgust Percent: ${data.disgust_percent}%</p>
+                <p>Fear Percent: ${data.fear_percent}%</p>
+                <p>Happy Percent: ${data.happy_percent}%</p>
+                <p>Sad Percent: ${data.sad_percent}%</p>
+                <p>Surprise Percent: ${data.surprise_percent}%</p>
+                <p>Neutral Percent: ${data.neutral_percent}%</p>
+                <p>Percentage of Time Looking at Camera: ${data.percentage_looking_at_camera}%</p>
+            `;
+            document.getElementById('statistics').innerHTML = stats;
+        }
     </script>
 </head>
 <body>
     <button onclick="startCamera()">開始面試</button>
     <button onclick="endInterview()">結束面試</button>
     <img id="video-stream" class="video-stream" src="">
-
+    <div id="statistics"></div>
 </body>
 </html>

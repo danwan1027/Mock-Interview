@@ -29,29 +29,33 @@ def end_interview():
     if cap:
         cap.release()
         cap = None
+
+    # Calculate percentages
+    stats = {
+        'total_emotion_count': total_emotion_count,
+        'angry_percent': round(angry_count / total_emotion_count * 100) if total_emotion_count > 0 else 0,
+        'disgust_percent': round(disgust_count / total_emotion_count * 100) if total_emotion_count > 0 else 0,
+        'fear_percent': round(fear_count / total_emotion_count * 100) if total_emotion_count > 0 else 0,
+        'happy_percent': round(happy_count / total_emotion_count * 100) if total_emotion_count > 0 else 0,
+        'sad_percent': round(sad_count / total_emotion_count * 100) if total_emotion_count > 0 else 0,
+        'surprise_percent': round(surprise_count / total_emotion_count * 100) if total_emotion_count > 0 else 0,
+        'neutral_percent': round(neutral_count / total_emotion_count * 100) if total_emotion_count > 0 else 0,
+        'percentage_looking_at_camera': round(looking_at_camera_frames / total_frames * 100) if total_frames > 0 else 0
+    }
     
-    # Print statistics
-    if total_emotion_count > 0:
-        print(
-            "\ntotal_emotion_count: ", total_emotion_count * 100, "\n",
-            "angry percent: ", angry_count / total_emotion_count * 100, "%\n",
-            "disgust percent: ", disgust_count / total_emotion_count * 100, "%\n",
-            "fear percent: ", fear_count / total_emotion_count * 100, "%\n",
-            "happy percent: ", happy_count / total_emotion_count * 100, "%\n",
-            "sad percent: ", sad_count / total_emotion_count * 100, "%\n",
-            "surprise percent: ", surprise_count / total_emotion_count * 100, "%\n",
-            "neutral percent: ", neutral_count / total_emotion_count * 100, "%\n"
-        )
-    if total_frames > 0:
-        percentage_looking_at_camera = (looking_at_camera_frames / total_frames) * 100
-        print(f"\nPercentage of time looking at the camera: {percentage_looking_at_camera:.2f}%")
+    #維綸要在這裡拿圖像辨識參數
+    #參數包含：
+    #總共偵測幾次情緒 total_emotion_count
+    #六種情緒比例 angry_percent,disgust_percent,fear_percent,happy_percent,sad_percent,surprise_percent,neutral_percent
+    #眼睛看鏡頭/不看鏡頭的時間比例 percentage_looking_at_camera
     
     # Reset counters
     total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count = (0, 0, 0, 0, 0, 0, 0, 0)
     total_frames = 0
     looking_at_camera_frames = 0
 
-    return 'Interview ended and data printed'
+    return jsonify(stats)
+
 
 
     
@@ -226,14 +230,3 @@ def gen_frames():
 
 
     
-# print(
-#     "\ntotal_emotion_count: ",total_emotion_count*100,"\n",
-#     "angry precent: ",angry_count/total_emotion_count*100,"%\n",
-#     "disgust precent: ",disgust_count/total_emotion_count*100,"%\n",
-#     "fear precent: ",fear_count/total_emotion_count*100,"%\n",
-#     "happy precent: ",happy_count/total_emotion_count*100,"%\n",
-#     "sad precent: ",sad_count/total_emotion_count*100,"%\n",
-#     "surprise precent: ",surprise_count/total_emotion_count*100,"%\n",
-#     "neutral precent: ",neutral_count/total_emotion_count*100,"%\n")    
-# percentage_looking_at_camera = (looking_at_camera_frames / total_frames) * 100
-# print(f"\nPercentage of time looking at the camera: {percentage_looking_at_camera:.2f}%")            

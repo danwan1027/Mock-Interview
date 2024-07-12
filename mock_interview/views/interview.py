@@ -4,6 +4,8 @@ import os
 import dlib
 import numpy as np
 from deepface import DeepFace
+from ..models import audio_func as audio
+import threading
 # from ..models import face_detect
 
 
@@ -21,11 +23,23 @@ def video_feed():
 def start_camera():
     global cap
     cap = cv2.VideoCapture(0)
+
+    # Audio
+    global audio_thread, audio_results
+    audio_results = {}
+    def run_audio():
+        global audio_results
+        
+        audio_results = audio.main()
+    
+    audio_thread = threading.Thread(target=run_audio)
+    audio_thread.start()
     return 'Camera started'
 
 @interview.route('/end_interview')
 def end_interview():
     global cap, total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count, total_frames, looking_at_camera_frames
+    global audio_thread, audio_results
     if cap:
         cap.release()
         cap = None
@@ -54,7 +68,18 @@ def end_interview():
     total_frames = 0
     looking_at_camera_frames = 0
 
-    return jsonify(stats)
+    ### ------------ Audio -------------
+    audio.stop_event.set()
+    audio_thread.join()
+
+    # 這裡是音訊辨識的結果
+    # audio_results = {
+    #     "accumulated_transcript": 使用者的逐字稿
+    #     "word_count": 每一個音檔的字數
+    #     "total_words": 總字數
+    #     "recording_times": 總共錄了幾個音檔
+    # }
+    return jsonify(stats, audio_results)
 
 
 

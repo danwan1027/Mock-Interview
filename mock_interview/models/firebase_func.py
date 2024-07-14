@@ -29,24 +29,37 @@ bucket = storage.bucket()
 # Users
 # 新增user
 def addUser(username, password, email):
-    user = {
-      "username": username,
-      "password": password, 
-      "email": email,
-      # "profile_image": profile_image
-    }
-    db.collection("User").add(user)
+
+    user = db.collection('Users').document()
+
+    user.set({
+        'user_id': user.id,
+        'username': username,
+        'password': password, 
+        'email': email,
+        # "profile_image": profile_image
+    })
 
 # 刪除user
 def delUser(user_id:str):
-    user = db.collection('User').document(user_id)
+    user = db.collection('Users').document(user_id)
     user.delete()
 
-def getUserID(email):
-    docs = db.collection('User').where('email', '==', email).stream()
-    for doc in docs:
-        print('{} => {}'.format(doc.id, doc.to_dict()))
+# 更新user
+def updateUser(user_id:str, username=None, password=None, email=None):
 
+    user = db.collection('Users').document(user_id)
+    updates = {}
+
+    if username is not None:
+        updates['username'] = username
+    if password is not None:
+        updates['password'] = password
+    if email is not None:
+        updates['email'] = email
+
+    if updates:
+        user.update(updates)
 
 
 
@@ -65,6 +78,7 @@ def addInterview(college:str, department:str, duration:int, resume, user_id:str)
     resume = blob.public_url
 
     interview.set({
+        'interview_id': interview.id,
         'college': college, 
         'created_at': created_at,
         'department': department,
@@ -75,21 +89,20 @@ def addInterview(college:str, department:str, duration:int, resume, user_id:str)
         'user_id': user_id,
     })
 
+
 # 刪除interview
 def delInterview(interview_id:str):
-    interview = db.collection('Interviews').document(interview_id)
-    interview.delete()
 
+    interview_ref = db.collection('Interviews').document(interview_id)
+    interview_query = db.collection('Interviews').where('interview_id', '==', interview_id).stream()
     
+    for interview in interview_query:
+        user_id = interview.to_dict()['user_id']
+    blob = bucket.blob(user_id + '/' + interview_id + '.pdf')
+    blob.delete()
+    
+    interview_ref.delete()
 
-# def test():
-#     a = db.collection('a').document()
-#     a.set
-
-def getInterview():
-    a = db.collection("Interviews").document("dQMdnLnjNjqhgDVmRlO7").get()
-    print(a.to_dict()['created_at'])
-    return a
 
 
 # Emotion_Recognition
@@ -100,6 +113,7 @@ def addEmotionRecognition(emotion:str, emotion_suggestion:str, intensity:str, in
     timestamp = SERVER_TIMESTAMP
 
     emo.set({
+        'emotion_id': emo.id,
         "emotion": emotion,
         "emotion_suggestion": emotion_suggestion, 
         "intensity": intensity,
@@ -112,6 +126,8 @@ def delEmotionRecognition(Emotion_Recognition_id:str):
     emo = db.collection('Emotion_Recognition').document(Emotion_Recognition_id)
     emo.delete()
 
+
+
 # Eye_Gaze_Tracking
 # 新增Eye_Gaze_Tracking
 def addEyeGaze(duration:int, eye_contact:bool, gaze_coordinates:str, gaze_suggestion:str, interview_id:str):
@@ -119,6 +135,7 @@ def addEyeGaze(duration:int, eye_contact:bool, gaze_coordinates:str, gaze_sugges
     eye_gaze = db.collection('Eye_Gaze_Tracking').document()
 
     eye_gaze.set({
+        'gaze_id': eye_gaze.id,
         "duration": duration,
         "eye_contact": eye_contact, 
         "gaze_coordinates": gaze_coordinates,
@@ -132,6 +149,7 @@ def delEyeGaze(eye_gaze_id:str):
     eye_gaze.delete()
 
 
+
 # Feedback
 # 新增Feedback
 def addFeedback(comments:str, rating:int, interview_id:str, user_id:str):
@@ -140,6 +158,7 @@ def addFeedback(comments:str, rating:int, interview_id:str, user_id:str):
     created_at = SERVER_TIMESTAMP
 
     feedback.set({
+        'feedback_id': feedback.id,
         "comments": comments,
         "created_at": created_at, 
         "rating": rating,
@@ -153,6 +172,7 @@ def delFeedback(feedback_id:str):
     feedback.delete()
 
 
+
 # Question_history
 # 新增Question_history
 def addQuestionHistory(chatgpt_analysis:str, question_id:str, user_id:str, user_reponse:str, user_score:int):
@@ -161,6 +181,7 @@ def addQuestionHistory(chatgpt_analysis:str, question_id:str, user_id:str, user_
     response_date = SERVER_TIMESTAMP
 
     history.set({
+        'history_id': history.id,
         "chatgpt_analysis": chatgpt_analysis,
         "question_id": question_id, 
         "response_date": response_date,
@@ -175,6 +196,7 @@ def delQuestionHistory(history_id:str):
     history.delete()
 
 
+
 # Voice_Transcriptions
 # 新增Emotion_Recognition
 def addVoiceTranscriptions(audio_file, speech_speed:List[int], transcript:str, interview_id:str):
@@ -182,8 +204,14 @@ def addVoiceTranscriptions(audio_file, speech_speed:List[int], transcript:str, i
     voice = db.collection('Voice_Transcriptions').document()
     timestamp = SERVER_TIMESTAMP
 
+    blob = bucket.blob(interview_id + '/' + voice.id + '.wav')
+    blob.upload_from_file(audio_file, content_type='audio/wav')
+    blob.make_public()
+    audio = blob.public_url
+
     voice.set({
-        "audio_file": audio_file,
+        'transcription_id': voice.id,
+        "audio_file": audio,
         "speech_speed": speech_speed, 
         "transcript": transcript,
         "interview_id": interview_id,
@@ -191,9 +219,17 @@ def addVoiceTranscriptions(audio_file, speech_speed:List[int], transcript:str, i
     })
 
 # 刪除Voice_Transcriptions
-def delVoiceTranscriptions(voice_id:str):
-    voice = db.collection('Voice_Transcriptions').document(voice_id)
-    voice.delete()
+def delVoiceTranscriptions(transcription_id:str):
+    
+    voice_ref = db.collection('Voice_Transcriptions').document(transcription_id)
+    voice_query = db.collection('Voice_Transcriptions').where('transcription_id', '==', transcription_id).stream()
+    
+    for interview in voice_query:
+        interview_id = interview.to_dict()['interview_id']
+    blob = bucket.blob(interview_id + '/' + transcription_id + '.wav')
+    blob.delete()
+    
+    voice_ref.delete()
 
 
 
@@ -201,10 +237,11 @@ def delVoiceTranscriptions(voice_id:str):
 # 新增Questions
 def addQuestions(question_department:str, question_school:str, interview_id:str, question_schooldepartment:str, qusetion_text:str, user_id:str):
     
-    question = db.collection('Voice_Transcriptions').document()
+    question = db.collection('Questions').document()
     question_create_time = SERVER_TIMESTAMP
 
     question.set({
+        'question_id': question.id,
         "interview_id": interview_id,
         "question_create_time": question_create_time,
         "question_department": question_department, 

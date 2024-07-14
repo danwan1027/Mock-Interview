@@ -7,17 +7,230 @@
 </head>
 <body>
     <h1>firebase test</h1>
-    <h2>add user</h2>
-    <form action="/adduser" method="post">
-        <input type="text" name="username" placeholder="username">
-        <input type="email" name="email" placeholder="Enter email">
-        <input type="password" name="password" placeholder="Enter password">
-        <button type="submit">Register</button>
+
+    <!-- Add User Form -->
+    <h2>Add User</h2>
+    <form action="/add_user" method="post">
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="text" id="password" name="password"><br>
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="email"><br>
+        <input type="submit" value="Add User">
     </form>
-    <h2>Upload Your PDF</h2>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="pdfFile" accept=".pdf">
-        <button type="submit">Upload</button>
+    <br>
+
+    <!-- Update User Form -->
+    <h2>Update User</h2>
+    <form action="/update_user" method="post">
+        <label for="user_id">User ID:</label><br>
+        <input type="text" id="user_id" name="user_id"><br>
+        <label for="username">Username:</label><br>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password:</label><br>
+        <input type="text" id="password" name="password"><br>
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="email"><br>
+        <input type="submit" value="Update User">
     </form>
+    <br>
+
+    <!-- Delete User Form -->
+    <h2>Delete User</h2>
+    <form action="/del_user" method="post">
+        <label for="user_id">User ID:</label><br>
+        <input type="text" id="user_id" name="user_id"><br>
+        <input type="submit" value="Delete User">
+    </form>
+    <br>
+
+    <!-- Get User ID Form -->
+    <h2>Get User ID by Email</h2>
+    <form action="/get_user_id" method="post">
+        <label for="email">Email:</label><br>
+        <input type="text" id="email" name="email"><br>
+        <input type="submit" value="Get User ID">
+    </form>
+    <br>
+
+    <!-- Add Interview Form -->
+    <h2>Add Interview</h2>
+    <form action="/add_interview" method="post" enctype="multipart/form-data">
+        <label for="college">College:</label><br>
+        <input type="text" id="college" name="college"><br>
+        <label for="department">Department:</label><br>
+        <input type="text" id="department" name="department"><br>
+        <label for="duration">Duration:</label><br>
+        <input type="text" id="duration" name="duration"><br>
+        <label for="resume">Resume:</label><br>
+        <input type="file" id="resume" name="resume"><br>
+        <label for="user_id">User ID:</label><br>
+        <input type="text" id="user_id" name="user_id"><br>
+        <input type="submit" value="Add Interview">
+    </form>
+    <br>
+
+    <!-- Delete Interview Form -->
+    <h2>Delete Interview</h2>
+    <form action="/del_interview" method="post">
+        <label for="interview_id">Interview ID:</label><br>
+        <input type="text" id="interview_id" name="interview_id"><br>
+        <input type="submit" value="Delete Interview">
+    </form>
+    <br>
+
+    <!-- Add Emotion Recognition Form -->
+    <h2>Add Emotion Recognition</h2>
+    <form action="/add_emotion_recognition" method="post">
+        <label for="emotion">Emotion:</label><br>
+        <input type="text" id="emotion" name="emotion"><br>
+        <label for="emotion_suggestion">Emotion Suggestion:</label><br>
+        <input type="text" id="emotion_suggestion" name="emotion_suggestion"><br>
+        <label for="intensity">Intensity:</label><br>
+        <input type="text" id="intensity" name="intensity"><br>
+        <label for="interview_id">Interview ID:</label><br>
+        <input type="text" id="interview_id" name="interview_id"><br>
+        <input type="submit" value="Add Emotion Recognition">
+    </form>
+    <br>
+
+    <!-- Delete Emotion Recognition Form -->
+    <h2>Delete Emotion Recognition</h2>
+    <form action="/del_emotion_recognition" method="post">
+        <label for="emotion_recognition_id">Emotion Recognition ID:</label><br>
+        <input type="text" id="emotion_recognition_id" name="emotion_recognition_id"><br>
+        <input type="submit" value="Delete Emotion Recognition">
+    </form>
+    <br>
+
+    <!-- Add Eye Gaze Tracking Form -->
+    <h2>Add Eye Gaze Tracking</h2>
+    <form action="/add_eye_gaze" method="post">
+        <label for="duration">Duration:</label><br>
+        <input type="text" id="duration" name="duration"><br>
+        <label for="eye_contact">Eye Contact:</label><br>
+        <input type="text" id="eye_contact" name="eye_contact"><br>
+        <label for="gaze_coordinates">Gaze Coordinates:</label><br>
+        <input type="text" id="gaze_coordinates" name="gaze_coordinates"><br>
+        <label for="gaze_suggestion">Gaze Suggestion:</label><br>
+        <input type="text" id="gaze_suggestion" name="gaze_suggestion"><br>
+        <label for="interview_id">Interview ID:</label><br>
+        <input type="text" id="interview_id" name="interview_id"><br>
+        <input type="submit" value="Add Eye Gaze Tracking">
+    </form>
+    <br>
+
+    <!-- Delete Eye Gaze Tracking Form -->
+    <h2>Delete Eye Gaze Tracking</h2>
+    <form action="/del_eye_gaze" method="post">
+        <label for="eye_gaze_id">Eye Gaze ID:</label><br>
+        <input type="text" id="eye_gaze_id" name="eye_gaze_id"><br>
+        <input type="submit" value="Delete Eye Gaze Tracking">
+    </form>
+    <br>
+
+    <!-- Add Feedback Form -->
+    <h2>Add Feedback</h2>
+    <form action="/add_feedback" method="post">
+        <label for="comments">Comments:</label><br>
+        <input type="text" id="comments" name="comments"><br>
+        <label for="rating">Rating:</label><br>
+        <input type="text" id="rating" name="rating"><br>
+        <label for="interview_id">Interview ID:</label><br>
+        <input type="text" id="interview_id" name="interview_id"><br>
+        <label for="user_id">User ID:</label><br>
+        <input type="text" id="user_id" name="user_id"><br>
+        <input type="submit" value="Add Feedback">
+    </form>
+    <br>
+
+    <!-- Delete Feedback Form -->
+    <h2>Delete Feedback</h2>
+    <form action="/del_feedback" method="post">
+        <label for="feedback_id">Feedback ID:</label><br>
+        <input type="text" id="feedback_id" name="feedback_id"><br>
+        <input type="submit" value="Delete Feedback">
+    </form>
+    <br>
+
+    <!-- Add Question History Form -->
+    <h2>Add Question History</h2>
+    <form action="/add_question_history" method="post">
+        <label for="chatgpt_analysis">ChatGPT Analysis:</label><br>
+        <input type="text" id="chatgpt_analysis" name="chatgpt_analysis"><br>
+        <label for="question_id">Question ID:</label><br>
+        <input type="text" id="question_id" name="question_id"><br>
+        <label for="user_id">User ID:</label><br>
+        <input type="text" id="user_id" name="user_id"><br>
+        <label for="user_reponse">User Response:</label><br>
+        <input type="text" id="user_reponse" name="user_reponse"><br>
+        <label for="user_score">User Score:</label><br>
+        <input type="text" id="user_score" name="user_score"><br>
+        <input type="submit" value="Add Question History">
+    </form>
+    <br>
+
+    <!-- Delete Question History Form -->
+    <h2>Delete Question History</h2>
+    <form action="/del_question_history" method="post">
+        <label for="history_id">History ID:</label><br>
+        <input type="text" id="history_id" name="history_id"><br>
+        <input type="submit" value="Delete Question History">
+    </form>
+    <br>
+
+    <!-- Add Voice Transcriptions Form -->
+    <h2>Add Voice Transcriptions</h2>
+    <form action="/add_voice_transcriptions" method="post" enctype="multipart/form-data">
+        <label for="audio_file">Audio File:</label><br>
+        <input type="file" id="audio_file" name="audio_file"><br>
+        <label for="speech_speed">Speech Speed (comma-separated):</label><br>
+        <input type="text" id="speech_speed" name="speech_speed" required><br><br>
+        <label for="transcript">Transcript:</label><br>
+        <textarea id="transcript" name="transcript" rows="4" cols="50" required></textarea><br><br>
+        <label for="interview_id">Interview ID:</label><br>
+        <input type="text" id="interview_id" name="interview_id"><br>
+        <input type="submit" value="Add Voice Transcriptions">
+    </form>
+    <br>
+
+    <!-- Delete Voice Transcriptions Form -->
+    <h2>Delete Voice Transcriptions</h2>
+    <form action="/del_voice_transcriptions" method="post">
+        <label for="voice_id">Voice ID:</label><br>
+        <input type="text" id="voice_id" name="voice_id"><br>
+        <input type="submit" value="Delete Voice Transcriptions">
+    </form>
+    <br>
+
+    <!-- Add Questions Form -->
+    <h2>Add Questions</h2>
+    <form action="/add_questions" method="post">
+        <label for="question_department">Question Department:</label><br>
+        <input type="text" id="question_department" name="question_department"><br>
+        <label for="question_school">Question School:</label><br>
+        <input type="text" id="question_school" name="question_school"><br>
+        <label for="interview_id">Interview ID:</label><br>
+        <input type="text" id="interview_id" name="interview_id"><br>
+        <label for="question_schooldepartment">Question School Department:</label><br>
+        <input type="text" id="question_schooldepartment" name="question_schooldepartment"><br>
+        <label for="qusetion_text">Question Text:</label><br>
+        <input type="text" id="qusetion_text" name="qusetion_text"><br>
+        <label for="user_id">User ID:</label><br>
+        <input type="text" id="user_id" name="user_id"><br>
+        <input type="submit" value="Add Questions">
+    </form>
+    <br>
+
+    <!-- Delete Questions Form -->
+    <h2>Delete Questions</h2>
+    <form action="/del_questions" method="post">
+        <label for="question_id">Question ID:</label><br>
+        <input type="text" id="question_id" name="question_id"><br>
+        <input type="submit" value="Delete Questions">
+    </form>
+    <br>
+    
 </body>
 </html>

@@ -1,12 +1,16 @@
 import pdfplumber
 import requests
 import json
-from flask import Blueprint, render_template, request
-from models import firebase_func as ff
+import os
+from flask import Blueprint, render_template, request, jsonify
+# from models import firebase_func as ff
+from dotenv import load_dotenv
+
+load_dotenv()
 
 generate = Blueprint('generate', __name__)
 
-@generate.route('/generate')
+@generate.route('/generate', methods=['POST'])
 def generate_question():
     # 這邊應該要有一個檢查是否有登入的function
     # 以下是確定登入使用者
@@ -17,34 +21,35 @@ def generate_question():
     ################
     ################
     ################
-    # 上傳履歷
+    department = request.form['department']
+    school = request.form['school']
+    
     if 'file' not in request.files:
-        return 'No file uploaded', 400
+        return jsonify({'error': 'No file uploaded'}), 400
     
     file = request.files['file']
     
     if file.filename == '':
-        return 'No selected file', 400
+        return jsonify({'error': 'No selected file'}), 400
     
     if file:
         text = convert(file)
-        generated_question = genquestion(text)
+        generated_question = genquestion(text, school, department)
         if generated_question:
             # 儲存到資料庫
-            ff.addQuestions(
-                question_department="資訊管理學系",  # 可以根据你的需求设置
-                question_school="國立中央大學",     # 可以根据你的需求设置
-                #待更改
-                interview_id = 1,        # 可以根据你的需求设置
-                question_schooldepartment="國立中央大學, 資訊管理學系",  # 可以根据你的需求设置
-                qusetion_text=generated_question,
-                user_id = 1
-            )
-            return render_template('result.html', generated_question=generated_question)
+            #ff.addQuestions(
+            #    question_department=department,
+            #    question_school=school,
+            #    interview_id=1,  # 根據實際需求進行調整
+            #    question_schooldepartment=f"{school}, {department}",
+            #    qusetion_text=generated_question,
+            #    user_id=1
+            #)
+            return jsonify({'generated_question': generated_question})
         else:
-            return 'Error generating questions', 500
+            return jsonify({'error': 'Error generating questions'}), 500
     else:
-        return 'Error processing file', 500
+        return jsonify({'error': 'Error processing file'}), 500
 
 
 # 將pdf檔案轉換成文字
@@ -55,13 +60,16 @@ def convert(file):
             text += page.extract_text()
     return text
 
-def genquestion(text):
+def genquestion(text, school, department):
     endpoint = "https://api.openai.com/v1/completions"
     prompts = load_genquestion_prompt()
-    prompt = prompts["sc_dep_resume_question"] + text
+    prompt = prompts["sc_dep_resume_question"] + "\n"
+    prompt += "以下是面試者欲申請的學校: " + school + "\n"
+    prompt += "以下是面試者欲申請的系所: " + department + "\n"
+    prompt += "以下是面試者的自我介紹: " + text
     headers = {
         "Content-Type": "application/json",
-        #"API-KEY" over here
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"
     }
     data = {
         "model": "gpt-3.5-turbo-instruct",
@@ -79,6 +87,9 @@ def genquestion(text):
     
     
 def load_genquestion_prompt():
-    with open('prompts.json', 'r', encoding='utf-8') as file:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    prompts_path = os.path.join(current_dir, 'prompt.json')
+
+    with open(prompts_path, 'r', encoding='utf-8') as file:
         prompts = json.load(file)
     return prompts

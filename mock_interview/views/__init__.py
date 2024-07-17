@@ -5,7 +5,7 @@ from .home import home
 from .interview import interview
 from .firebase_test import firebase_test
 from .GPT.generate_question import generate
-from .GPT.rate_addvice import rate
+from .GPT.rate_advice import rate
 
 def init_views(app):
     app.register_blueprint(home)

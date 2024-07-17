@@ -79,7 +79,7 @@ def end_interview():
     #     "total_words": 總字數
     #     "recording_times": 總共錄了幾個音檔
     # }
-    return jsonify(stats, audio_results)
+    return jsonify({'stats': stats, 'audio_results': audio_results})
 
 
 

@@ -19,7 +19,8 @@
                 .then(data => {
                     console.log(data);
                     document.getElementById('video-stream').src = "";
-                    displayStatistics(data);
+                    displayStatistics(data.stats);
+                    sendAdvice(data);
                 })
                 .catch(error => console.error('Error ending interview:', error));
         }
@@ -38,12 +39,60 @@
             `;
             document.getElementById('statistics').innerHTML = stats;
         }
+
+        function displayQuestion(event) {
+            event.preventDefault();
+            const formData = new FormData(document.getElementById('interview-form'));
+            
+            fetch('/generate', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    document.getElementById('generated-question').innerText = data.generated_question;
+                }
+            })
+            .catch(error => console.error('Error generating question:', error));
+        }
+
+        function sendAdvice(data) {
+            fetch('/rate_advice', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.text())
+            .then(html => {
+                document.documentElement.innerHTML = html;
+            })
+            .catch(error => console.error('Error:', error));
+        }
     </script>
 </head>
 <body>
+    <form id="interview-form" onsubmit="displayQuestion(event)" enctype="multipart/form-data">
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department" required><br><br>
+        
+        <label for="school">School:</label>
+        <input type="text" id="school" name="school" required><br><br>
+        
+        <label for="file">Upload Resume:</label>
+        <input type="file" id="file" name="file" accept="application/pdf" required><br><br>
+        
+        <button type="submit">Submit</button>
+    </form>
+    
     <button onclick="startCamera()">開始面試</button>
     <button onclick="endInterview()">結束面試</button>
     <img id="video-stream" class="video-stream" src="">
     <div id="statistics"></div>
+    <div id="generated-question"></div>
 </body>
 </html>

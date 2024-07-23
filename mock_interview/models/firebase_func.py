@@ -3,6 +3,8 @@ from firebase_admin import credentials, firestore, storage
 from firebase_admin.firestore import SERVER_TIMESTAMP
 from instance import config
 from typing import List
+from .User import User
+
 
 firebase_config = {
     "type": config.type,
@@ -28,16 +30,24 @@ bucket = storage.bucket()
 
 # Users
 # 新增user
-def addUser(username, password, email):
+def addUser(username, password, email, role, profile_image):
 
     user = db.collection('Users').document()
+    created_at = SERVER_TIMESTAMP
+
+    blob = bucket.blob(user.id + '/profile_image.png')
+    blob.upload_from_file(profile_image, content_type='image/png')
+    blob.make_public()
+    profile_image = blob.public_url
 
     user.set({
         'user_id': user.id,
         'username': username,
         'password': password, 
         'email': email,
-        # "profile_image": profile_image
+        'role': role,
+        'profile_image': profile_image,
+        'created_at': created_at
     })
 
 # 刪除user
@@ -46,7 +56,7 @@ def delUser(user_id:str):
     user.delete()
 
 # 更新user
-def updateUser(user_id:str, username=None, password=None, email=None):
+def updateUser(user_id:str, username=None, password=None, email=None, profile_image=None):
 
     user = db.collection('Users').document(user_id)
     updates = {}
@@ -57,11 +67,48 @@ def updateUser(user_id:str, username=None, password=None, email=None):
         updates['password'] = password
     if email is not None:
         updates['email'] = email
+    if profile_image is not None:
+        blob = bucket.blob(user.id + '/profile_image.png')
+        blob.upload_from_string(profile_image.read(), content_type='image/png')
+        blob.make_public()
 
     if updates:
         user.update(updates)
 
+# 取得user
+def get_user_by_email(email: str):
+    user_query = db.collection('Users').where('email', '==', email).stream()
+    
+    for user_doc in user_query:
+        user_data = user_doc.to_dict()
+        return User(
+            id = user_data['user_id'], 
+            email = user_data['email'], 
+            name = user_data['username'], 
+            password = user_data['password'],
+            role = user_data['role'],
+            profile_image = user_data['profile_image'],
+            created_at = user_data['created_at']
+        )
+    
+    return None
 
+def get_user_by_id(user_id: str):
+    user_query = db.collection('Users').where('user_id', '==', user_id).stream()
+    
+    for user_doc in user_query:
+        user_data = user_doc.to_dict()
+        return User(
+            id = user_data['user_id'], 
+            email = user_data['email'], 
+            name = user_data['username'], 
+            password = user_data['password'],
+            role = user_data['role'],
+            profile_image = user_data['profile_image'],
+            created_at = user_data['created_at']
+        )
+    
+    return None
 
 
 # Interviews

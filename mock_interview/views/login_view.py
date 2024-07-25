@@ -13,7 +13,8 @@ def login():
     if user:
         if user.check_password(form.password.data):
             login_user(user, form.remember_me.data)
-            return 'Welcome:' + current_user.username + current_user.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            return redirect(url_for('home_view.dashboard'))
+            # return 'Welcome:' + current_user.username + current_user.created_at.strftime('%Y-%m-%d %H:%M:%S')
         else:
             flash('Wrong Email or Password')
     else:

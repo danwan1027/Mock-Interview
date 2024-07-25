@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, url_for
+from flask import Flask, flash, redirect, url_for, abort
 from flask_login import LoginManager, current_user
 from functools import wraps
 from .models import firebase_func as db
@@ -9,23 +9,18 @@ login_manager = LoginManager()
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.get_user_by_id(user_id)
-
-
+    user = db.get_user_by_id(user_id)
+    # print(user.profile_image)
+    return user
+                           
 
 # 檢查role的decorator
 def role_required(allowed_roles):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            print(current_user.role)
-            if not current_user.is_authenticated:
-                flash("You need to log in to access this page.", "danger")
-                return redirect(url_for('login_view.login'))  # 重定向到登錄頁面
-
             if current_user.role not in allowed_roles:
-                flash("You do not have permission to access this page.", "danger")
-                return redirect(url_for('home.index'))  # 重定向到其他頁面（如首頁）
+                abort(403)
             return f(*args, **kwargs)
         return decorated_function
     return decorator

@@ -14,15 +14,29 @@
         }
 
         function endInterview() {
-            fetch('/end_interview')
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    document.getElementById('video-stream').src = "";
-                    displayStatistics(data.stats);
-                    sendAdvice(data);
-                })
-                .catch(error => console.error('Error ending interview:', error));
+            const department = document.getElementById('department').value;
+            const school = document.getElementById('school').value;
+            const resumeFile = document.getElementById('file').files[0];
+
+            // Create a FormData object
+            const formData = new FormData();
+            formData.append('department', department);
+            formData.append('school', school);
+            formData.append('resume', resumeFile);
+
+            fetch('/end_interview', {
+                method: 'POST',
+                body: formData
+            })
+
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById('video-stream').src = "";
+                displayStatistics(data.stats);
+                sendAdvice(data);
+            })
+            .catch(error => console.error('Error ending interview:', error));
         }
 
         function displayStatistics(data) {

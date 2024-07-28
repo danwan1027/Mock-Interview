@@ -4,6 +4,7 @@ import os
 from flask import Blueprint, render_template, request
 # from models import firebase_func as ff
 from dotenv import load_dotenv
+from ...models import firebase_func as db
 
 load_dotenv()
 
@@ -16,14 +17,31 @@ def rate_advice():
     
     # 假設你有一個函數用於根據數據進行分析和評分
     # advice_score = analyze_and_rate(data)
-    audio_advice = gen_audio_advice(data)
-    view_advice = gen_view_advice(data)
-    
+    # audio_advice = gen_audio_advice(data)
+    # view_advice = gen_view_advice(data)
+    # emotion_advice = gen_view_advice(data) # gen_emotion_advice(data)才是對的，先用view_advice代替
     # 也可以是結合分析面試回答和面試情緒的函數的評論後再總結
     #但因為太花錢了所以先直接分析一次
     # final_advice = gen_final_advice(audio_advice, view_advice, data)
-    final_advice = gen_final_advice(data)
-    interview_score = gen_score(final_advice)
+    # final_advice = gen_final_advice(data)
+    # interview_score = gen_score(final_advice)
+    
+    ######## test省token ##########
+    audio_advice = "test"
+    view_advice = "test"
+    emotion_advice = "test"
+    final_advice = "test"
+    interview_score = 80
+    ###############################
+    
+    
+    #上傳結果至資料庫
+    db.addEmotionRecognition(data['stats']['total_emotion_count'], emotion_advice, data['stats']['percentage_looking_at_camera'], data['interview_id'])
+    db.addEyeGaze(1, True, data['stats']['percentage_looking_at_camera'], view_advice, data['interview_id'])
+    #db.addVoiceTranscriptions(None, None, audio_advice, data['interview_id'])
+    db.addFeedback(final_advice, interview_score, data['interview_id'], data['user_id'])
+    db.addQuestionHistory(final_advice, data['question_id'], data['user_id'], data['audio_results']['accumulated_transcript'], interview_score)
+
     
     
     # 渲染一個新的模板頁面來顯示結果

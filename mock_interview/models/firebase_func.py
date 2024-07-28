@@ -135,6 +135,9 @@ def addInterview(college:str, department:str, duration:int, resume, user_id:str)
         'updated_at': updated_at, 
         'user_id': user_id,
     })
+    
+    #新增interview的時候會回傳interview_id
+    return interview.id
 
 
 # 刪除interview
@@ -297,6 +300,9 @@ def addQuestions(question_department:str, question_school:str, interview_id:str,
         "qusetion_text": qusetion_text, 
         "user_id": user_id,
     })
+    
+    # 新增題目的時候會回傳id
+    return question.id
 
 # 刪除Questions
 def delQuestions(question_id:str):

@@ -3,6 +3,8 @@
 <head>
     <title>Face Detection with OpenCV</title>
     <script>
+        let generatedQuestion = ""; // Store the generated question
+
         function startCamera() {
             fetch('/start_camera')
                 .then(response => response.text())
@@ -23,6 +25,7 @@
             formData.append('department', department);
             formData.append('school', school);
             formData.append('resume', resumeFile);
+            formData.append('question', generatedQuestion);
 
             fetch('/end_interview', {
                 method: 'POST',
@@ -68,6 +71,7 @@
                     alert(data.error);
                 } else {
                     document.getElementById('generated-question').innerText = data.generated_question;
+                    generatedQuestion = data.generated_question;
                 }
             })
             .catch(error => console.error('Error generating question:', error));

@@ -49,6 +49,13 @@ def end_interview():
     user_id = current_user.id # 使用current_user.id取得當前使用者的id
     department = request.form.get('department')
     school = request.form.get('school')
+    generatedQuestion = request.form.get('question')
+    schooldepartment = school + " " + department
+    
+    print(user_id)
+    print(department)
+    print(school)
+    print(schooldepartment)
 
     # Retrieve the resume file from the request
     resume = request.files.get('resume')
@@ -90,8 +97,17 @@ def end_interview():
     #     "total_words": 總字數
     #     "recording_times": 總共錄了幾個音檔
     # }
-    db.addInterview(school, department, 1, resume,user_id)
-    return jsonify({'stats': stats, 'audio_results': audio_results})
+    
+    
+    
+    #完成面試後將資料上傳到資料庫
+    ##---------上傳資料庫---------
+    interview_id = db.addInterview(school, department, 1, resume,user_id) #新增interview
+    question_id = db.addQuestions(department, school, interview_id, schooldepartment, generatedQuestion, user_id)
+    ##---------上傳資料庫---------
+    
+    
+    return jsonify({'stats': stats, 'audio_results': audio_results, 'interview_id': interview_id, 'user_id': user_id, 'question_id': question_id})
 
 
 

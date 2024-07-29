@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Details</title>
+</head>
+{% extends "base.html" %}  
+
+{% block title %}Interview Details{% endblock %} 
+
+{% block page_content %}  
+<div class="container">
+    <div class="main-body">    
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">面試詳細資料</h4>
+                        <div class="details-container">
+                            {% for Interview in Interview %}
+                            <div class="detail-item">
+                                <strong>College:</strong> {{ Interview.college }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Department:</strong> {{ Interview.department }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Interview Date:</strong> {{ Interview.interview_date }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Resume:</strong> <a href="{{ Interview.resume }}" target="_blank">View Resume</a>
+                            </div>
+                            {% endfor %}
+                            {% for EyeGaze in EyeGaze %}
+                            <div class="detail-item">
+                                <strong>EyeGaze:</strong> {{ EyeGaze.gaze_coordinates }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Gaze Suggestion</strong> {{ EyeGaze.gaze_suggestion }}
+                            </div>
+                            {% endfor %}
+                            {% for EmotionRecognition in EmotionRecognition %}
+                            <div class="detail-item">
+                                <strong>Emotion:</strong> {{ EmotionRecognition.emotion }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Emotion Suggestion:</strong> {{ EmotionRecognition.emotion_suggestion }}
+                            </div>
+                            {% endfor %}
+                            {% for Feedback in Feedback %}
+                            <div class="detail-item">
+                                <strong>FeedBack:</strong> {{ Feedback.comments }}
+                            </div>
+                            <div class="detail-item">
+                                <strong>Rating:</strong> {{ Feedback.rating }}
+                            </div>
+                            {% endfor %}
+                            {% for Question in Question %}
+                            <div class="detail-item">
+                                <strong>Question:</strong> {{ Question.question_text }}
+                            </div>
+                            {% endfor %}
+                            <!-- Add other details as needed -->
+                        </div>
+                        <a href="{{ url_for('home_view.dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

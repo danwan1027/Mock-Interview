@@ -1,7 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Face Detection with OpenCV</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-container div {
+            width: 30%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .form-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .form-container ul li {
+            margin-bottom: 10px;
+        }
+        .form-container ul li input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .upload-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .upload-btn:hover {
+            background-color: #f0f0f0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            text-align: center;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .video-stream {
+            display: block;
+            width: 100%;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .statistics {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>全方位模擬面試系統</h1>
+        </div>
+        <form id="interview-form" onsubmit="displayQuestion(event)" enctype="multipart/form-data">
+            <div class="form-container">
+                <div>
+                    <h2>學校</h2>
+                    <ul>
+                        <li><input type="radio" id="school1" name="school" value="國立台灣大學" required> 國立台灣大學</li>
+                        <li><input type="radio" id="school2" name="school" value="國立清華大學"> 國立清華大學</li>
+                        <li><input type="radio" id="school3" name="school" value="國立交通大學"> 國立交通大學</li>
+                        <li><input type="radio" id="school4" name="school" value="國立成功大學"> 國立成功大學</li>
+                        <li><input type="radio" id="school5" name="school" value="國立政治大學"> 國立政治大學</li>
+                        <li><input type="radio" id="school6" name="school" value="國立中央大學"> 國立中央大學</li>
+                        <li><input type="radio" id="school7" name="school" value="國立台灣師範大學"> 國立台灣師範大學</li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>科系</h2>
+                    <ul>
+                        <li><input type="radio" id="department1" name="department" value="管理科學系" required> 管理科學系</li>
+                        <li><input type="radio" id="department2" name="department" value="資訊管理與財務金融學系"> 資訊管理與財務金融學系</li>
+                        <li><input type="radio" id="department3" name="department" value="工業工程與管理學系"> 工業工程與管理學系</li>
+                        <li><input type="radio" id="department4" name="department" value="運輸與物流管理學系"> 運輸與物流管理學系</li>
+                        <li><input type="radio" id="department5" name="department" value="生物科技學系"> 生物科技學系</li>
+                        <li><input type="radio" id="department6" name="department" value="應用化學系"> 應用化學系</li>
+                        <li><input type="radio" id="department7" name="department" value="電子物理學系"> 電子物理學系</li>
+                    </ul>
+                </div>
+                <div>
+                    <h2>履歷上傳</h2>
+                    <label for="file" class="upload-btn">
+                        <input type="file" id="file" name="file" accept="application/pdf" style="display:none" required>
+                        <img src="{{ url_for('static', filename='images/upload-icon.png') }}" alt="Upload Icon">
+                    </label>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button type="submit" class="btn">提交</button>
+            </div>
+        </form>
+        <div class="btn-container">
+            <button onclick="startCamera()" class="btn">開始面試</button>
+            <button onclick="endInterview()" class="btn">結束面試</button>
+        </div>
+        <img id="video-stream" class="video-stream" src="">
+        <div id="statistics" class="statistics"></div>
+        <div id="generated-question"></div>
+    </div>
     <script>
         let generatedQuestion = ""; // Store the generated question
 
@@ -16,8 +163,8 @@
         }
 
         function endInterview() {
-            const department = document.getElementById('department').value;
-            const school = document.getElementById('school').value;
+            const department = document.querySelector('input[name="department"]:checked').value;
+            const school = document.querySelector('input[name="school"]:checked').value;
             const resumeFile = document.getElementById('file').files[0];
 
             // Create a FormData object
@@ -31,7 +178,6 @@
                 method: 'POST',
                 body: formData
             })
-
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -92,25 +238,5 @@
             .catch(error => console.error('Error:', error));
         }
     </script>
-</head>
-<body>
-    <form id="interview-form" onsubmit="displayQuestion(event)" enctype="multipart/form-data">
-        <label for="department">Department:</label>
-        <input type="text" id="department" name="department" required><br><br>
-        
-        <label for="school">School:</label>
-        <input type="text" id="school" name="school" required><br><br>
-        
-        <label for="file">Upload Resume:</label>
-        <input type="file" id="file" name="file" accept="application/pdf" required><br><br>
-        
-        <button type="submit">Submit</button>
-    </form>
-    
-    <button onclick="startCamera()">開始面試</button>
-    <button onclick="endInterview()">結束面試</button>
-    <img id="video-stream" class="video-stream" src="">
-    <div id="statistics"></div>
-    <div id="generated-question"></div>
 </body>
 </html>

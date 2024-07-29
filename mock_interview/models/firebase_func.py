@@ -308,4 +308,119 @@ def addQuestions(question_department:str, question_school:str, interview_id:str,
 def delQuestions(question_id:str):
     question = db.collection('Questions').document(question_id)
     question.delete()
+
+
+def getHistory(user_id: str):
+    Interview_ref = db.collection('Interviews').where('user_id', '==', user_id).stream()
+    interview_history = []
     
+    for interview in Interview_ref:
+        interview_data = interview.to_dict()
+        interview_history.append({
+            'interview_id': interview_data['interview_id'],
+            'college': interview_data['college'],
+            'department': interview_data['department'],
+            'duration': interview_data['duration'],
+            'interview_date': interview_data['interview_date'],
+            'resume': interview_data['resume'],
+            'updated_at': interview_data['updated_at'],
+            'user_id': interview_data['user_id'],
+        })
+    
+    return interview_history
+
+
+
+def getInterview(interview_id: str):
+    interview_ref = db.collection('Interviews').where('interview_id', '==', interview_id).stream()
+    interview = []
+    
+    for inter in interview_ref:
+        inter_data = inter.to_dict()
+        interview.append({
+            'interview_id': inter_data['interview_id'],
+            'college': inter_data['college'],
+            'created_at': inter_data['created_at'],
+            'department': inter_data['department'],
+            'duration': inter_data['duration'],
+            'interview_date': inter_data['interview_date'],
+            'resume': inter_data['resume'],
+            'updated_at': inter_data['updated_at'],
+            'user_id': inter_data['user_id'],
+        })
+    
+    return interview
+
+
+def getEyeGaze(interview_id: str):
+    eye_gaze_ref = db.collection('Eye_Gaze_Tracking').where('interview_id', '==', interview_id).stream()
+    eye_gaze = []
+    
+    for gaze in eye_gaze_ref:
+        gaze_data = gaze.to_dict()
+        eye_gaze.append({
+            'gaze_id': gaze_data['gaze_id'],
+            'duration': gaze_data['duration'],
+            'eye_contact': gaze_data['eye_contact'],
+            'gaze_coordinates': gaze_data['gaze_coordinates'],
+            'gaze_suggestion': gaze_data['gaze_suggestion'],
+            'interview_id': gaze_data['interview_id'],
+        })
+    
+    return eye_gaze
+
+
+def getEmotionRecognition(interview_id: str):
+    emotion_recognition_ref = db.collection('Emotion_Recognition').where('interview_id', '==', interview_id).stream()
+    emotion_recognition = []
+    
+    for emo in emotion_recognition_ref:
+        emo_data = emo.to_dict()
+        emotion_recognition.append({
+            'emotion_id': emo_data['emotion_id'],
+            'emotion': emo_data['emotion'],
+            'emotion_suggestion': emo_data['emotion_suggestion'],
+            'intensity': emo_data['intensity'],
+            'interview_id': emo_data['interview_id'],
+            'timestamp': emo_data['timestamp'],
+        })
+    
+    return emotion_recognition
+
+
+def getFeedBack(interview_id: str):
+    feedback_ref = db.collection('Feedback').where('interview_id', '==', interview_id).stream()
+    feedback = []
+    
+    for feed in feedback_ref:
+        feed_data = feed.to_dict()
+        feedback.append({
+            'feedback_id': feed_data['feedback_id'],
+            'comments': feed_data['comments'],
+            'created_at': feed_data['created_at'],
+            'rating': feed_data['rating'],
+            'interview_id': feed_data['interview_id'],
+            'user_id': feed_data['user_id'],
+        })
+    
+    return feedback
+
+
+def getQuestion(interview_id: str):
+    question_ref = db.collection('Questions').where('interview_id', '==', interview_id).stream()
+    question = []
+    
+    for ques in question_ref:
+        ques_data = ques.to_dict()
+        question.append({
+            'question_id': ques_data['question_id'],
+            'interview_id': ques_data['interview_id'],
+            'question_create_time': ques_data['question_create_time'],
+            'question_department': ques_data['question_department'],
+            'question_school': ques_data['question_school'],
+            'question_schooldepartment': ques_data['question_schooldepartment'],
+            'qusetion_text': ques_data['qusetion_text'],
+            'user_id': ques_data['user_id'],
+        })
+    
+    return question

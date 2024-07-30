@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, Response,jsonify
+from flask import Blueprint, render_template, Response,jsonify, request
 import cv2
 import os
 import dlib
@@ -6,6 +6,8 @@ import numpy as np
 from deepface import DeepFace
 from ..models import audio_func as audio
 import threading
+from flask_login import current_user
+from ..models import firebase_func as db
 # from ..models import face_detect
 
 
@@ -36,13 +38,29 @@ def start_camera():
     audio_thread.start()
     return 'Camera started'
 
-@interview.route('/end_interview')
+@interview.route('/end_interview', methods=['POST'])
 def end_interview():
     global cap, total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count, total_frames, looking_at_camera_frames
     global audio_thread, audio_results
     if cap:
         cap.release()
         cap = None
+        
+    user_id = current_user.id # 使用current_user.id取得當前使用者的id
+    department = request.form.get('department')
+    school = request.form.get('school')
+    generatedQuestion = request.form.get('question')
+    schooldepartment = school + " " + department
+    
+    print(user_id)
+    print(department)
+    print(school)
+    print(schooldepartment)
+
+    # Retrieve the resume file from the request
+    resume = request.files.get('resume')
+    if resume is None:
+        return jsonify({'error': 'No resume file provided'}), 400
 
     # Calculate percentages
     stats = {
@@ -79,7 +97,17 @@ def end_interview():
     #     "total_words": 總字數
     #     "recording_times": 總共錄了幾個音檔
     # }
-    return jsonify({'stats': stats, 'audio_results': audio_results})
+    
+    
+    
+    #完成面試後將資料上傳到資料庫
+    ##---------上傳資料庫---------
+    interview_id = db.addInterview(school, department, 1, resume,user_id) #新增interview
+    question_id = db.addQuestions(department, school, interview_id, schooldepartment, generatedQuestion, user_id)
+    ##---------上傳資料庫---------
+    
+    
+    return jsonify({'stats': stats, 'audio_results': audio_results, 'interview_id': interview_id, 'user_id': user_id, 'question_id': question_id})
 
 
 

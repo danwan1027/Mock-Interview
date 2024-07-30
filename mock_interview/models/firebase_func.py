@@ -419,7 +419,7 @@ def getQuestion(interview_id: str):
             'question_department': ques_data['question_department'],
             'question_school': ques_data['question_school'],
             'question_schooldepartment': ques_data['question_schooldepartment'],
-            'qusetion_text': ques_data['qusetion_text'],
+            'question_text': ques_data['question_text'],
             'user_id': ques_data['user_id'],
         })
     

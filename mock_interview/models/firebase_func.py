@@ -294,7 +294,7 @@ def addQuestions(question_department:str, question_school:str, interview_id:str,
         "question_department": question_department, 
         "question_school": question_school,
         "question_schooldepartment": question_schooldepartment,
-        "qusetion_text": qusetion_text, 
+        "question_text": qusetion_text, 
         "user_id": user_id,
     })
 

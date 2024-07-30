@@ -23,15 +23,15 @@ def rate_advice():
     # 也可以是結合分析面試回答和面試情緒的函數的評論後再總結
     #但因為太花錢了所以先直接分析一次
     # final_advice = gen_final_advice(audio_advice, view_advice, data)
-    # final_advice = gen_final_advice(data)
+    final_advice = gen_final_advice(data)
     # interview_score = gen_score(final_advice)
     
     ######## test省token ##########
     audio_advice = "test"
     view_advice = "test"
     emotion_advice = "test"
-    final_advice = "test"
-    interview_score = 80
+    # final_advice = "test"
+    interview_score = 75
     ###############################
     
     

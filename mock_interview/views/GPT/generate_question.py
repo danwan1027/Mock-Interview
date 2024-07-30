@@ -34,8 +34,8 @@ def generate_question():
     
     if file:
         text = convert(file)
-        # generated_question = genquestion(text, school, department)
-        generated_question = "test"
+        generated_question = genquestion(text, school, department)
+        # generated_question = "test"
         if generated_question:
             return jsonify({'generated_question': generated_question})
         else:

@@ -1,6 +1,9 @@
-instance/
-.venv
-**/__pycache__
-*.pyc
-.anima
+Server/instance/
+Server/.venv
+Server/**/__pycache__
+Server/*.pyc
+Server/.anima
+Server/.env
+Client/node_modules/
+.idea
 .env

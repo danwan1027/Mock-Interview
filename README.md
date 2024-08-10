@@ -38,17 +38,37 @@ mac的指令我沒測過
 ### 4. 下載相關套件
 進到MOCK-INTERVIEW(不是小的那個)
 ```
+npm install
+npm install @heygen/streaming-avatar
 pip install -r requirements.txt
 ```
-
-### 5. 啟動
+進到 Client 資料夾
 ```
-python run.py
+npm install react-router-dom
+```
+
+### 5. Get HEYGEN API Key
+到 https://app.heygen.com/settings?nav=API 申請一個 Trail Token，貼到 Server/.env 裡面
+```
+HEYGEN_API_KEY=YOUR_API_KEY
+```
+
+### 6. 啟動
+到根目錄執行
+```
+npm start
 ```
 
 
 
 ## 架構
+### 新的架構更動
+這個 project 現在分成前端 React ，後端 Flask，後端的部分我直接把之前的整包都丟到 Server folder 裡面
+
+每一次執行 npm start，系統就會自動執行開始後端的 python run.py 和 開始前端的 npm start
+
+前端是 3000 port，後端是 3001 port，之後有需要傳資料的話要使用 API 傳
+
 
 ### 架構簡介
 這個project用了MTV架構，MTV是MVC的一個變種，總之兩個類似，MTV分別代表:

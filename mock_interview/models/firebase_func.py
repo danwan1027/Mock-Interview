@@ -424,3 +424,22 @@ def getQuestion(interview_id: str):
         })
     
     return question
+
+
+def getUser():
+    user_ref = db.collection('Users').stream()
+    user = []
+    
+    for u in user_ref:
+        u_data = u.to_dict()
+        user.append({
+            'user_id': u_data['user_id'],
+            'username': u_data['username'],
+            'password': u_data['password'],
+            'email': u_data['email'],
+            'role': u_data['role'],
+            'profile_image': u_data['profile_image'],
+            'created_at': u_data['created_at'],
+        })
+    
+    return user

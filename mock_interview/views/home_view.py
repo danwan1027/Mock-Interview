@@ -20,6 +20,13 @@ def index():
     # return render_template('index.html')
 
 
+@home_view.route('/admin')
+@login_required
+def admin():
+    user_list = db.getUser()
+    return render_template('dashboard/admin_home.html', user_list=user_list)
+
+
 @home_view.route('/home')
 @login_required
 def dashboard():

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Manage Users</title>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .card-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            font-size: 1em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .user-list {
+            margin-top: 20px;
+        }
+        .user-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .user-item:last-child {
+            border-bottom: none;
+        }
+        .user-info {
+            flex: 1;
+            margin-right: 20px;
+        }
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .user-actions .btn {
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    {% extends "base.html" %}
+
+    {% block title %}Admin Panel - Manage Users{% endblock %}
+
+    {% block page_content %}
+    <div class="container">
+        <div class="main-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">新增使用者</h4>
+                            <form action="{{ url_for('firebase_test_view.add_user') }}" method="POST" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="username">Username</label>
+                                    <input type="text" id="username" name="username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" name="password" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="role">Role</label>
+                                    <select id="role" name="role" required>
+                                        <option value="student">學生</option>
+                                        <option value="teacher">老師</option>
+                                        <option value="admin">管理員</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile_image">Profile Image</label>
+                                    <input type="file" id="profile_image" name="profile_image" accept="image/*" required>
+                                </div>
+                                <button type="submit" class="btn">Add User</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card user-list">
+                        <div class="card-body">
+                            <h4 class="card-title">已存在的使用者</h4>
+                            {% for user in user_list %}
+                            <div class="user-item">
+                                <div class="user-info">
+                                    <strong>{{ user.username }}</strong> - {{ user.email }} ({{ user.role }})
+                                </div>
+                                <div class="user-actions">
+                                    <a href="{{ url_for('firebase_test_view.delete_user', user_id=user.user_id) }}" class="btn btn-danger">刪除此使用者</a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,152 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 80vw;
+    height: 80vh;
+
+}
+.hidden {
+    display: none;
+}
+
+.scrollable-list {
+    max-height: 100%; /* Set a fixed height for the list */
+    overflow-y: auto;  /* Add vertical scrollbar if content exceeds the height */
+    padding-left: 0;   /* Remove default padding if needed */
+}
+
+label {
+    display: block;
+    padding: 10px;
+    background-color: #f8faff;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 5px; /* Add space between labels */
+}
+
+label:hover {
+    background-color: #e0f0ff;
+}
+
+input[type="radio"]:checked + label {
+    background-color: #cce7ff;
+    border-color: #007bff;
+    font-weight: bold;
+}
+
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.selection-container, .form-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.school-section, .department-section, .upload-section {
+    background-color: #f8faff;
+    padding: 15px;
+    height: 60vh;
+    margin:10px;
+    border-radius: 10px;
+    width: 30%;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.school-list, .department-list {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button.selected {
+    /* border-color: black; */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+button:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.upload-button button {
+    cursor: pointer;
+
+}
+
+.upload-button img {
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.back-button, .continue-button {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover, .continue-button:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.video-stream {
+    display: block;
+    width: 70%;
+    margin-left:15%;
+    height: 55vh;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.statistics {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

@@ -27,6 +27,14 @@ def admin():
     return render_template('dashboard/admin_home.html', user_list=user_list)
 
 
+@home_view.route('/teacher')
+@login_required
+def teacher():
+    user_id = current_user.id
+    student_list = db.getTeacherMember(user_id)
+    return render_template('dashboard/teacher_home.html', student_list=student_list)
+
+
 @home_view.route('/home')
 @login_required
 def dashboard():

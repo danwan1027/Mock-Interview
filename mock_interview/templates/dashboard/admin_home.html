@@ -132,7 +132,7 @@
                                     <strong>{{ user.username }}</strong> - {{ user.email }} ({{ user.role }})
                                 </div>
                                 <div class="user-actions">
-                                    <a href="{{ url_for('firebase_test_view.delete_user', user_id=user.user_id) }}" class="btn btn-danger">刪除此使用者</a>
+                                    <button class="btn btn-danger" onclick="deleteUser('{{ user.user_id }}')">刪除此使用者</button>
                                 </div>
                             </div>
                             {% endfor %}
@@ -143,6 +143,26 @@
             </div>
         </div>
     </div>
+    <script>
+        function deleteUser(userId) {
+            if (confirm('確定要刪除此使用者嗎？')) {
+                fetch("{{ url_for('firebase_test_view.delete_user') }}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id: userId })
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.message === "User deleted successfully") {
+                          location.reload(); // 刪除成功後重新加載頁面
+                      } else {
+                          alert("Failed to delete user.");
+                      }
+                  });
+            }
+        }
+    </script>
     {% endblock %}
 </body>
 </html>

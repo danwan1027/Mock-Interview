@@ -31,12 +31,15 @@ def update_user():
     return jsonify({"message": "User updated successfully"}), 200
 
 # Route to delete a user
-@firebase_test_view.route('/del_user', methods=['POST'])
+@firebase_test_view.route('/delete_user', methods=['POST'])
 @role_required(['admin'])
 def delete_user():
-    user_id = request.form['user_id']
-    db.delUser(user_id)
-    return jsonify({"message": "User deleted successfully"}), 200
+    user_id = request.json.get('user_id')  # 使用 request.json.get() 來獲取 JSON 数据中的 user_id
+    if user_id:
+        db.delUser(user_id)
+        return jsonify({"message": "User deleted successfully"}), 200
+    else:
+        return jsonify({"message": "User ID is required"}), 400
 
 # Route to get user ID by email
 @firebase_test_view.route('/get_user_id', methods=['POST'])

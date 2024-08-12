@@ -443,3 +443,25 @@ def getUser():
         })
     
     return user
+
+
+#得到老師所隸屬的學生資料
+def getTeacherMember(user_id: str):
+    #等待資料庫更新
+    # user_ref = db.collection('Users_creater').where('user_id', '==', user_id).stream()
+    user_ref = db.collection('Users').where('user_id', '==', user_id).stream()
+    user = []
+    
+    for u in user_ref:
+        u_data = u.to_dict()
+        user.append({
+            'user_id': u_data['user_id'],
+            'username': u_data['username'],
+            'password': u_data['password'],
+            'email': u_data['email'],
+            'role': u_data['role'],
+            'profile_image': u_data['profile_image'],
+            'created_at': u_data['created_at'],
+        })
+    
+    return user

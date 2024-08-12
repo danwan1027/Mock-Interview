@@ -26,12 +26,9 @@ def login():
         flash('Wrong Email or Password')
     return render_template('login.html', form=form)
 
+
 @login_view.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login_view.login'))
-
-
-
-    

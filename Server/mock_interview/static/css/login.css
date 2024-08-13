@@ -1,0 +1,160 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+body {
+    display: flex;
+}
+
+.container {
+    display: flex;
+    height: 100lvh;
+    width: 100%;
+}
+
+.image-container {
+    flex: 1;
+}
+
+.bg-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.login-container {
+    flex: 0.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.role-selection {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+}
+
+.role-button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 25px;
+    background-color: #e0e0e0;
+    color: #555;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.role-button.selected {
+    background-color: #5a8efc;
+    color: #fff;
+}
+
+.role-button:hover {
+    background-color: #d0d0d0;
+}
+
+.register-text {
+    font-size: 14px;
+    color: #777;
+    margin-top: 20px;
+}
+
+.login-form-container {
+    text-align: center;
+}
+
+.toggle-buttons {
+    display: flex;
+    background-color: #a3c0ff;
+    justify-content: center;
+    margin-bottom: 20px;
+    border-radius: 50px;    
+    padding: 5px;
+
+
+}
+
+.toggle-button {
+    width: 100px;
+    padding: 10px;
+    border-radius: 50px;
+    border: none;
+    margin: 0 5px;
+    cursor: pointer;
+    background-color: #a3c0ff;
+
+    color: #fff;
+    font-size: 16px;
+}
+
+.toggle-button.active {
+    background-color: #6d87ff;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    text-align: left;
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #333;
+}
+
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 14px;
+}
+
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.nav-button {
+    width: 100px;
+    padding: 10px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #555;
+}
+
+.back-button {
+    background-color: #f0f0f0;
+}
+
+.continue-button {
+    background-color: #6d87ff;
+    color: #fff;
+}

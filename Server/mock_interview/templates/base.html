@@ -36,6 +36,7 @@
         <!-- 用來接後端傳來的flash-message -->
         {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
+          
             <!-- 弄一個x的button，點擊之後讓訊息消失，可參考bootstrap說明 -->
             <button type="button" class="close" data-dismiss="alert">&times;</button>
             {{ message }}

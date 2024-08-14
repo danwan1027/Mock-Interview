@@ -1,0 +1,194 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+}
+
+.sidebar {
+    width: 25%; /* Ensure the sidebar occupies 1/4 of the width */
+    padding: 20px;
+    display: flex;
+    align-items: flex-start; /* Align to the top */
+    justify-content: flex-start; /* Align to the left */
+}
+
+.sidebar h2 {
+    font-size: 2.5rem; /* Increased font size for "帳號管理" */
+    color: #333;
+    margin-top: 30px;
+    line-height: 1.2;
+}
+
+.main-container {
+    flex-grow: 1;
+    padding-left: 20px;
+}
+
+.container {
+    background-color: #fff;
+    
+    border-radius: 20px; /* Increased border radius for a more rounded container */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding-left: 60px; /* Increased padding */
+    padding-right: 60px; /* Increased padding */
+    padding-top: 40px; /* Increased padding */
+    padding-bottom: 30px; /* Increased padding */
+    margin-top: 40px;
+    margin-left: 10%;
+}
+
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.title {
+    font-size: 2.5rem; /* Increased title size */
+    margin: 0;
+}
+
+.controls {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding-left: 10px;
+}
+
+.search-container input {
+    padding: 10px;
+    padding-left: 30px;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    width: 200px;
+}
+
+.search-container .search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 16px;
+    color: #999;
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding-left: 10px;
+}
+
+.sort-container label {
+    margin-right: 10px;
+    color: #666;
+}
+
+.sort-container select {
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    outline: none;
+    border-radius: 20px;
+}
+
+.add-button {
+    background-color: #A3C0FF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-button:hover {
+    background-color: #3b6cd4;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    color: #333;
+}
+
+table th {
+    text-transform: capitalize;
+    color: #888;
+    font-weight: normal; /* Thinner font for table headers */
+}
+
+table .right-align {
+    text-align: right; /* Align 'action' and 'Edit/Delete' to the right */
+}
+
+table a {
+    color: #A3C0FF;
+    text-decoration: none;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+table a:hover {
+    color: #3b6cd4;
+}
+
+.edit-link {
+    cursor: pointer;
+    color: #A3C0FF;
+}
+
+.delete-link {
+    padding-left: 10px;
+    cursor: pointer;
+    color: #ff7d7d;
+}
+
+.delete-link:hover {
+    color: #d43b3b;
+}
+
+/* Scrollable tbody */
+.table-scroll tbody {
+    display: block;
+    max-height: 150px; /* Adjust height as needed */
+    overflow-y: auto;
+}
+
+.table-scroll thead, .table-scroll tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed; /* Optional, for a fixed layout */
+}
+.table-scroll thead {
+    width: calc( 100% - 1em )
+}
+
+.student-name {
+    cursor: pointer; /* Makes the name have a pointer cursor */
+    color: #3b6cd4; /* Changes text color on hover */
+    
+}
+
+.student-name:hover {
+    color: #A3C0FF; /* Changes text color on hover */
+}

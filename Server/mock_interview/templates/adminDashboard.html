@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Management</title>
+    <link rel="stylesheet" href="../static/css/adminDashboard.css">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>帳號管理</h2>
+    </div>
+    <div class="main-container">
+        <!-- Student Section -->
+        <div class="container">
+            <div class="header-controls">
+                <h1 class="title">Student</h1>
+                <div class="controls">
+                    <div class="search-container">
+                        <input type="text" placeholder="Search">
+                        <span class="search-icon">&#128269;</span>
+                    </div>
+                    <div class="sort-container">
+                        <label for="sort">Sort by :</label>
+                        <select id="sort">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                        </select>
+                    </div>
+                    <button class="add-button">Add</button>
+                </div>
+            </div>
+            <table class="table-scroll">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Email</th>
+                        <th class="right-align">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td class="student-name">{{ student.name }}</td>
+                        <td>{{ student.department }}</td>
+                        <td>{{ student.email }}</td>
+                        <td class="right-align">
+                            <span class="edit-link">Edit</span>
+                            <span class="delete-link">Delete</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Teacher Section -->
+        <div class="container">
+            <div class="header-controls">
+                <h1 class="title">Teacher</h1>
+                <div class="controls">
+                    <div class="search-container">
+                        <input type="text" placeholder="Search">
+                        <span class="search-icon">&#128269;</span>
+                    </div>
+                    <div class="sort-container">
+                        <label for="sort">Sort by :</label>
+                        <select id="sort">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                        </select>
+                    </div>
+                    <button class="add-button">Add</button>
+                </div>
+            </div>
+            <table class="table-scroll">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Email</th>
+                        <th class="right-align">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for teacher in teachers %}
+                    <tr>
+                        <td class="student-name">{{ teacher.name }}</td>
+                        <td>{{ teacher.department }}</td>
+                        <td>{{ teacher.email }}</td>
+                        <td class="right-align">
+                            <span class="edit-link">Edit</span>
+                            <span class="delete-link">Delete</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+
+</html>

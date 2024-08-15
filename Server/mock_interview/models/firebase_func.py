@@ -424,3 +424,62 @@ def getQuestion(interview_id: str):
         })
     
     return question
+
+
+# Admin 獲得所有老師的資料
+def getAllTeacher():
+    user_ref = db.collection('Users').where('role', '==', 'teacher').stream()
+    user = []
+    
+    for u in user_ref:
+        u_data = u.to_dict()
+        user.append({
+            'user_id': u_data['user_id'],
+            'username': u_data['username'],
+            'password': u_data['password'],
+            'email': u_data['email'],
+            'role': u_data['role'],
+            'profile_image': u_data['profile_image'],
+            'created_at': u_data['created_at'],
+        })
+    
+    return user
+
+# Admin 獲得所有學生的資料
+def getAllStudent():
+    user_ref = db.collection('Users').where('role', '==', 'student').stream()
+    user = []
+    
+    for u in user_ref:
+        u_data = u.to_dict()
+        user.append({
+            'user_id': u_data['user_id'],
+            'username': u_data['username'],
+            'password': u_data['password'],
+            'email': u_data['email'],
+            'role': u_data['role'],
+            'profile_image': u_data['profile_image'],
+            'created_at': u_data['created_at'],
+        })
+    
+    return user
+
+# Teacher獲得所有隸屬於自己的學生的資料
+def getStudentByTeacher(teacher_id: str):
+    # user_ref = db.collection('Users').where('role', '==', 'student').where('teacher_id', '==', teacher_id).stream()
+    user_ref = db.collection('Users').where('role', '==', 'student').stream()
+    user = []
+    
+    for u in user_ref:
+        u_data = u.to_dict()
+        user.append({
+            'user_id': u_data['user_id'],
+            'username': u_data['username'],
+            'password': u_data['password'],
+            'email': u_data['email'],
+            'role': u_data['role'],
+            'profile_image': u_data['profile_image'],
+            'created_at': u_data['created_at'],
+        })
+    
+    return user

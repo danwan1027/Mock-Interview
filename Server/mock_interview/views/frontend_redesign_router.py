@@ -19,13 +19,16 @@ def interviewReview():
     overall_grade = 79
     
     eye_contact_review = "你控制了語速，保持了自然的語調，這使得整個對話非常順暢。"
-    reply_content_review = "保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。"
+    reply_content_review = "保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。"
     facial_expression_review = "你控制了語速，保持了自然的語調。"
     
     eye_contact_grade = 85
     reply_content_grade = 78
     facial_expression_grade = 50
 
+    angry_percent,disgust_percent,fear_percent,happy_percent,sad_percent,surprise_percent,neutral_percent=(10,20,30,0,5,35,0)
+    
+    
     return render_template('interviewReview.html',
                            name=name,
                            interview_school=interview_school,
@@ -36,5 +39,13 @@ def interviewReview():
                            overall_grade=overall_grade,
                            eye_contact_grade=eye_contact_grade,
                            reply_content_grade=reply_content_grade,
-                           facial_expression_grade=facial_expression_grade)
+                           facial_expression_grade=facial_expression_grade,
+                           angry_percent=angry_percent,
+                           disgust_percent=disgust_percent,
+                           fear_percent=fear_percent,
+                           happy_percent=happy_percent,
+                           sad_percent=sad_percent,
+                           surprise_percent=surprise_percent,
+                           neutral_percent=neutral_percent,
+                           )
 

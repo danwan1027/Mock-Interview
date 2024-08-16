@@ -141,3 +141,32 @@ body {
 .add-button:hover {
     background-color: #3b6cd4;
 }
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.carousel-button {
+    padding: 10px 30px;
+    border: none;
+    border-radius: 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    background-color: #a0c4ff;
+    color: white;
+    font-size: 14px;
+}
+
+.carousel-button.active {
+    background-color: #4c6ef5;
+}
+
+.chart-container {
+    display: none;
+}
+
+.chart-container.active {
+    display: block;
+}

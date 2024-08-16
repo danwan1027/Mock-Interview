@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.main-container {
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+    /* 30% + 65% = 95% */
+}
+
+.left-section {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+}
+
+.left-bottom {
+    height: 360px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #a0c4ff;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
+}
+
+.right-section {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+
+
+.container {
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px 40px;
+    border: 1px solid #a0c4ff;
+    height: 150px;
+    /* Ensure height is set */
+    flex-grow: 0;
+    /* Prevent the container from growing */
+    flex-shrink: 0;
+    /* Prevent the container from shrinking */
+    flex-basis: auto;
+    /* Ensure flex-basis does not interfere */
+}
+
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h2 {
+    font-size: 2em;
+    color: #4c6ef5;
+    margin: 0;
+}
+
+.header .rate-container {
+    display: flex;
+    align-items: baseline;
+    color: #4c6ef5;
+}
+
+.header .rate-container .label {
+    font-size: 1em;
+    margin-right: 5px;
+    color: #a0c4ff;
+    /* Light blue color */
+}
+
+.header .rate-container .rate {
+    font-size: 3em;
+    font-weight: bold;
+    margin: 0;
+}
+
+.line {
+    border-bottom: 2px solid #cee1ff;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.details {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    max-height: 70px;
+    /* Set a max height to control when scrolling is needed */
+}
+
+
+.details p {
+    margin: 0;
+    font-size: 1.5em;
+    color: #495057;
+    font-weight: bold;
+}
+
+.details span {
+    display: block;
+    font-size: 1em;
+    color: #868e96;
+    margin-top: 5px;
+}
+
+.add-button {
+    background-color: #A3C0FF;
+    color: #fff;
+    padding: 10px 40px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: fixed;
+    /* Fix the button to a specific position on the screen */
+    bottom: 30px;
+    /* 20px from the bottom edge */
+    right: 40px;
+    /* 20px from the right edge */
+}
+
+.add-button:hover {
+    background-color: #3b6cd4;
+}

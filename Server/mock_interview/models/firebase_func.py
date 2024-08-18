@@ -577,3 +577,42 @@ def getStudentByTeacher(teacher_id: str):
         })
     
     return user
+
+def getQuestionBySchoolD(schooldepartment: str):
+    question_ref = db.collection('Questions').where('question_schooldepartment', '==', schooldepartment).stream()
+    question = []
+    
+    for ques in question_ref:
+        ques_data = ques.to_dict()
+        question.append({
+            'question_id': ques_data['question_id'],
+            'interview_id': ques_data['interview_id'],
+            'question_create_time': ques_data['question_create_time'],
+            'question_department': ques_data['question_department'],
+            'question_school': ques_data['question_school'],
+            'question_schooldepartment': ques_data['question_schooldepartment'],
+            'question_text': ques_data['question_text'],
+            'user_id': ques_data['user_id'],
+        })
+    
+    return question
+
+
+def getQuestionByDepartment(department: str):
+    question_ref = db.collection('Questions').where('question_department', '==', department).stream()
+    question = []
+    
+    for ques in question_ref:
+        ques_data = ques.to_dict()
+        question.append({
+            'question_id': ques_data['question_id'],
+            'interview_id': ques_data['interview_id'],
+            'question_create_time': ques_data['question_create_time'],
+            'question_department': ques_data['question_department'],
+            'question_school': ques_data['question_school'],
+            'question_schooldepartment': ques_data['question_schooldepartment'],
+            'question_text': ques_data['question_text'],
+            'user_id': ques_data['user_id'],
+        })
+    
+    return question

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Containers Layout</title>
+    <link rel="stylesheet" href="../static/css/interviewReview.css">
+
+</head>
+
+<body>
+    <div class="main-container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <div class="container">
+                <div class="header">
+                    <h2>總覽</h2>
+                    <div class="rate-container">
+                        <span class="label">評分</span>
+                        <span class="rate">{{ overall_grade }}</span>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="details">
+                    <div>
+                        <p>{{ name }}</p>
+                        <span>姓名</span>
+                    </div>
+                    <div>
+                        <p>{{ interview_school }}</p>
+                        <span>學校</span>
+                    </div>
+                    <div>
+                        <p>{{ interview_department }}</p>
+                        <span>科系</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="left-bottom">
+                <div class="carousel-controls">
+                    <button class="carousel-button active" onclick="showChart('radarChartContainer')">分數分析</button>
+                    <button class="carousel-button" onclick="showChart('doughnutChartContainer')">臉部表情分析</button>
+                </div>
+                <div class="line"></div>
+
+                <div id="radarChartContainer" class="chart-container active">
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div id="doughnutChartContainer" class="chart-container">
+                    <canvas id="myDoughnutChart"></canvas>
+                </div>
+               
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="container">
+                <div class="header">
+                    <h2>回答內容</h2>
+                    <div class="rate-container">
+                        <span class="label">評分</span>
+                        <span class="rate">{{ reply_content_grade }}</span>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="details">
+                    <div>
+                        <span>{{ reply_content_review }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="container">
+                <div class="header">
+                    <h2>眼睛視線</h2>
+                    <div class="rate-container">
+                        <span class="label">評分</span>
+                        <span class="rate">{{ eye_contact_grade }}</span>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="details">
+                    <div>
+                        <span>{{ eye_contact_review }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="header">
+                    <h2>臉部表情</h2>
+                    <div class="rate-container">
+                        <span class="label">評分</span>
+                        <span class="rate">{{ facial_expression_grade }}</span>
+                    </div>
+                </div>
+                <div class="line"></div>
+                <div class="details">
+                    <div>
+                        <span>{{ facial_expression_review }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="add-button">繼續</button>
+
+    </div>
+</body>
+
+</html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('myChart');
+    const doughnutCtx = document.getElementById('myDoughnutChart');
+
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['眼睛視線', '回答內容', '臉部表情'],
+            datasets: [
+                {
+                    label: '整體分項評分',
+                    data: [70, 50, 90],  // This could be your overall comparison data if needed.
+                    borderWidth: 1,
+                    fill: true,
+                    backgroundColor: 'rgba(160, 196, 255, 0.2)',
+                    borderColor: '#4c6ef5',
+                    pointBackgroundColor: '#4c6ef5',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#4c6ef5'
+                }, {
+                    label: '個人分項評分',
+                    data: [
+                        {{ eye_contact_grade }}, 
+                        {{ reply_content_grade }}, 
+                        {{ facial_expression_grade }}
+                    ],
+                    borderWidth: 1,
+                    fill: true,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(255, 99, 132, 1)'
+                },
+            ]
+        },
+        options: {
+            scales: {
+                r: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                tooltip: {
+                    enabled: true,
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            return tooltipItems[0].label; // Label (e.g., '眼睛視線')
+                        },
+                        label: function(tooltipItem) {
+                            return tooltipItem.dataset.label + ': ' + tooltipItem.raw; // Dataset label and value
+                        },
+                        afterLabel: function(tooltipItem) {
+                            // Add any additional info here if needed
+                            return ' 分數: ' + tooltipItem.raw;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    new Chart(doughnutCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['angry_percent', 'disgust_percent', 'fear_percent', 'happy_percent', 'sad_percent', 'surprise_percent', 'neutral_percent'],
+            datasets: [{
+                label: 'Emotions',
+                data: [ {{angry_percent}},{{disgust_percent}},{{fear_percent}},{{happy_percent}},{{sad_percent}},{{surprise_percent}},{{neutral_percent}}],  // Sample data, replace with dynamic values as needed
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(201, 203, 207, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(201, 203, 207, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,  // Set to false if you want to manually control width and height
+            aspectRatio: 1.4,  // 1:1 aspect ratio; change this value for different ratios
+            cutout: '50%'
+        }
+    });
+
+    function showChart(chartId) {
+        // Hide all chart containers
+        document.querySelectorAll('.chart-container').forEach(function(container) {
+            container.classList.remove('active');
+        });
+
+        // Deactivate all buttons
+        document.querySelectorAll('.carousel-button').forEach(function(button) {
+            button.classList.remove('active');
+        });
+
+        // Show the selected chart container
+        document.getElementById(chartId).classList.add('active');
+
+        // Activate the corresponding button
+        document.querySelector(`.carousel-button[onclick="showChart('${chartId}')"]`).classList.add('active');
+    }
+</script>

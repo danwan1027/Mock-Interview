@@ -9,6 +9,8 @@ from .GPT.rate_advice import rate
 from .login_view import login_view
 from .error_handle_view import error_handle_view
 from .frontend_redesign_router import frontend_redesign_router
+from .stat_view import stat_view
+from .interview_process import interview_process
 
 def init_views(app):
     app.register_blueprint(home_view)
@@ -20,3 +22,5 @@ def init_views(app):
     # wstfu blueprint 
     app.register_blueprint(generate)
     app.register_blueprint(rate)
+    app.register_blueprint(stat_view)
+    app.register_blueprint(interview_process)

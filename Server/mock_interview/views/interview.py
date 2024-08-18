@@ -8,6 +8,7 @@ from ..models import audio_func as audio
 import threading
 from flask_login import current_user
 from ..models import firebase_func as db
+from GPT import generate_question as gq
 # from ..models import face_detect
 
 
@@ -16,6 +17,26 @@ interview = Blueprint('interview', __name__)
 @interview.route('/interview')
 def index():
     return render_template('interview.html')
+
+
+@interview.route('/start_interview')
+def start_interview():
+    user_id = current_user.id
+    department = request.form.get('department')
+    school = request.form.get('school')
+    resume = request.files.get('resume')
+    if resume is None:
+        return jsonify({'error': 'No resume file provided'}), 400
+    
+    interview_id = db.addInterview(school, department, 1, resume,user_id)
+    
+    return render_template('interview.html', interview_id=interview_id)
+
+
+@interview.route('/next_question')
+def next_question():
+    gq.generate_question()
+    
 
 
 @interview.route('/video_feed')

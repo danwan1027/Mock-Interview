@@ -7,4 +7,6 @@ Server/.env
 Client/node_modules/
 .idea
 .env
+node_modules
+Server/node_modules
 .venv

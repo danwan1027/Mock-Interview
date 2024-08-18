@@ -1,8 +1,53 @@
 from flask import Blueprint, render_template, request, jsonify
 from ..models import firebase_func as db
 from mock_interview import role_required
+from ..forms import login_form, register_form
+from flask_login import login_user
 
 firebase_test_view = Blueprint('firebase_test_view', __name__)
+
+@firebase_test_view.route('/test', methods=['GET', 'POST'])
+def test():
+    login = login_form.LoginForm()
+    admin_register = register_form.AdminRegistrationForm()
+    teacher_register = register_form.TeacherRegistrationForm()
+    student_register = register_form.StudentRegistrationForm()
+    if login.validate_on_submit():
+        user = db.get_user_by_email(login.email.data)
+        if user:
+            if user.check_password(login.password.data):
+                login_user(user, login.remember_me.data)
+                print("success")
+        else:
+            return "wrong"
+    else:
+        print(login.errors)
+    return render_template('authentication/authentication.html',
+                           login_form=login,
+                           admin_form=admin_register,
+                           teacher_form=teacher_register,
+                           student_form=student_register)
+
+# login = login_form.LoginForm()
+#     admin_register = register_form.AdminRegistrationForm()
+#     teacher_register = register_form.TeacherRegistrationForm()
+#     student_register = register_form.StudentRegistrationForm()
+#     if login.validate_on_submit():
+#         user = db.get_user_by_email(login.email.data)
+#         if user:
+#             if user.check_password(login.password.data):
+#                 login_user(user, login.remember_me.data)
+#                 if user.role == 'admin':
+#                     return redirect(url_for('adminDashboard.admim_dashboard'))
+#                 elif user.role == 'teacher':
+#                     return redirect(url_for('interviewer_view.dashboard'))
+#                 else:
+#                     return redirect(url_for('home_view.dashboard'))
+#     return render_template('authentication/authentication.html',
+#                            login_form=login,
+#                            admin_form=admin_register,
+#                            teacher_form=teacher_register,
+#                            student_form=student_register)
 
 @firebase_test_view.route('/firebase')
 def firebase():

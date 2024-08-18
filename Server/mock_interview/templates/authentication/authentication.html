@@ -1,0 +1,114 @@
+{% import "macros.html" as macros %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interviewer Login</title>
+    <link rel="stylesheet" href="../../static/css/login.css">
+    <script>
+        function showLoginForm() {
+            document.querySelector('.login-form-container').innerHTML = `
+                <h2>AI Interviewer</h2>
+                <div class="toggle-buttons">
+                    <button class="toggle-button active" onclick="showLoginForm()">登入</button>
+                    <button class="toggle-button" onclick="selectRoleForm()">註冊</button>
+                </div>
+                <form method="POST" action="/login">
+                    {% for field in login_form %}
+                        {{ macros.render_field(field) }}
+                    {% endfor %}
+                </form>
+            `;
+        }
+
+        function showRegisterForm(role) {
+            if(role == 'admin'){
+                document.querySelector('.login-form-container').innerHTML = `
+                    <h2>AI Interviewer</h2>
+                    <div class="toggle-buttons">
+                        <button class="toggle-button" onclick="showLoginForm()">登入</button>
+                        <button class="toggle-button active" onclick="selectRoleForm()">註冊</button>
+                    </div>
+                    <form method="POST" action="/admin_register" enctype="multipart/form-data">
+                        {% for field in admin_form %}
+                            {{ macros.render_field(field) }}
+                        {% endfor %}
+                    </form>
+                `;
+            }
+            else if(role == 'teacher'){
+                document.querySelector('.login-form-container').innerHTML = `
+                    <h2>AI Interviewer</h2>
+                    <div class="toggle-buttons">
+                        <button class="toggle-button" onclick="showLoginForm()">登入</button>
+                        <button class="toggle-button active" onclick="selectRoleForm()">註冊</button>
+                    </div>
+                    <form method="POST" action="/teacher_register" enctype="multipart/form-data">
+                        {% for field in teacher_form %}
+                            {{ macros.render_field(field) }}
+                        {% endfor %}
+                    </form>
+                `;
+            }
+            else{
+                document.querySelector('.login-form-container').innerHTML = `
+                    <h2>AI Interviewer</h2>
+                    <div class="toggle-buttons">
+                        <button class="toggle-button" onclick="showLoginForm()">登入</button>
+                        <button class="toggle-button active" onclick="selectRoleForm()">註冊</button>
+                    </div>
+                    <form method="POST" action="/student_register" enctype="multipart/form-data">
+                        {% for field in student_form %}
+                            {{ macros.render_field(field) }}
+                        {% endfor %}
+                    </form>
+                `;
+            }
+
+        }
+
+        function selectRoleForm() {
+            document.querySelector('.login-form-container').innerHTML = `
+                <h2>AI Interviewer</h2>
+                <div class="toggle-buttons">
+                    <button class="toggle-button" onclick="showLoginForm()">登入</button>
+                    <button class="toggle-button active" onclick="selectRoleForm()">註冊</button>
+                </div>
+                <div class="role-selection">
+                    <button class="role-button" onclick="showRegisterForm('admin')">admin</button>
+                    <button class="role-button" onclick="showRegisterForm('teacher')">teacher</button>
+                    <button class="role-button" onclick="showRegisterForm('student')">student</button>
+                </div>
+            `;
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="image-container">
+            <img src="../static/images/bg_coffee.jpeg" alt="Background Image" class="bg-image">
+        </div>
+
+        <div class="login-container">
+            <div class="login-form-container">
+                <h2>AI Interviewer</h2>
+                <div class="toggle-buttons">
+                    <button class="toggle-button active" onclick="showLoginForm()">登入</button>
+                    <button class="toggle-button" onclick="selectRoleForm()">註冊</button>
+                </div>
+                <form method="POST" action="/login">
+                    {% for field in login_form %}
+                        {{ macros.render_field(field) }}
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

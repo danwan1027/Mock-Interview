@@ -1,0 +1,17 @@
+{% macro render_field(field) %}
+    {% if field.type == 'SubmitField' %}
+        <div class="form-navigation">
+            {{ field(class="nav-button continue-button") }}
+        </div>
+    {% elif field.type == 'BooleanField' %}
+        <div>
+            {{ field(class="form-group", **kwargs) }}
+            <label>{{ field.label }}</label>
+        </div>
+    {% elif field.name != 'csrf_token' %}
+        <div class="form-group">
+            <label class="form-group">{{ field.label }}</label>
+            {{ field(**kwargs) }}
+        </div>
+    {% endif %}
+{% endmacro %}

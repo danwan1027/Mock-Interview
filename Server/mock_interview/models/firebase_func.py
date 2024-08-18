@@ -30,7 +30,7 @@ bucket = storage.bucket()
 
 # Users
 # 新增user
-def addUser(username, password, email, role, profile_image):
+def addUser(username, password, email, role, profile_image, student_id=None, classroom=None, seat_number=None, school=None, department=None, teacher=None):
 
     user = db.collection('Users').document()
     created_at = SERVER_TIMESTAMP
@@ -40,15 +40,29 @@ def addUser(username, password, email, role, profile_image):
     blob.make_public()
     profile_image = blob.public_url
 
-    user.set({
+    data = {
         'user_id': user.id,
         'username': username,
         'password': password, 
         'email': email,
         'role': role,
         'profile_image': profile_image,
-        'created_at': created_at
-    })
+        'created_at': created_at,
+    }
+    if student_id is not None:
+        data['student_id'] = student_id
+    if classroom is not None:
+        data['classroom'] = classroom
+    if seat_number is not None:
+        data['seat_number'] = seat_number
+    if school is not None:
+        data['school'] = school
+    if department is not None:
+        data['department'] = department
+    if teacher is not None:
+        data['teacher'] = teacher
+
+    user.set(data)
 
 # 刪除user
 def delUser(user_id:str):
@@ -56,7 +70,7 @@ def delUser(user_id:str):
     user.delete()
 
 # 更新user
-def updateUser(user_id:str, username=None, password=None, email=None, profile_image=None):
+def updateUser(user_id:str, username=None, password=None, email=None, profile_image=None, student_id=None, classroom=None, seat_number=None, school=None, department=None, teacher=None):
 
     user = db.collection('Users').document(user_id)
     updates = {}
@@ -67,6 +81,18 @@ def updateUser(user_id:str, username=None, password=None, email=None, profile_im
         updates['password'] = password
     if email is not None:
         updates['email'] = email
+    if student_id is not None:
+        updates['student_id'] = student_id
+    if classroom is not None:
+        updates['classroom'] = classroom
+    if seat_number is not None:
+        updates['seat_number'] = seat_number
+    if school is not None:
+        updates['school'] = school
+    if department is not None:
+        updates['department'] = department
+    if teacher is not None:
+        updates['teacher'] = teacher
     if profile_image is not None:
         blob = bucket.blob(user.id + '/profile_image.png')
         blob.upload_from_string(profile_image.read(), content_type='image/png')
@@ -81,15 +107,43 @@ def get_user_by_email(email: str):
     
     for user_doc in user_query:
         user_data = user_doc.to_dict()
-        return User(
-            id = user_data['user_id'], 
-            email = user_data['email'], 
-            name = user_data['username'], 
-            password = user_data['password'],
-            role = user_data['role'],
-            profile_image = user_data['profile_image'],
-            created_at = user_data['created_at']
-        )
+        if user_data['role'] == 'admin':
+            return User(
+                id = user_data['user_id'], 
+                email = user_data['email'], 
+                name = user_data['username'], 
+                password = user_data['password'],
+                role = user_data['role'],
+                profile_image = user_data['profile_image'],
+                created_at = user_data['created_at']
+            )
+        elif user_data['role'] == 'teacher':
+            return User(
+                id = user_data['user_id'], 
+                email = user_data['email'], 
+                name = user_data['username'], 
+                password = user_data['password'],
+                role = user_data['role'],
+                profile_image = user_data['profile_image'],
+                created_at = user_data['created_at'],
+                school = user_data['school']
+            )
+        else:
+            return User(
+                id = user_data['user_id'], 
+                email = user_data['email'], 
+                name = user_data['username'], 
+                password = user_data['password'],
+                role = user_data['role'],
+                profile_image = user_data['profile_image'],
+                created_at = user_data['created_at'],
+                school = user_data['school'],
+                classroom = user_data['classroom'],
+                seat_number = user_data['seat_number'],
+                department = user_data['department'],
+                teacher = user_data['teacher'],
+                student_id = user_data['student_id']
+            )
     
     return None
 
@@ -98,15 +152,43 @@ def get_user_by_id(user_id: str):
     
     for user_doc in user_query:
         user_data = user_doc.to_dict()
-        return User(
-            id = user_data['user_id'], 
-            email = user_data['email'], 
-            name = user_data['username'], 
-            password = user_data['password'],
-            role = user_data['role'],
-            profile_image = user_data['profile_image'],
-            created_at = user_data['created_at']
-        )
+        if user_data['role'] == 'admin':
+            return User(
+                id = user_data['user_id'], 
+                email = user_data['email'], 
+                name = user_data['username'], 
+                password = user_data['password'],
+                role = user_data['role'],
+                profile_image = user_data['profile_image'],
+                created_at = user_data['created_at']
+            )
+        elif user_data['role'] == 'teacher':
+            return User(
+                id = user_data['user_id'], 
+                email = user_data['email'], 
+                name = user_data['username'], 
+                password = user_data['password'],
+                role = user_data['role'],
+                profile_image = user_data['profile_image'],
+                created_at = user_data['created_at'],
+                school = user_data['school']
+            )
+        else:
+            return User(
+                id = user_data['user_id'], 
+                email = user_data['email'], 
+                name = user_data['username'], 
+                password = user_data['password'],
+                role = user_data['role'],
+                profile_image = user_data['profile_image'],
+                created_at = user_data['created_at'],
+                school = user_data['school'],
+                classroom = user_data['classroom'],
+                seat_number = user_data['seat_number'],
+                department = user_data['department'],
+                teacher = user_data['teacher'],
+                student_id = user_data['student_id']
+            )
     
     return None
 
@@ -157,7 +239,9 @@ def delInterview(interview_id:str):
 
 # Emotion_Recognition
 # 新增Emotion_Recognition
-def addEmotionRecognition(emotion:str, emotion_suggestion:str, intensity:str, interview_id:str):
+def addEmotionRecognition(emotion:str, emotion_suggestion:str, intensity:str, interview_id:str, 
+                          total_emotion_count:int, angry_percent:int, disgust_percent:int, fear_percent:int,
+                          happy_percent:int, sad_percent:int, surprise_percent:int, neutral_percent:int):
 
     emo = db.collection('Emotion_Recognition').document()
     timestamp = SERVER_TIMESTAMP
@@ -169,6 +253,14 @@ def addEmotionRecognition(emotion:str, emotion_suggestion:str, intensity:str, in
         "intensity": intensity,
         "interview_id": interview_id,
         "timestamp": timestamp,
+        "total_emotion_count": total_emotion_count,
+        "angry_percent": angry_percent,
+        "disgust_percent": disgust_percent,
+        "fear_percent": fear_percent,
+        "happy_percent": happy_percent,
+        "sad_percent": sad_percent,
+        "surprise_percent": surprise_percent,
+        "neutral_percent": neutral_percent
     })
 
 # 刪除Emotion_Recognition
@@ -180,7 +272,7 @@ def delEmotionRecognition(Emotion_Recognition_id:str):
 
 # Eye_Gaze_Tracking
 # 新增Eye_Gaze_Tracking
-def addEyeGaze(duration:int, eye_contact:bool, gaze_coordinates:str, gaze_suggestion:str, interview_id:str):
+def addEyeGaze(duration:int, eye_contact:bool, gaze_coordinates:str, gaze_suggestion:str, interview_id:str, percentage_looking_at_camera:int):
 
     eye_gaze = db.collection('Eye_Gaze_Tracking').document()
 
@@ -191,6 +283,7 @@ def addEyeGaze(duration:int, eye_contact:bool, gaze_coordinates:str, gaze_sugges
         "gaze_coordinates": gaze_coordinates,
         "gaze_suggestion": gaze_suggestion,
         "interview_id": interview_id,
+        "percentage_looking_at_camera": percentage_looking_at_camera
     })
 
 # 刪除Eye_Gaze_Tracking
@@ -225,7 +318,7 @@ def delFeedback(feedback_id:str):
 
 # Question_history
 # 新增Question_history
-def addQuestionHistory(chatgpt_analysis:str, question_id:str, user_id:str, user_reponse:str, user_score:int):
+def addQuestionHistory(chatgpt_analysis:str, question_id:str, user_id:str, user_reponse:str, user_score:int, interview_id:int):
 
     history = db.collection('Question_history').document()
     response_date = SERVER_TIMESTAMP
@@ -238,6 +331,7 @@ def addQuestionHistory(chatgpt_analysis:str, question_id:str, user_id:str, user_
         "user_id": user_id,
         "user_reponse": user_reponse,
         "user_score": user_score,
+        "interview_id": interview_id
     })
 
 # 刪除Question_history

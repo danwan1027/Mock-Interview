@@ -3,16 +3,15 @@ from wtforms import EmailField, SubmitField, validators, PasswordField, BooleanF
 
 class LoginForm(FlaskForm):
 
-    email = EmailField('Email', validators=[
-        validators.DataRequired(),
-        validators.Length(5, 30),
-        validators.Email()
-    ])
-
-    password = PasswordField('Password', validators=[
+    email = EmailField('電子郵件', validators=[
         validators.DataRequired()
     ])
 
-    remember_me = BooleanField('Keep Logged in')
+    password = PasswordField('密碼', validators=[
+        validators.DataRequired()
+    ])
 
-    submit = SubmitField('Log in')
+    remember_me = BooleanField('保持登入')
+
+    # back = SubmitField('Back')
+    submit = SubmitField('登入')

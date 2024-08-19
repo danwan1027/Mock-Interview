@@ -9,6 +9,10 @@ def admim_dashboard():
     teachers = db.getAllTeacher()
     return render_template('adminDashboard.html', students=students, teachers=teachers)
 
+@frontend_redesign_router.route('/studentDashboard')
+def student_dashboard():
+    return render_template('studentDashboard.html')
+
 @frontend_redesign_router.route('/interview_questioning')
 def interview_questioning():
     question_text = "在面對生成式 AI 的快速發展背景下，您認為為什麼資料分析仍為重要的學習方向，以及學習的優勢是什麼？"

@@ -91,8 +91,6 @@ p {
     margin-bottom: 20px;
     border-radius: 50px;    
     padding: 5px;
-
-
 }
 
 .toggle-button {
@@ -103,7 +101,6 @@ p {
     margin: 0 5px;
     cursor: pointer;
     background-color: #a3c0ff;
-
     color: #fff;
     font-size: 16px;
 }
@@ -125,7 +122,6 @@ p {
     color: #333;
 }
 
-
 .form-group input {
     width: 100%;
     padding: 10px;
@@ -136,7 +132,6 @@ p {
 
 .form-navigation {
     display: flex;
-    /* justify-content: space-between; */
     justify-content: center;
     margin-top: 20px;
 }
@@ -158,4 +153,9 @@ p {
 .continue-button {
     background-color: #6d87ff;
     color: #fff;
+}
+
+.form-container {
+    max-height: 600px;
+    overflow-y: auto;
 }

@@ -13,7 +13,7 @@ body {
 .container {
     display: grid;
     grid-template-columns: 1fr 5fr;
-    grid-template-rows: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
     grid-gap: 20px;
        
     height: 85%;
@@ -73,22 +73,32 @@ body {
 
 .search-sort input {
     padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 15px;
+    border: 1px solid #ffffff;
+    background-color: #f0f0f0;
     width: 200px;
 }
 
 .search-sort select {
-    padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 15px;
+    border: 1px solid #ffffff;
+    background-color: #f0f0f0;
+
+}
+.search-container .search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 16px;
+    color: #999;
 }
 
 .search-sort button {
-    background-color: #6d8bff;
+    background-color: #5A8EFC;
     color: #fff;
     padding: 10px 20px;
-    border-radius: 5px;
+    margin-left: 20px;
+    border-radius: 15px;
     border: none;
     cursor: pointer;
 }
@@ -170,7 +180,7 @@ a {
 .charts {
     grid-column: span 2;
     background-color: #fff;
-    padding: 20px;
+    padding: 20px 20px;
     border-radius: 25px;
     box-shadow: 0 0 15px rgba(214, 227, 255, 0.8);     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -180,15 +190,16 @@ a {
 .chart-item {
     background-color: #fff;
     border-radius: 10px;
-    padding: 20px;
+    padding: 0 20px; /* Removed vertical padding, kept horizontal padding */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    text-align: left; /* Align text to the left */
 }
 
 .chart-item h3 {
-    margin-bottom: 20px;
     color: #333;
+    text-align: left; /* Ensure h3 is aligned to the left */
 }
+
 
 .line {
     border-bottom: 2px solid #cee1ff;

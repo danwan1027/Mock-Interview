@@ -1,14 +1,13 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
-    margin: 0;
+    margin-top: 7%;
     padding: 20px;
     display: flex;
 }
 
 .sidebar {
     width: 25%; /* Ensure the sidebar occupies 1/4 of the width */
-    padding: 20px;
     display: flex;
     align-items: flex-start; /* Align to the top */
     justify-content: flex-start; /* Align to the left */
@@ -17,13 +16,11 @@ body {
 .sidebar h2 {
     font-size: 2.5rem; /* Increased font size for "帳號管理" */
     color: #333;
-    margin-top: 30px;
     line-height: 1.2;
 }
 
 .main-container {
     flex-grow: 1;
-    padding-left: 20px;
 }
 
 .container {
@@ -35,7 +32,7 @@ body {
     padding-right: 60px; /* Increased padding */
     padding-top: 40px; /* Increased padding */
     padding-bottom: 30px; /* Increased padding */
-    margin-top: 40px;
+    margin-bottom: 40px;
     margin-left: 10%;
 }
 

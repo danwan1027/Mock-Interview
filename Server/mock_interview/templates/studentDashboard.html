@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
     <link rel="stylesheet" href="../static/css/studentDashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <div class="container">
+        <!-- Overview Section -->
         <div class="overview">
             <h1>資料總覽</h1>
             <div class="overview-item">
-                <h2>75</h2>
+                <h2>{{ overview_data.average }}</h2>
                 <p>總平均</p>
             </div>
+
             <div class="overview-item">
-                <h2>70</h2>
+                <h2>{{ overview_data.pr_value }}</h2>
                 <p>PR值</p>
             </div>
             <div class="overview-item">
-                <h2>8</h2>
+                <h2>{{ overview_data.practice_count }}</h2>
                 <p>練習次數</p>
             </div>
         </div>
 
+        <!-- Records Section -->
         <div class="records">
             <div class="header">
                 <h1>面試記錄</h1>
@@ -31,7 +37,6 @@
                     <input type="text" placeholder="Search">
                     <select>
                         <option>Sort by: Newest</option>
-                        <!-- Add more options if needed -->
                     </select>
                     <button>開始面試</button>
                 </div>
@@ -47,72 +52,135 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for record in interview_records %}
                     <tr>
-                        <td class="align-left">國立中央大學</td>
-                        <td class="align-left">企業管理學系</td>
-                        <td class="align-left">8/17</td>
-                        <td class="align-left">97</td>
+                        <td class="align-left">{{ record.school }}</td>
+                        <td class="align-left">{{ record.department }}</td>
+                        <td class="align-left">{{ record.date }}</td>
+                        <td class="align-left">{{ record.score }}</td>
                         <td class="align-right"><a href="#">查看更多</a></td>
                     </tr>
-                    <tr>
-                        <td class="align-left">國立中央大學</td>
-                        <td class="align-left">企業管理學系</td>
-                        <td class="align-left">8/17</td>
-                        <td class="align-left">97</td>
-                        <td class="align-right"><a href="#">查看更多</a></td>
-                    </tr><tr>
-                        <td class="align-left">國立中央大學</td>
-                        <td class="align-left">企業管理學系</td>
-                        <td class="align-left">8/17</td>
-                        <td class="align-left">97</td>
-                        <td class="align-right"><a href="#">查看更多</a></td>
-                    </tr><tr>
-                        <td class="align-left">國立中央大學</td>
-                        <td class="align-left">企業管理學系</td>
-                        <td class="align-left">8/17</td>
-                        <td class="align-left">97</td>
-                        <td class="align-right"><a href="#">查看更多</a></td>
-                    </tr><tr>
-                        <td class="align-left">國立中央大學</td>
-                        <td class="align-left">企業管理學系</td>
-                        <td class="align-left">8/17</td>
-                        <td class="align-left">97</td>
-                        <td class="align-right"><a href="#">查看更多</a></td>
-                    </tr><tr>
-                        <td class="align-left">國立中央大學</td>
-                        <td class="align-left">企業管理學系</td>
-                        <td class="align-left">8/17</td>
-                        <td class="align-left">97</td>
-                        <td class="align-right"><a href="#">查看更多</a></td>
-                    </tr><tr>
-                        <td class="align-left">國立中央大學</td>
-                        <td class="align-left">企業管理學系</td>
-                        <td class="align-left">8/17</td>
-                        <td class="align-left">97</td>
-                        <td class="align-right"><a href="#">查看更多</a></td>
-                    </tr><tr>
-                        <td class="align-left">國立中央大學</td>
-                        <td class="align-left">企業管理學系</td>
-                        <td class="align-left">8/17</td>
-                        <td class="align-left">97</td>
-                        <td class="align-right"><a href="#">查看更多</a></td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
-            
-                  
         </div>
 
+        <!-- Charts Section -->
         <div class="charts">
             <div class="chart-item">
                 <h3>各項趨勢圖</h3>
-                <p>Chart</p>
+                <canvas id="trendChart"></canvas>
             </div>
+
             <div class="chart-item">
                 <h3>分數總覽</h3>
-                <p>Chart</p>
+                <canvas id="scoreOverviewChart"></canvas>
             </div>
         </div>
     </div>
+
+    <!-- JavaScript to Render Charts -->
+    <script>
+        var trendChartData = {
+            labels: {{ trend_chart_data.labels | safe }},
+            datasets: [
+                {
+                    label: '總平均',
+                    data: {{ trend_chart_data.datasets.total_avg | safe }},
+                    borderColor: 'rgba(160, 196, 255, 1)',
+                    backgroundColor: 'rgba(160, 196, 255, 0.2)',
+                    borderWidth: 2
+                },
+                {
+                    label: '回答內容',
+                    data: {{ trend_chart_data.datasets.content_quality | safe }},
+                    borderColor: 'rgba(160, 255, 219, 1)',
+                    backgroundColor: 'rgba(160, 255, 219, 0.2)',
+                    borderWidth: 2
+                },
+                {
+                    label: '臉部表情',
+                    data: {{ trend_chart_data.datasets.facial_expression | safe }},
+                    borderColor: 'rgba(255, 160, 196, 1)',
+                    backgroundColor: 'rgba(255, 160, 196, 0.2)',
+                    borderWidth: 2
+                },
+                {
+                    label: '眼睛視線',
+                    data: {{ trend_chart_data.datasets.eye_contact | safe }},
+                    borderColor: 'rgba(255, 219, 160, 1)',
+                    backgroundColor: 'rgba(255, 219, 160, 0.2)',
+                    borderWidth: 2
+                }
+            ]
+        };
+
+        var ctx1 = document.getElementById('trendChart').getContext('2d');
+        var trendChart = new Chart(ctx1, {
+            type: 'line',
+            data: trendChartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 4.5,
+                scales: {
+                    x: {
+                        display: false,
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Values'
+                        },
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var scoreOverviewChartData = {
+            labels: {{ score_overview_chart_data.labels | safe }},
+            datasets: [
+                {
+                    label: '個人分數',
+                    data: {{ score_overview_chart_data.personal_scores | safe }},
+                    backgroundColor: 'rgba(160, 196, 255, 0.5)',
+                    borderColor: 'rgba(160, 196, 255, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: '整體分數',
+                    data: {{ score_overview_chart_data.overall_scores | safe }},
+                    backgroundColor: 'rgba(255, 219, 160, 0.5)',
+                    borderColor: 'rgba(255, 219, 160, 1)',
+                    borderWidth: 1
+                }
+            ]
+        };
+
+        var ctx2 = document.getElementById('scoreOverviewChart').getContext('2d');
+        var scoreOverviewChart = new Chart(ctx2, {
+            type: 'bar',
+            data: scoreOverviewChartData,
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 4.5,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        stacked: true
+                    },
+                    y: {
+                        beginAtZero: true,
+                        stacked: true
+                    }
+                }
+            }
+        });
+    </script>
 </body>
+
 </html>

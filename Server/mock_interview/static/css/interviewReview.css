@@ -68,14 +68,14 @@ body {
 
 .header h2 {
     font-size: 2em;
-    color: #4c6ef5;
+    color: #5A8EFC;
     margin: 0;
 }
 
 .header .rate-container {
     display: flex;
     align-items: baseline;
-    color: #4c6ef5;
+    color: #5A8EFC;
 }
 
 .header .rate-container .label {
@@ -95,6 +95,7 @@ body {
     border-bottom: 2px solid #cee1ff;
     margin-top: 5px;
     margin-bottom: 15px;
+    width:100%
 }
 
 .details {
@@ -160,7 +161,7 @@ body {
 }
 
 .carousel-button.active {
-    background-color: #4c6ef5;
+    background-color: #5A8EFC;
 }
 
 .chart-container {

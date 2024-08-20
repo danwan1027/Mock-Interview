@@ -1,3 +1,4 @@
+from flask_login import current_user
 from ..models import firebase_func as db
 from flask import Blueprint, render_template
 
@@ -18,21 +19,11 @@ def student_dashboard():
         'practice_count': 8
     }
 
-    interview_records = [
-        {
-            'school': '國立中央大學',
-            'department': '企業管理學系',
-            'date': '8/17',
-            'score': 97
-        },
-        {
-            'school': '國立中央大學',
-            'department': '企業管理學系',
-            'date': '8/17',
-            'score': 97
-        }
-    ]
-
+    interview_records = db.getHistory(current_user.id)
+    total_avg = db.getFeedbackRating(current_user.id)
+    eye_contact = db.getUserEye(current_user.id)
+    facial_expression = db.getUserEmotionScore(current_user.id)
+    
     # Data for the charts
     trend_chart_data = {
         'labels': ['last_7', 'last_6', 'last_5', 'last_4', 'last_3', 'last_2', 'last_1'],
@@ -74,20 +65,40 @@ def interview_questioning():
 
 @frontend_redesign_router.route('/interviewReview')
 def interviewReview():
-    name = "陳睿弘"
-    interview_school = "成功大學"
-    interview_department = "航太系"
-    overall_grade = 79
+    interview_id = "qd6epLnWy852Ra9NBZVa"
+    interview_list = db.getSingleInterview(interview_id)
+    interview = interview_list[0]
+    feedback_list = db.getFeedBack(interview_id)
+    feedback = feedback_list[0] 
+    eyegaze_list = db.getEyeGaze(interview_id)
+    eyegaze = eyegaze_list[0]
+    emotion_list = db.getEmotionRecognition(interview_id)
+    emotion = emotion_list[0]
+    # average_score = db.averageReplyScore(interview_id)
+    average_score = 80
+    facial_score = db.countEmotionScore(interview_id)
     
-    eye_contact_review = "你控制了語速，保持了自然的語調，這使得整個對話非常順暢。"
-    reply_content_review = "保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。保持簡潔和具體: 在回答問題時，能夠保持簡潔明了。"
-    facial_expression_review = "你控制了語速，保持了自然的語調。"
+    name = current_user.username
+    interview_school = interview['college']
+    interview_department = interview['department']
+    overall_grade = feedback['rating']
+    
+    eye_contact_review = eyegaze['gaze_suggestion']
+    facial_expression_review = emotion['emotion_suggestion']
+    reply_content_review = feedback['comments']
     
     eye_contact_grade = 85
-    reply_content_grade = 78
-    facial_expression_grade = 50
+    reply_content_grade = average_score
+    facial_expression_grade = facial_score
 
-    angry_percent,disgust_percent,fear_percent,happy_percent,sad_percent,surprise_percent,neutral_percent=(10,20,30,0,5,35,0)
+    angry_percent = emotion['angry_percent']
+    disgust_percent = emotion['disgust_percent']
+    fear_percent = emotion['fear_percent']
+    happy_percent = emotion['happy_percent']
+    sad_percent = emotion['sad_percent']
+    surprise_percent = emotion['surprise_percent']
+    neutral_percent = emotion['neutral_percent']
+    
     
     
     return render_template('interviewReview.html',

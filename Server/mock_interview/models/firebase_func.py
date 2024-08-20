@@ -459,6 +459,7 @@ def getEyeGaze(interview_id: str):
             'gaze_coordinates': gaze_data['gaze_coordinates'],
             'gaze_suggestion': gaze_data['gaze_suggestion'],
             'interview_id': gaze_data['interview_id'],
+            'percentage_looking_at_camera': gaze_data['percentage_looking_at_camera'],
         })
     
     return eye_gaze
@@ -477,6 +478,14 @@ def getEmotionRecognition(interview_id: str):
             'intensity': emo_data['intensity'],
             'interview_id': emo_data['interview_id'],
             'timestamp': emo_data['timestamp'],
+            'total_emotion_count': emo_data['total_emotion_count'],
+            'angry_percent': emo_data['angry_percent'],
+            'disgust_percent': emo_data['disgust_percent'],
+            'fear_percent': emo_data['fear_percent'],
+            'happy_percent': emo_data['happy_percent'],
+            'sad_percent': emo_data['sad_percent'],
+            'surprise_percent': emo_data['surprise_percent'],
+            'neutral_percent': emo_data['neutral_percent'],
         })
     
     return emotion_recognition
@@ -530,11 +539,11 @@ def getAllTeacher():
         user.append({
             'user_id': u_data['user_id'],
             'username': u_data['username'],
-            'password': u_data['password'],
             'email': u_data['email'],
             'role': u_data['role'],
             'profile_image': u_data['profile_image'],
             'created_at': u_data['created_at'],
+            'school': u_data['school'],
         })
     
     return user
@@ -549,19 +558,23 @@ def getAllStudent():
         user.append({
             'user_id': u_data['user_id'],
             'username': u_data['username'],
-            'password': u_data['password'],
             'email': u_data['email'],
             'role': u_data['role'],
             'profile_image': u_data['profile_image'],
             'created_at': u_data['created_at'],
+            'school': u_data['school'],
+            'classroom': u_data['classroom'],
+            'seat_number': u_data['seat_number'],
+            'department': u_data['department'],
+            'teacher': u_data['teacher'],
+            'student_id': u_data['student_id'],
         })
     
     return user
 
 # Teacher獲得所有隸屬於自己的學生的資料
-def getStudentByTeacher(teacher_id: str):
-    # user_ref = db.collection('Users').where('role', '==', 'student').where('teacher_id', '==', teacher_id).stream()
-    user_ref = db.collection('Users').where('role', '==', 'student').stream()
+def getStudentByTeacher(teacher: str):
+    user_ref = db.collection('Users').where('role', '==', 'student').where('teacher', '==', teacher).stream()
     user = []
     
     for u in user_ref:
@@ -569,11 +582,16 @@ def getStudentByTeacher(teacher_id: str):
         user.append({
             'user_id': u_data['user_id'],
             'username': u_data['username'],
-            'password': u_data['password'],
             'email': u_data['email'],
             'role': u_data['role'],
             'profile_image': u_data['profile_image'],
             'created_at': u_data['created_at'],
+            'school': u_data['school'],
+            'classroom': u_data['classroom'],
+            'seat_number': u_data['seat_number'],
+            'department': u_data['department'],
+            'teacher': u_data['teacher'],
+            'student_id': u_data['student_id'],
         })
     
     return user
@@ -616,3 +634,135 @@ def getQuestionByDepartment(department: str):
         })
     
     return question
+
+
+def getSingleInterview(interview_id: str):
+    interview_ref = db.collection('Interviews').where('interview_id', '==', interview_id).stream()
+    interview = []
+    
+    for inter in interview_ref:
+        inter_data = inter.to_dict()
+        interview.append({
+            'interview_id': inter_data['interview_id'],
+            'college': inter_data['college'],
+            'created_at': inter_data['created_at'],
+            'department': inter_data['department'],
+            'duration': inter_data['duration'],
+            'interview_date': inter_data['interview_date'],
+            'resume': inter_data['resume'],
+            'updated_at': inter_data['updated_at'],
+            'user_id': inter_data['user_id'],
+        })
+    
+    return interview
+
+
+# 此次面試的所有問題回答
+def getInterviewQuestionHistory(interview_id: str):
+    answer_ref = db.collection('Question_history').where('interview_id', '==', interview_id).stream()
+    answer = []
+    
+    for ans in answer_ref:
+        ans_data = ans.to_dict()
+        answer.append({
+            'history_id': ans_data['history_id'],
+            'chatgpt_analysis': ans_data['chatgpt_analysis'],
+            'question_id': ans_data['question_id'],
+            'response_date': ans_data['response_date'],
+            'user_id': ans_data['user_id'],
+            'user_reponse': ans_data['user_reponse'],
+            'user_score': ans_data['user_score'],
+            'interview_id': ans_data['interview_id'],
+        })
+        
+    return answer
+
+
+# 計算所有回答的平均分數
+def averageReplyScore(interview_id: str):
+    score = []
+    for ans in getInterviewQuestionHistory(interview_id):
+        score.append(ans['user_score'])
+        
+    return sum(score) / len(score)
+
+
+# 換算情緒分析後的得分
+def countEmotionScore(interview_id: str):
+    emotion_recognition = getEmotionRecognition(interview_id)
+    emotion_data = emotion_recognition[0]
+    weights = {
+        'angry': -0.1,
+        'disgust': -0.1,
+        'fear': -0.1,
+        'happy': 0.5,
+        'sad': -0.1,
+        'surprise': 0.1,
+        'neutral': 0.2
+    }
+    score = (weights['angry'] * emotion_data['angry_percent'] +
+             weights['disgust'] * emotion_data['disgust_percent'] +
+             weights['fear'] * emotion_data['fear_percent'] +
+             weights['happy'] * emotion_data['happy_percent'] +
+             weights['sad'] * emotion_data['sad_percent'] +
+             weights['surprise'] * emotion_data['surprise_percent'] +
+             weights['neutral'] * emotion_data['neutral_percent'])
+    
+    
+    score = score * 20
+
+    return score
+
+
+# get all feedback rating
+def getFeedbackRating(user_id: str):
+    feedback_ref = db.collection('Feedback').where('user_id', '==', user_id).stream()
+    feedback = []
+    
+    for feed in feedback_ref:
+        feed_data = feed.to_dict()
+        feedback.append({
+            'feedback_id': feed_data['feedback_id'],
+            'comments': feed_data['comments'],
+            'created_at': feed_data['created_at'],
+            'rating': feed_data['rating'],
+            'interview_id': feed_data['interview_id'],
+            'user_id': feed_data['user_id'],
+        })
+    
+    return feedback
+
+
+# get user all interviews eyes percentage looking at camera
+def getUserEye(user_id: str):
+    interview_ref = db.collection('Interviews').where('user_id', '==', user_id).stream()
+    eye_percentage = []
+    
+    for inter in interview_ref:
+        inter_data = inter.to_dict()
+        eye_gaze_ref = db.collection('Eye_Gaze_Tracking').where('interview_id', '==', inter_data['interview_id']).stream()
+        
+        for gaze in eye_gaze_ref:
+            gaze_data = gaze.to_dict()
+            eye_percentage.append({
+                'gaze_id': gaze_data['gaze_id'],
+                'duration': gaze_data['duration'],
+                'eye_contact': gaze_data['eye_contact'],
+                'gaze_coordinates': gaze_data['gaze_coordinates'],
+                'gaze_suggestion': gaze_data['gaze_suggestion'],
+                'interview_id': gaze_data['interview_id'],
+                'percentage_looking_at_camera': gaze_data['percentage_looking_at_camera'],
+            })
+    
+    return eye_percentage
+
+
+# get user all countEmotionScore
+def getUserEmotionScore(user_id: str):
+    interview_ref = db.collection('Interviews').where('user_id', '==', user_id).stream()
+    emotion_score = []
+    
+    for inter in interview_ref:
+        emotion_score.append(countEmotionScore(inter.to_dict()['interview_id']))
+    
+    return emotion_score

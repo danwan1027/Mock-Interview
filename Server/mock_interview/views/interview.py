@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, Response,jsonify, request
+from flask import Blueprint, render_template, Response,jsonify, request, url_for
 import cv2
 import os
 import dlib
@@ -8,12 +8,28 @@ from ..models import audio_func as audio
 import threading
 from flask_login import current_user
 from ..models import firebase_func as db
+from ..views import frontend_redesign_router as frr
 # from GPT import generate_question as gq
 # from ..models import face_detect
 
 
 interview = Blueprint('interview', __name__)
 
+@interview.route('/test', methods=['POST'])
+def test():
+    user_id = current_user.id
+    department = request.form.get('department')
+    school = request.form.get('school')
+    resume = request.files.get('resume')
+    interview_id = db.addInterview(school, department, 1, resume, user_id)
+    db.addEmotionRecognition("sad", "可以更嚴肅並且減少展現緊張的情緒", "test", interview_id, 100, 10, 20, 20, 10, 10, 10, 20)
+    db.addEyeGaze(1, True, "focus", "可以更專注地看面試官，建議不要有過多的眼神迴避", interview_id, 40)
+    db.addFeedback("總體來說表現還是不錯的，可以在多提升自己的專注度，在專業知識方面也回答得不錯", 75, interview_id, user_id)
+    
+    #呼叫 fronted_redesign_route.py 的 interviewReview function
+    return frr.interviewReview(interview_id)
+    
+    
 @interview.route('/interview')
 def index():
     return render_template('interview.html')

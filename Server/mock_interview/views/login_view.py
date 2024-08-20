@@ -17,7 +17,7 @@ def login():
         if user.check_password(login.password.data):
             login_user(user, login.remember_me.data)
             if user.role == 'admin':
-                return redirect(url_for('adminDashboard.admim_dashboard'))
+                return redirect(url_for('home_view.admin'))
             elif user.role == 'teacher':
                 return redirect(url_for('interviewer_view.dashboard'))
             else:

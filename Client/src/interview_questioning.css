@@ -37,13 +37,14 @@ body {
     align-items: center;
     margin-bottom: 30px;
     height: 400px;
-    
+
 }
 
 .image_frame {
     width: 45%;
-  aspect-ratio: 16 / 9; /* Example for 16:9 aspect ratio */
-  object-fit: cover;
+    aspect-ratio: 16 / 9;
+    /* Example for 16:9 aspect ratio */
+    object-fit: cover;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -53,7 +54,7 @@ body {
     box-shadow: 0 0 15px rgba(214, 227, 255, 0.8);
 }
 
-.continue-btn {
+.btn {
     font-size: 16px;
     color: #ffffff;
     background-color: #8aaeff;
@@ -64,7 +65,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.continue-btn:hover {
+.btn:hover {
     background-color: #6f93d2;
 }
 
@@ -76,6 +77,9 @@ body {
 
 .video-stream {
     width: 100%;
-  aspect-ratio: 16 / 9; /* Example for 16:9 aspect ratio */
-  object-fit: cover;
+    aspect-ratio: 16 / 9;
+    /* Example for 16:9 aspect ratio */
+    object-fit: cover;
+    color: #ffffff;
+
 }

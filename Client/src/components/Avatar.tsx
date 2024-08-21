@@ -83,7 +83,7 @@ function Avatar() {
   async function activate() {
     await updateToken();
     startCamera();
-    
+
     if (!avatar.current) {
       setDebug('Avatar API is not initialized');
       return;
@@ -183,17 +183,26 @@ function Avatar() {
         </div>
 
         <div className="image_frame">
-            <img id="video-stream" className="video-stream" src={imgSrc} alt="" />
+          {imgSrc ? (
+            <img
+              id="video-stream"
+              className="video-stream"
+              src={imgSrc}
+              alt="Video Stream"
+            />
+          ) : null}
         </div>
-
-
-
       </div>
       {/* <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} /> */}
       <div className="button-container">
-        <button className="continue-btn" onClick={activate} >啟動</button>
-        <button className="continue-btn" onClick={handleSpeak}>說話</button>
-        <button className="continue-btn" onClick={endCamera}>繼續</button>
+        <div>
+          <button className="btn" onClick={activate} >啟動</button>
+          <button className="btn" onClick={handleSpeak}>說話</button>
+        </div>
+        <div>
+          <button className="btn" >繼續</button>
+          <button className="btn" onClick={endCamera}>結束</button>
+        </div>
       </div>
 
 

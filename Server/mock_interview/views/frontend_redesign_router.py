@@ -1,8 +1,18 @@
 from flask_login import current_user
 from ..models import firebase_func as db
-from flask import Blueprint, render_template
+from flask import Blueprint, jsonify, render_template, request
 
 frontend_redesign_router = Blueprint('frontend_redesign_router', __name__)
+
+@frontend_redesign_router.route('/api/hello', methods=['GET'])
+def send_question():
+    return jsonify(message='question from Flask!(這段來自Server/mock_interview/views/frontend_redesign_router.py)')
+
+@frontend_redesign_router.route('/api/add', methods=['POST'])
+def add_numbers():
+    data = request.get_json()
+    result = data['num1'] + data['num2']
+    return jsonify(result=result)
 
 @frontend_redesign_router.route('/adminDashboard')
 def admim_dashboard():

@@ -41,12 +41,24 @@ function Avatar() {
   
 
   const addNumbers = () => {
-    axios.post('http://127.0.0.1:3001/api/add', {
-      num1: 5,
-      num2: 10
+    fetch('http://127.0.0.1:3001/api/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        num1: 5,
+        num2: 10,
+      }),
     })
       .then(response => {
-        setSumResult(response.data.result);
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setSumResult(data.result);
       })
       .catch(error => {
         console.error('There was an error adding the numbers!', error);

@@ -14,13 +14,13 @@ body {
     box-shadow: 0 0 15px rgba(214, 227, 255, 0.8);
     padding: 50px;
     text-align: center;
-    width: 75dvw;
+    width: 85dvw;
 }
 
 .question {
     font-size: 16px;
     color: #4668c5;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     padding: 20px 40px;
     width: 70%;
     border-radius: 20px;
@@ -32,15 +32,20 @@ body {
 
 .images {
     display: flex;
+
     justify-content: space-around;
     align-items: center;
     margin-bottom: 30px;
     height: 400px;
+    
 }
 
 .image_frame {
     width: 45%;
-    height: 80%;
+  aspect-ratio: 16 / 9; /* Example for 16:9 aspect ratio */
+  object-fit: cover;
+    position: relative;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -62,9 +67,15 @@ body {
 .continue-btn:hover {
     background-color: #6f93d2;
 }
+
 .button-container {
     display: flex;
     justify-content: space-between;
     margin: 0px 50px;
-  }
-  
+}
+
+.video-stream {
+    width: 100%;
+  aspect-ratio: 16 / 9; /* Example for 16:9 aspect ratio */
+  object-fit: cover;
+}

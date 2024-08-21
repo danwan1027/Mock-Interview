@@ -76,6 +76,12 @@ def start_camera():
     audio_thread.start()
     return 'Camera started'
 
+@interview.route('/just_end_camera')
+def just_end_camera():
+    if cap:
+        cap.release()
+        cap = None
+
 @interview.route('/end_interview', methods=['POST'])
 def end_interview():
     global cap, total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count, total_frames, looking_at_camera_frames

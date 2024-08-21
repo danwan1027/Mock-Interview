@@ -1,5 +1,5 @@
-import React, {useEffect, useRef} from 'react';
-import styles from './styles.module.css'
+import React, { useEffect, useRef } from 'react';
+import styles from './styles.module.css';
 
 type CanvasRenderProps = {
   style?: React.CSSProperties;
@@ -14,10 +14,11 @@ export function CanvasRender(props: CanvasRenderProps) {
     if (!refCanvas.current) return;
     if (!videoRef.current) return;
 
-    // Set the canvas size to be the same as the video size
-    refCanvas.current.width = videoRef.current.videoWidth;
-    refCanvas.current.height = videoRef.current.videoHeight;
-    const ctx = refCanvas.current?.getContext('2d');
+    // Set the canvas size to be larger than the video size for higher resolution
+    const scaleFactor = 2; // Adjust this factor for higher resolution
+    refCanvas.current.width = videoRef.current.videoWidth * scaleFactor;
+    refCanvas.current.height = videoRef.current.videoHeight * scaleFactor;
+    const ctx = refCanvas.current.getContext('2d');
     let show = true;
 
     function processFrame() {
@@ -28,7 +29,9 @@ export function CanvasRender(props: CanvasRenderProps) {
 
       // Draw the current frame of the video on the canvas
       ctx.drawImage(videoRef.current, 0, 0, refCanvas.current.width, refCanvas.current.height);
+      ctx.filter = 'blur(1px)'; // Apply a slight blur to smooth edges
       ctx.getContextAttributes().willReadFrequently = true;
+
       // Get image data from canvas
       const imageData = ctx.getImageData(0, 0, refCanvas.current.width, refCanvas.current.height);
       const data = imageData.data;
@@ -39,10 +42,9 @@ export function CanvasRender(props: CanvasRenderProps) {
         const green = data[i + 1];
         const blue = data[i + 2];
 
-        // Determine whether it is green, can be adjusted according to actual scenario
-        if (green > 90 && red < 90 && blue < 90) {
-          // Set the green background to transparent
-          data[i + 3] = 0;
+        // Refined green detection threshold
+        if (green > 100 && red < 90 && blue < 90 && green > red + 30 && green > blue + 30) {
+          data[i + 3] = 0; // Set the green background to transparent
         }
       }
 

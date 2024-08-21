@@ -38,33 +38,10 @@ function Avatar() {
         console.error('There was an error fetching the greeting!', error);
       });
   }, []);
-  
 
-  const addNumbers = () => {
-    fetch('http://127.0.0.1:3001/api/add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        num1: 5,
-        num2: 10,
-      }),
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json();
-      })
-      .then(data => {
-        setSumResult(data.result);
-      })
-      .catch(error => {
-        console.error('There was an error adding the numbers!', error);
-      });
-  };
-    ///////////////////////////// talk with flask  /////////////////////////////
+
+
+  ///////////////////////////// talk with flask  /////////////////////////////
 
 
   async function fetchAccessToken() {
@@ -136,10 +113,11 @@ function Avatar() {
       setDebug('Avatar API not initialized');
       return;
     }
-    await avatar.current.speak({ taskRequest: { text: text, sessionId: data?.sessionId } }).catch((e) => {
+    await avatar.current.speak({ taskRequest: { text: helloMessage, sessionId: data?.sessionId } }).catch((e) => {
       setDebug(e.message);
     });
   }
+
 
 
 
@@ -189,18 +167,16 @@ function Avatar() {
 
 
       </div>
-      <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} />
-      <button className="continue-btn" onClick={grab}>啟動</button>
-      <button className="continue-btn" onClick={handleSpeak}>說話</button>
-      <button className="continue-btn">繼續</button>
+      {/* <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} /> */}
+      <div className="button-container">
+        <button className="continue-btn" onClick={grab} >啟動</button>
+        <button className="continue-btn" onClick={handleSpeak}>說話</button>
+        <button className="continue-btn">繼續</button>
+      </div>
+
+
     </div>
 
-    // {/* <div className="HeyGenStreamingAvatar">
-    //   <div>
-    //   <button onClick={addNumbers}>Add Numbers</button>
-    //   {sumResult !== null && <h2>Result: {sumResult}</h2>}
-    // </div>
-    // </div> */}
   );
 }
 

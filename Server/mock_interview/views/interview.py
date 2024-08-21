@@ -64,6 +64,10 @@ def start_camera():
     global cap
     cap = cv2.VideoCapture(0)
 
+    return 'Camera started'
+
+@interview.route('/start_recording')
+def start_recording():
     # Audio
     global audio_thread, audio_results
     audio_results = {}
@@ -74,7 +78,7 @@ def start_camera():
     
     audio_thread = threading.Thread(target=run_audio)
     audio_thread.start()
-    return 'Camera started'
+    return "Start Recording"
 
 @interview.route('/just_end_camera')
 def just_end_camera():
@@ -82,11 +86,12 @@ def just_end_camera():
     if cap:
         cap.release()
         cap = None
+    return "Camera has been released", 200  # Returning a response with status code 200 (OK)
+    
 
 @interview.route('/end_interview', methods=['POST'])
 def end_interview():
     global cap, total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count, total_frames, looking_at_camera_frames
-    global audio_thread, audio_results
     if cap:
         cap.release()
         cap = None
@@ -131,18 +136,6 @@ def end_interview():
     total_frames = 0
     looking_at_camera_frames = 0
 
-    ### ------------ Audio -------------
-    audio.stop_event.set()
-    audio_thread.join()
-
-    # 這裡是音訊辨識的結果
-    # audio_results = {
-    #     "accumulated_transcript": 使用者的逐字稿
-    #     "word_count": 每一個音檔的字數
-    #     "total_words": 總字數
-    #     "recording_times": 總共錄了幾個音檔
-    # }
-    
     
     
     #完成面試後將資料上傳到資料庫
@@ -152,10 +145,27 @@ def end_interview():
     ##---------上傳資料庫---------
     
     
-    return jsonify({'stats': stats, 'audio_results': audio_results, 'interview_id': interview_id, 'user_id': user_id, 'question_id': question_id})
+    return jsonify({'stats': stats, 'interview_id': interview_id, 'user_id': user_id, 'question_id': question_id})
 
 
+@interview.route('/stop_recording')
+def stop_recording():
+    global audio_thread, audio_results
 
+    audio.stop_event.set()
+    audio_thread.join()
+
+    # 音訊辨識的結果
+    # audio_results = {
+    #     "accumulated_transcript": 使用者的逐字稿
+    #     "word_count": 每一個音檔的字數
+    #     "total_words": 總字數
+    #     "recording_times": 總共錄了幾個音檔
+    # }
+
+    # 新增至資料庫
+    # db.addVoiceTranscriptions(audio_results['word_count'], audio_results['accumulated_transcript'])
+    return jsonify(audio_results)
     
 cap = None
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')

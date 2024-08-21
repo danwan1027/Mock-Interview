@@ -76,6 +76,13 @@ def start_camera():
     audio_thread.start()
     return 'Camera started'
 
+@interview.route('/just_end_camera')
+def just_end_camera():
+    global cap
+    if cap:
+        cap.release()
+        cap = None
+
 @interview.route('/end_interview', methods=['POST'])
 def end_interview():
     global cap, total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count, total_frames, looking_at_camera_frames
@@ -247,7 +254,7 @@ def gen_frames():
             break
 
         frame = cv2.resize(frame, (683, 384))
-        
+        frame = cv2.flip(frame, 1)
         # Emotion detection start------------------
         try:
             analyze = DeepFace.analyze(frame, actions=['emotion'])

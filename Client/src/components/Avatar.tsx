@@ -21,6 +21,8 @@ function Avatar() {
 
   const [helloMessage, setHelloMessage] = useState('');
   const [sumResult, setSumResult] = useState(null);
+  const [imgSrc, setImgSrc] = useState<string>('');
+
 
   useEffect(() => {
     ///////////////////////////// talk with flask  /////////////////////////////
@@ -41,6 +43,25 @@ function Avatar() {
 
 
 
+
+  const startCamera = () => {
+    fetch('http://127.0.0.1:3001/start_camera')
+      .then(response => response.text())
+      .then(() => {
+        setImgSrc("http://127.0.0.1:3001/video_feed");
+      })
+      .catch(error => console.error('Error starting camera:', error));
+  };
+
+  const endCamera = () => {
+    fetch('http://127.0.0.1:3001/just_end_camera')
+      .then(response => response.text())
+      .then(() => {
+        setImgSrc('');  // Clear the image source to stop displaying the video
+      })
+      .catch(error => console.error('Error ending camera:', error));
+  };
+
   ///////////////////////////// talk with flask  /////////////////////////////
 
 
@@ -59,8 +80,9 @@ function Avatar() {
     }
   }
 
-  async function grab() {
+  async function activate() {
     await updateToken();
+    startCamera();
 
     if (!avatar.current) {
       setDebug('Avatar API is not initialized');
@@ -161,17 +183,26 @@ function Avatar() {
         </div>
 
         <div className="image_frame">
-          camera show here
+          {imgSrc ? (
+            <img
+              id="video-stream"
+              className="video-stream"
+              src={imgSrc}
+              alt="Video Stream"
+            />
+          ) : null}
         </div>
-
-
-
       </div>
       {/* <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} /> */}
       <div className="button-container">
-        <button className="continue-btn" onClick={grab} >啟動</button>
-        <button className="continue-btn" onClick={handleSpeak}>說話</button>
-        <button className="continue-btn">繼續</button>
+        <div>
+          <button className="btn" onClick={activate} >啟動</button>
+          <button className="btn" onClick={handleSpeak}>說話</button>
+        </div>
+        <div>
+          <button className="btn" >繼續</button>
+          <button className="btn" onClick={endCamera}>結束</button>
+        </div>
       </div>
 
 

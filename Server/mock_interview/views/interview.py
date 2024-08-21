@@ -82,6 +82,8 @@ def just_end_camera():
     if cap:
         cap.release()
         cap = None
+    return "Camera has been released", 200  # Returning a response with status code 200 (OK)
+    
 
 @interview.route('/end_interview', methods=['POST'])
 def end_interview():

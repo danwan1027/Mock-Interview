@@ -4,8 +4,7 @@ import requests
 import json
 import os
 from flask import Blueprint, render_template, request, jsonify
-from ...models import firebase_func as db
-# from models import firebase_func as ff
+from ..models import firebase_func as db
 from dotenv import load_dotenv
 
 load_dotenv()

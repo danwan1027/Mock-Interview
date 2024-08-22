@@ -333,6 +333,8 @@ def addQuestionHistory(chatgpt_analysis:str, question_id:str, user_id:str, user_
         "user_score": user_score,
         "interview_id": interview_id
     })
+    
+    return history.id
 
 # 刪除Question_history
 def delQuestionHistory(history_id:str):

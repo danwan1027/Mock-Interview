@@ -3,6 +3,7 @@ import { Configuration, NewSessionData, StreamingAvatarApi } from '@heygen/strea
 import '../App.css';
 import '../interview_questioning.css';
 import { CanvasRender } from "../components/canvas-render";
+import { Interface } from 'readline';
 
 function Avatar() {
   const [stream, setStream] = useState<MediaStream>();
@@ -23,6 +24,17 @@ function Avatar() {
   const [sumResult, setSumResult] = useState(null);
   const [imgSrc, setImgSrc] = useState<string>('');
 
+  // 前端紀錄面試資料
+  let count: number = 1;
+  const [questionText, setQuestionText] = useState<string>(''); // 這裡定義 questionText 狀態
+  const [interviewId, setInterviewId] = useState<string>('');
+  const [questionId, setQuestionId] = useState<string>('');
+
+  //面試校系
+  const [department, setDepartment] = useState<string>('');
+  const [school, setSchool] = useState<string>('');
+
+
 
   useEffect(() => {
     ///////////////////////////// talk with flask  /////////////////////////////
@@ -41,7 +53,6 @@ function Avatar() {
       });
   }, []);
 
-
   const startRecording = async () => {
     try {
       await fetch('http://127.0.0.1:3001/start_recording');
@@ -51,16 +62,31 @@ function Avatar() {
   };
   const stopRecording = async () => {
     try {
-      await fetch('http://127.0.0.1:3001/stop_recording');
+      await fetch('http://127.0.0.1:3001/stop_recording',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ interview_id: interviewId, question_id: questionId, questionText: questionText, school: school, department: department})
+      });
     } catch (error) {
       console.error('Error ending recording:', error);
     }
   };
 
   const startCamera = () => {
-    fetch('http://127.0.0.1:3001/start_camera')
-      .then(response => response.text())
-      .then(() => {
+    fetch('http://127.0.0.1:3001/start_camera', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ count: count , school: school, department: department})
+    })
+      .then(response => response.json())
+      .then(data => {
+        setInterviewId(data.interview_id);
+        setQuestionText(data.question);
+        setQuestionId(data.question_id);
         setImgSrc("http://127.0.0.1:3001/video_feed");
       })
       .catch(error => console.error('Error starting camera:', error));
@@ -96,6 +122,7 @@ function Avatar() {
   async function activate() {
     await updateToken();
     startCamera();
+    count++;
 
     if (!avatar.current) {
       setDebug('Avatar API is not initialized');
@@ -148,7 +175,9 @@ function Avatar() {
       setDebug('Avatar API not initialized');
       return;
     }
-    await avatar.current.speak({ taskRequest: { text: helloMessage, sessionId: data?.sessionId } }).catch((e) => {
+    //將要念的文字設定為textToSpeak，並透過question_text賦值
+    const textToSpeak = questionText || 'No question to ask';
+    await avatar.current.speak({ taskRequest: { text: textToSpeak, sessionId: data?.sessionId } }).catch((e) => {
       setDebug(e.message);
     });
   }
@@ -185,7 +214,7 @@ function Avatar() {
       {debug}
 
       <div className="question">
-        {helloMessage}
+        {questionText}
       </div>
       <div className="images" >
         <div className="image_frame" >

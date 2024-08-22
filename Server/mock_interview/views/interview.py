@@ -1,3 +1,4 @@
+from random import randint
 from flask import Blueprint, render_template, Response,jsonify, request, url_for
 import cv2
 import os
@@ -9,6 +10,8 @@ import threading
 from flask_login import current_user
 from ..models import firebase_func as db
 from ..views import frontend_redesign_router as frr
+from ..views import generate_question as gq
+from ..views import rate_advice as ra
 # from GPT import generate_question as gq
 # from ..models import face_detect
 
@@ -49,22 +52,24 @@ def start_interview():
     return render_template('interview.html', interview_id=interview_id)
 
 
-# @interview.route('/next_question')
-# def next_question():
-#     gq.generate_question()
-    
-
-
 @interview.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
-@interview.route('/start_camera')
+@interview.route('/start_camera', methods=['POST'])
 def start_camera():
+    count = request.args.get('count')
     global cap
     cap = cv2.VideoCapture(0)
+    # user_id = current_user.id
+    user_id = "qfIwnqbenPXnZyydNYv7"
+    # interview_id = db.addInterview("國立中央大學", "資訊管理學系", 1, "test", user_id)
+    interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
+    question = gq.genfirst_question("工業工程與管理學系")
+    question_id = db.addQuestions("工業工程與管理學系", "國立清華大學", interview_id, "國立清華大學工業工程與管理學系", question, user_id)
+    
 
-    return 'Camera started'
+    return jsonify({"interview_id": interview_id, "question_id": question_id, "question": question})
 
 @interview.route('/start_recording')
 def start_recording():
@@ -163,8 +168,21 @@ def stop_recording():
     #     "recording_times": 總共錄了幾個音檔
     # }
 
+    # 將使用者的回答給gpt獲得建議和評分
+    # gpt_analysis = ra.gen_final_advice(audio_results['accumulated_transcript'])
+    gpt_analysis = "test"
+    # user_id = current_user.id
+    user_id = "qfIwnqbenPXnZyydNYv7"
+    school = request.form.get('school')
+    department = request.form.get('department')
+    interview_id = request.form.get('interview_id')
+    question_id = request.form.get('question_id')
+    question_text = request.form.get('questionText')
+    score = randint(60, 100)
+
     # 新增至資料庫
-    # db.addVoiceTranscriptions(audio_results['word_count'], audio_results['accumulated_transcript'])
+    history_id = db.addQuestionHistory(gpt_analysis, question_id, user_id, audio_results['accumulated_transcript'], score)
+    # db.addVoiceTranscriptions(audio_results['word_count'], audio_results['accumulated_transcript'], history_id)
     return jsonify(audio_results)
     
 cap = None

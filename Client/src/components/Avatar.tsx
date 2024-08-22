@@ -44,6 +44,23 @@ function Avatar() {
       });
   }, []);
 
+
+
+  const startRecording = async () => {
+    try {
+      await fetch('http://127.0.0.1:3001/start_recording');
+    } catch (error) {
+      console.error('Error starting recording:', error);
+    }
+  };
+  const stopRecording = async () => {
+    try {
+      await fetch('http://127.0.0.1:3001/stop_recording');
+    } catch (error) {
+      console.error('Error ending recording:', error);
+    }
+  };
+
   const startCamera = () => {
     fetch('http://127.0.0.1:3001/start_camera')
       .then(response => response.text())
@@ -188,12 +205,16 @@ function Avatar() {
               />
             ) : null}
           </div>
-        </div>
+      </div>
+      
+        
         {/* <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} />  */}
         <div className="button-container">
           <div>
             <button className="btn" onClick={activate} >啟動</button>
             <button className="btn" onClick={handleSpeak}>說話</button>
+            <button className="btn" onClick={startRecording}>開始回答</button>
+            <button className="btn" onClick={stopRecording}>結束回答</button>
           </div>
           <div>
             <button className="btn" >繼續</button>

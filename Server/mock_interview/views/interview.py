@@ -5,6 +5,7 @@ import os
 import dlib
 import numpy as np
 from deepface import DeepFace
+import pdfplumber
 from ..models import audio_func as audio
 import threading
 from flask_login import current_user
@@ -38,11 +39,45 @@ def index():
     return render_template('interview.html')
 
 
+def convert(file):
+    text = ""
+    with pdfplumber.open(file) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text()
+    return text
+
+@interview.route('/next_question', methods=['POST'])
+def nextQuestion():
+    # user_id = current_user.id
+    user_id = "qfIwnqbenPXnZyydNYv7"
+    department = request.json.get('department')
+    school = request.json.get('school')
+    interview_id = request.json.get('interviewId')
+    # interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
+    # resume = request.files['file']
+    # resume_text = convert(resume)
+    count = request.json.get('count')
+    if(count == 2):
+        # question = gq.gensecond_question(school, department)
+        question = "請問你認為清大的工業工程與管理學系有什麼吸引你的特質？"
+    elif(count == 3):
+        # question = gq.genthird_question(resume_text)
+        question = "你在履歷中提到了你在工業工程與管理學系的經驗，可以談談你的經驗嗎？"
+    elif(count == 4 or count == 5):
+        # question = gq.history_question("國立清華大學", "工業工程與管理學系", count-3)
+        question = "這一將會在資料庫中自動搜尋"
+    
+    question_id = db.addQuestions(department, school, interview_id, school + department, question, user_id)
+    count += 1
+    
+    return jsonify({"count": count, "question_id": question_id, "question": question})
+
+
 @interview.route('/start_interview')
 def start_interview():
     user_id = current_user.id
-    department = request.form.get('department')
-    school = request.form.get('school')
+    department = request.json.get('department')
+    school = request.json.get('school')
     resume = request.files.get('resume')
     if resume is None:
         return jsonify({'error': 'No resume file provided'}), 400
@@ -65,10 +100,15 @@ def start_camera():
     user_id = "qfIwnqbenPXnZyydNYv7"
     # interview_id = db.addInterview("國立中央大學", "資訊管理學系", 1, "test", user_id)
     interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
-    question = gq.genfirst_question("工業工程與管理學系")
-    question_id = db.addQuestions("工業工程與管理學系", "國立清華大學", interview_id, "國立清華大學工業工程與管理學系", question, user_id)
+    department = request.json.get('department')
+    school = request.json.get('school')
     
-
+    # 產生第一個問題
+    ## question = gq.genfirst_question(department)
+    question = "請問你認為工業工程與管理學系能為社會帶來什麼？"
+    schooldepartment = f"{school}{department}"
+    question_id = db.addQuestions(department, school, interview_id, schooldepartment, question, user_id)
+    
     return jsonify({"interview_id": interview_id, "question_id": question_id, "question": question})
 
 @interview.route('/start_recording')
@@ -100,23 +140,20 @@ def end_interview():
     if cap:
         cap.release()
         cap = None
-        
-    user_id = current_user.id # 使用current_user.id取得當前使用者的id
-    department = request.form.get('department')
-    school = request.form.get('school')
-    generatedQuestion = request.form.get('question')
-    schooldepartment = school + " " + department
+    
+    
+    interview_id = request.json.get('interviewId')
+    # user_id = current_user.id # 使用current_user.id取得當前使用者的id
+    user_id = "qfIwnqbenPXnZyydNYv7"
+    department = request.json.get('department')
+    school = request.json.get('school')
+    schooldepartment = f"{school}{department}"
     
     print(user_id)
     print(department)
     print(school)
     print(schooldepartment)
-
-    # Retrieve the resume file from the request
-    resume = request.files.get('resume')
-    if resume is None:
-        return jsonify({'error': 'No resume file provided'}), 400
-
+    
     # Calculate percentages
     stats = {
         'total_emotion_count': total_emotion_count,
@@ -141,19 +178,26 @@ def end_interview():
     total_frames = 0
     looking_at_camera_frames = 0
 
+    # genearate advice
+    # emotion_advice = ra.gen_emotion_advice(stats)
+    # eye_gaze_advice = ra.gen_eye_gaze_advice(stats)
+    # final_advice = ra.gen_final_advice(emotion_advice, eye_gaze_advice)
+    emotion_advice = "可以以更嚴肅但不失親切的態度面對，且更好的把緊張和恐懼的心理隱藏起來"
+    eye_gaze_advice = "可以更專注地看面試官，建議不要有過多的眼神迴避，聽取面試官的問題時可以看著面試官的眼睛"
+    final_advice = "總體來說表現還是不錯的，可以在多提升自己的專注度，在專業知識方面也回答得不錯"
     
     
     #完成面試後將資料上傳到資料庫
     ##---------上傳資料庫---------
-    interview_id = db.addInterview(school, department, 1, resume,user_id) #新增interview
-    question_id = db.addQuestions(department, school, interview_id, schooldepartment, generatedQuestion, user_id)
+    db.addEmotionRecognition(stats['total_emotion_count'], emotion_advice, stats['percentage_looking_at_camera'], interview_id, stats['total_emotion_count'], stats['angry_percent'], stats['disgust_percent'], stats['fear_percent'], stats['happy_percent'], stats['sad_percent'], stats['surprise_percent'], stats['neutral_percent'])
+    db.addEyeGaze(1, True, "test", eye_gaze_advice, interview_id, stats['percentage_looking_at_camera'])
+    db.addFeedback(final_advice, 75, interview_id, user_id)
     ##---------上傳資料庫---------
     
-    
-    return jsonify({'stats': stats, 'interview_id': interview_id, 'user_id': user_id, 'question_id': question_id})
+    return stats
 
 
-@interview.route('/stop_recording')
+@interview.route('/stop_recording', methods=['POST'])
 def stop_recording():
     global audio_thread, audio_results
 
@@ -170,20 +214,18 @@ def stop_recording():
 
     # 將使用者的回答給gpt獲得建議和評分
     # gpt_analysis = ra.gen_final_advice(audio_results['accumulated_transcript'])
-    gpt_analysis = "test"
+    gpt_analysis = "這題回答的還不錯，有回答到問題的核心"
     # user_id = current_user.id
     user_id = "qfIwnqbenPXnZyydNYv7"
-    school = request.form.get('school')
-    department = request.form.get('department')
-    interview_id = request.form.get('interview_id')
-    question_id = request.form.get('question_id')
-    question_text = request.form.get('questionText')
+    interview_id = request.json.get('interview_id')
+    question_id = request.json.get('question_id')
     score = randint(60, 100)
 
     # 新增至資料庫
-    history_id = db.addQuestionHistory(gpt_analysis, question_id, user_id, audio_results['accumulated_transcript'], score)
-    # db.addVoiceTranscriptions(audio_results['word_count'], audio_results['accumulated_transcript'], history_id)
-    return jsonify(audio_results)
+    history_id = db.addQuestionHistory(gpt_analysis, question_id, user_id, audio_results['accumulated_transcript'], score, interview_id)
+    db.addVoiceTranscriptions(audio_results['word_count'], audio_results['accumulated_transcript'], history_id)
+    
+    return audio_results['accumulated_transcript']
     
 cap = None
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')

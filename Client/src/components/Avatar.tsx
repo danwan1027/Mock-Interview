@@ -28,7 +28,7 @@ function Avatar() {
   const [imgSrc, setImgSrc] = useState<string>('');
 
   // 前端紀錄面試資料
-  let count: number = 1;
+  const [count, setCount] = useState<number>(0); // 這裡定義 count 狀態
   const [questionText, setQuestionText] = useState<string>(''); // 這裡定義 questionText 狀態
   const [interviewId, setInterviewId] = useState<string>('');
   const [questionId, setQuestionId] = useState<string>('');
@@ -65,6 +65,7 @@ function Avatar() {
       console.error('Error starting recording:', error);
     }
   };
+
   const stopRecording = async () => {
     try {
       await fetch('http://127.0.0.1:3001/stop_recording',{
@@ -72,7 +73,7 @@ function Avatar() {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ interview_id: interviewId, question_id: questionId, questionText: questionText, school: school, department: department})
+        body: JSON.stringify({ question_id: questionId, interview_id: interviewId })
       });
     } catch (error) {
       console.error('Error ending recording:', error);
@@ -85,7 +86,7 @@ function Avatar() {
       headers: {
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ count: count , school: school, department: department})
+      body: JSON.stringify({ school: school, department: department})
     })
       .then(response => response.json())
       .then(data => {
@@ -98,12 +99,36 @@ function Avatar() {
   };
 
   const endCamera = () => {
-    fetch('http://127.0.0.1:3001/just_end_camera')
+    fetch('http://127.0.0.1:3001/end_interview', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ interviewId: interviewId, school: school, department: department})
+    })
       .then(response => response.text())
-      .then(() => {
+      .then(data => {
         setImgSrc('');  // Clear the image source to stop displaying the video
+        window.location.href = `http://127.0.0.1:3001/interviewReview?interview_id=${interviewId}`;
       })
       .catch(error => console.error('Error ending camera:', error));
+  };
+
+  const nextquestion = () => {
+    fetch('http://127.0.0.1:3001/next_question', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ count: count, interviewId: interviewId, school: school, department: department})
+    })
+      .then(response => response.json())
+      .then(data => {
+        setQuestionText(data.question);
+        setQuestionId(data.question_id);
+        setCount(data.count);
+      })
+      .catch(error => console.error('Error getting next question:', error));
   };
 
   async function fetchAccessToken() {
@@ -123,8 +148,10 @@ function Avatar() {
 
   async function activate() {
     await updateToken();
+    setSchool('國立清華大學');
+    setDepartment('工業工程與工程管理學系');
     startCamera();
-    count++;
+    setCount(count + 1);
 
     if (!avatar.current) {
       setDebug('Avatar API is not initialized');
@@ -215,7 +242,7 @@ function Avatar() {
         {debug}
 
         <div className="question">
-          {helloMessage}
+          {questionText}
         </div>
         <div className="images" >
           <div className="image_frame" >
@@ -247,7 +274,7 @@ function Avatar() {
             <button className="btn" onClick={stopRecording}>結束回答</button>
           </div>
           <div>
-            <button className="btn" >繼續</button>
+            <button className="btn" onClick={nextquestion}>繼續</button>
             <button className="btn" onClick={endCamera}>結束</button>
           </div>
         </div>

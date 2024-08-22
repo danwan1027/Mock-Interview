@@ -345,22 +345,16 @@ def delQuestionHistory(history_id:str):
 
 # Voice_Transcriptions
 # 新增Emotion_Recognition
-def addVoiceTranscriptions(audio_file, speech_speed:List[int], transcript:str, interview_id:str):
+def addVoiceTranscriptions(speech_speed:List[int], transcript:str, history_id:str):
 
     voice = db.collection('Voice_Transcriptions').document()
     timestamp = SERVER_TIMESTAMP
 
-    blob = bucket.blob(interview_id + '/' + voice.id + '.wav')
-    blob.upload_from_file(audio_file, content_type='audio/wav')
-    blob.make_public()
-    audio = blob.public_url
-
     voice.set({
         'transcription_id': voice.id,
-        "audio_file": audio,
         "speech_speed": speech_speed, 
         "transcript": transcript,
-        "interview_id": interview_id,
+        "history_id": history_id,
         "timestamp": timestamp,
     })
 
@@ -368,13 +362,6 @@ def addVoiceTranscriptions(audio_file, speech_speed:List[int], transcript:str, i
 def delVoiceTranscriptions(transcription_id:str):
     
     voice_ref = db.collection('Voice_Transcriptions').document(transcription_id)
-    voice_query = db.collection('Voice_Transcriptions').where('transcription_id', '==', transcription_id).stream()
-    
-    for interview in voice_query:
-        interview_id = interview.to_dict()['interview_id']
-    blob = bucket.blob(interview_id + '/' + transcription_id + '.wav')
-    blob.delete()
-    
     voice_ref.delete()
 
 

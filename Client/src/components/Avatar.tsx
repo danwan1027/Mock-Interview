@@ -4,6 +4,7 @@ import '../App.css';
 import '../interview_questioning.css';
 import { CanvasRender } from "../components/canvas-render";
 import { Interface } from 'readline';
+import ImageContainer from './list_before_interview'; // Adjust the path based on where your component is located
 
 function Avatar() {
   const [stream, setStream] = useState<MediaStream>();
@@ -13,6 +14,8 @@ function Avatar() {
   const [voiceId, setVoiceId] = useState<string>("");
   const [data, setData] = useState<NewSessionData>();
   const [initialized, setInitialized] = useState(false); // Track initialization
+  const [showImageContainer, setShowImageContainer] = useState(true); // Control ImageContainer visibility
+
   const mediaStream = useRef<HTMLVideoElement>(null);
   const avatar = useRef<StreamingAvatarApi | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
@@ -52,6 +55,8 @@ function Avatar() {
         console.error('There was an error fetching the greeting!', error);
       });
   }, []);
+
+
 
   const startRecording = async () => {
     try {
@@ -101,9 +106,6 @@ function Avatar() {
       .catch(error => console.error('Error ending camera:', error));
   };
 
-  ///////////////////////////// talk with flask  /////////////////////////////
-
-
   async function fetchAccessToken() {
     try {
       const response = await fetch('http://localhost:3001/get-access-token', {
@@ -142,6 +144,7 @@ function Avatar() {
         }, setDebug);
       setData(res);
       setStream(avatar.current.mediaStream);
+      setShowImageContainer(false); // Hide ImageContainer when activate is called
     } catch (error) {
       console.error('Error starting avatar session:', error);
     }
@@ -169,7 +172,6 @@ function Avatar() {
     setInitialized(true);
   }
 
-
   async function handleSpeak() {
     if (!initialized || !avatar.current) {
       setDebug('Avatar API not initialized');
@@ -181,9 +183,6 @@ function Avatar() {
       setDebug(e.message);
     });
   }
-
-
-
 
   useEffect(() => {
     async function init() {
@@ -207,52 +206,58 @@ function Avatar() {
     }
   }, [mediaStream, stream]);
 
-
-
-  return (
+  return(
     <div className="container">
-      {debug}
+      {showImageContainer && <ImageContainer onActivate={activate} />} {/* Conditionally render ImageContainer */}
 
-      <div className="question">
-        {questionText}
+      {!showImageContainer  &&
+      <div>
+        {debug}
+
+        <div className="question">
+          {helloMessage}
+        </div>
+        <div className="images" >
+          <div className="image_frame" >
+            <video playsInline autoPlay width={300} ref={mediaStream} style={{ display: 'none' }} onCanPlay={() => {
+              setCanPlay(true)
+            }} />
+            {canPlay && <CanvasRender videoRef={mediaStream} />}
+          </div>
+
+          <div className="image_frame">
+            {imgSrc ? (
+              <img
+                id="video-stream"
+                className="video-stream"
+                src={imgSrc}
+                alt="Video Stream"
+              />
+            ) : null}
+          </div>
       </div>
-      <div className="images" >
-        <div className="image_frame" >
-          <video playsInline autoPlay width={300} ref={mediaStream} style={{ display: 'none' }} onCanPlay={() => {
-            setCanPlay(true)
-          }} />
-          {canPlay && <CanvasRender videoRef={mediaStream} />}
+      
+        
+        {/* <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} />  */}
+        <div className="button-container">
+          <div>
+            <button className="btn" onClick={activate} >啟動</button>
+            <button className="btn" onClick={handleSpeak}>說話</button>
+            <button className="btn" onClick={startRecording}>開始回答</button>
+            <button className="btn" onClick={stopRecording}>結束回答</button>
+          </div>
+          <div>
+            <button className="btn" >繼續</button>
+            <button className="btn" onClick={endCamera}>結束</button>
+          </div>
         </div>
 
-        <div className="image_frame">
-          {imgSrc ? (
-            <img
-              id="video-stream"
-              className="video-stream"
-              src={imgSrc}
-              alt="Video Stream"
-            />
-          ) : null}
-        </div>
-      </div>
-      {/* <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} /> */}
-      <div className="button-container">
-        <div>
-          <button className="btn" onClick={activate} >啟動</button>
-          <button className="btn" onClick={handleSpeak}>說話</button>
-          <button className="btn" onClick={startRecording}>開始回答</button>
-          <button className="btn" onClick={stopRecording}>結束回答</button>
-        </div>
-        <div>
-          <button className="btn" >繼續</button>
-          <button className="btn" onClick={endCamera}>結束</button>
-        </div>
-      </div>
-
+      </div>}
 
     </div>
-
   );
 }
 
 export default Avatar;
+
+

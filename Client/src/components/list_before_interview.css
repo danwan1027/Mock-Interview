@@ -1,0 +1,82 @@
+
+.lists_row {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+    padding:20px;
+    height: 70dvh;
+    width: 90%;
+    margin:auto
+
+}
+
+.list {
+    width:30%;
+    overflow: hidden;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100%;
+
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(214, 227, 255, 0.8);
+}
+
+
+.scrollable-list {
+    max-height: 100%; /* Set a fixed height for the list */
+    overflow-y: auto;  /* Add vertical scrollbar if content exceeds the height */
+    padding-left: 0;   /* Remove default padding if needed */
+}
+
+label {
+    display: block;
+    padding: 10px;
+    background-color: #f8faff;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 5px; /* Add space between labels */
+}
+
+label:hover {
+    background-color: #e0f0ff;
+}
+
+
+
+.selection-container, .form-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.school-section, .department-section, .upload-section {
+    background-color: #f8faff;
+    padding: 15px;
+    height: 60vh;
+    margin:10px;
+    border-radius: 10px;
+    width: 30%;
+}
+
+
+.school-list, .department-list {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+
+.upload-button button {
+    cursor: pointer;
+
+}
+
+.upload-button img {
+    width: 100%;
+    height: 100%;
+    border-radius: 30px;
+
+}
+

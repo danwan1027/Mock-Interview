@@ -4,6 +4,7 @@ import '../App.css';
 import '../interview_questioning.css';
 import { CanvasRender } from "../components/canvas-render";
 import ImageContainer from './list_before_interview'; // Adjust the path based on where your component is located
+import CameraControl from './camera_related/func'; // Adjust the path based on where your component is located
 
 function Avatar() {
   const [stream, setStream] = useState<MediaStream>();
@@ -24,7 +25,7 @@ function Avatar() {
 
   const [helloMessage, setHelloMessage] = useState('');
   const [sumResult, setSumResult] = useState(null);
-  const [imgSrc, setImgSrc] = useState<string>('');
+  const { imgSrc, startCamera, endCamera } = CameraControl();
 
 
   useEffect(() => {
@@ -61,23 +62,7 @@ function Avatar() {
     }
   };
 
-  const startCamera = () => {
-    fetch('http://127.0.0.1:3001/start_camera')
-      .then(response => response.text())
-      .then(() => {
-        setImgSrc("http://127.0.0.1:3001/video_feed");
-      })
-      .catch(error => console.error('Error starting camera:', error));
-  };
-
-  const endCamera = () => {
-    fetch('http://127.0.0.1:3001/just_end_camera')
-      .then(response => response.text())
-      .then(() => {
-        setImgSrc('');  // Clear the image source to stop displaying the video
-      })
-      .catch(error => console.error('Error ending camera:', error));
-  };
+ 
 
   async function fetchAccessToken() {
     try {
@@ -145,6 +130,8 @@ function Avatar() {
   }
 
   async function handleSpeak() {
+    startRecording()
+
     if (!initialized || !avatar.current) {
       setDebug('Avatar API not initialized');
       return;
@@ -152,6 +139,16 @@ function Avatar() {
     await avatar.current.speak({ taskRequest: { text: helloMessage, sessionId: data?.sessionId } }).catch((e) => {
       setDebug(e.message);
     });
+  }
+
+  async function stop() {
+    endCamera()
+    
+    if (!initialized || !avatar.current) {
+      setDebug('Avatar API not initialized');
+      return;
+    }
+    await avatar.current.stopAvatar({ stopSessionRequest: { sessionId: data?.sessionId } }, setDebug);
   }
 
   useEffect(() => {
@@ -213,12 +210,10 @@ function Avatar() {
           <div>
             <button className="btn" onClick={activate} >啟動</button>
             <button className="btn" onClick={handleSpeak}>說話</button>
-            <button className="btn" onClick={startRecording}>開始回答</button>
-            <button className="btn" onClick={stopRecording}>結束回答</button>
           </div>
           <div>
-            <button className="btn" >繼續</button>
-            <button className="btn" onClick={endCamera}>結束</button>
+            <button className="btn" onClick={stopRecording}>繼續</button>
+            <button className="btn" onClick={stop}>結束</button>
           </div>
         </div>
 

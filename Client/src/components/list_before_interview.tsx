@@ -1,9 +1,9 @@
 import React from 'react';
 import './list_before_interview.css';
-interface ImageContainerProps {
+interface ListBeforeInterviewProps {
     onActivate: () => void;
   }
-  const ImageContainer: React.FC<ImageContainerProps> = ({ onActivate }) => {
+  const ListBeforeInterview: React.FC<ListBeforeInterviewProps> = ({ onActivate }) => {
     return (
         <form id="interview-form">
             <div className="lists_row">
@@ -52,4 +52,4 @@ interface ImageContainerProps {
     );
 };
 
-export default ImageContainer;
+export default ListBeforeInterview;

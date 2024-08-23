@@ -4,15 +4,13 @@ import requests
 import json
 import os
 from flask import Blueprint, render_template, request, jsonify
-from ...models import firebase_func as db
-# from models import firebase_func as ff
+from ..models import firebase_func as db
 from dotenv import load_dotenv
 
 load_dotenv()
 
 generate = Blueprint('generate', __name__)
 
-@generate.route('/generate', methods=['POST'])
 def generate_question():
     # 這邊應該要有一個檢查是否有登入的function
     # 以下是確定登入使用者

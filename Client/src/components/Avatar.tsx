@@ -3,6 +3,7 @@ import { Configuration, NewSessionData, StreamingAvatarApi } from '@heygen/strea
 import '../App.css';
 import '../interview_questioning.css';
 import { CanvasRender } from "../components/canvas-render";
+import { Interface } from 'readline';
 import ImageContainer from './list_before_interview'; // Adjust the path based on where your component is located
 
 function Avatar() {
@@ -25,6 +26,17 @@ function Avatar() {
   const [helloMessage, setHelloMessage] = useState('');
   const [sumResult, setSumResult] = useState(null);
   const [imgSrc, setImgSrc] = useState<string>('');
+
+  // 前端紀錄面試資料
+  const [count, setCount] = useState<number>(0); // 這裡定義 count 狀態
+  const [questionText, setQuestionText] = useState<string>(''); // 這裡定義 questionText 狀態
+  const [interviewId, setInterviewId] = useState<string>('');
+  const [questionId, setQuestionId] = useState<string>('');
+
+  //面試校系
+  const [department, setDepartment] = useState<string>('');
+  const [school, setSchool] = useState<string>('');
+
 
 
   useEffect(() => {
@@ -53,30 +65,70 @@ function Avatar() {
       console.error('Error starting recording:', error);
     }
   };
+
   const stopRecording = async () => {
     try {
-      await fetch('http://127.0.0.1:3001/stop_recording');
+      await fetch('http://127.0.0.1:3001/stop_recording',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question_id: questionId, interview_id: interviewId })
+      });
     } catch (error) {
       console.error('Error ending recording:', error);
     }
   };
 
   const startCamera = () => {
-    fetch('http://127.0.0.1:3001/start_camera')
-      .then(response => response.text())
-      .then(() => {
+    fetch('http://127.0.0.1:3001/start_camera', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ school: school, department: department})
+    })
+      .then(response => response.json())
+      .then(data => {
+        setInterviewId(data.interview_id);
+        setQuestionText(data.question);
+        setQuestionId(data.question_id);
         setImgSrc("http://127.0.0.1:3001/video_feed");
       })
       .catch(error => console.error('Error starting camera:', error));
   };
 
   const endCamera = () => {
-    fetch('http://127.0.0.1:3001/just_end_camera')
+    fetch('http://127.0.0.1:3001/end_interview', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ interviewId: interviewId, school: school, department: department})
+    })
       .then(response => response.text())
-      .then(() => {
+      .then(data => {
         setImgSrc('');  // Clear the image source to stop displaying the video
+        window.location.href = `http://127.0.0.1:3001/interviewReview?interview_id=${interviewId}`;
       })
       .catch(error => console.error('Error ending camera:', error));
+  };
+
+  const nextquestion = () => {
+    fetch('http://127.0.0.1:3001/next_question', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ count: count, interviewId: interviewId, school: school, department: department})
+    })
+      .then(response => response.json())
+      .then(data => {
+        setQuestionText(data.question);
+        setQuestionId(data.question_id);
+        setCount(data.count);
+      })
+      .catch(error => console.error('Error getting next question:', error));
   };
 
   async function fetchAccessToken() {
@@ -96,7 +148,10 @@ function Avatar() {
 
   async function activate() {
     await updateToken();
+    setSchool('國立清華大學');
+    setDepartment('工業工程與工程管理學系');
     startCamera();
+    setCount(count + 1);
 
     if (!avatar.current) {
       setDebug('Avatar API is not initialized');
@@ -149,7 +204,9 @@ function Avatar() {
       setDebug('Avatar API not initialized');
       return;
     }
-    await avatar.current.speak({ taskRequest: { text: helloMessage, sessionId: data?.sessionId } }).catch((e) => {
+    //將要念的文字設定為textToSpeak，並透過question_text賦值
+    const textToSpeak = questionText || 'No question to ask';
+    await avatar.current.speak({ taskRequest: { text: textToSpeak, sessionId: data?.sessionId } }).catch((e) => {
       setDebug(e.message);
     });
   }
@@ -176,7 +233,7 @@ function Avatar() {
     }
   }, [mediaStream, stream]);
 
-  return (
+  return(
     <div className="container">
       {showImageContainer && <ImageContainer onActivate={activate} />} {/* Conditionally render ImageContainer */}
 
@@ -185,7 +242,7 @@ function Avatar() {
         {debug}
 
         <div className="question">
-          {helloMessage}
+          {questionText}
         </div>
         <div className="images" >
           <div className="image_frame" >
@@ -217,7 +274,7 @@ function Avatar() {
             <button className="btn" onClick={stopRecording}>結束回答</button>
           </div>
           <div>
-            <button className="btn" >繼續</button>
+            <button className="btn" onClick={nextquestion}>繼續</button>
             <button className="btn" onClick={endCamera}>結束</button>
           </div>
         </div>

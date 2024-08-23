@@ -42,7 +42,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for student in students %}
+                    {% for student in student_list %}
                     <tr>
                         <td class="student-name">{{ student.username }}</td>
                         <td>{{ student.department }}</td>
@@ -86,7 +86,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for teacher in teachers %}
+                    {% for teacher in teacher_list %}
                     <tr>
                         <td class="student-name">{{ teacher.username }}</td>
                         <td>{{ teacher.department }}</td>

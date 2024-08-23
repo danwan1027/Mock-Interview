@@ -75,7 +75,7 @@ def interview_questioning():
 
 @frontend_redesign_router.route('/interviewReview')
 def interviewReview():
-    interview_id = "qd6epLnWy852Ra9NBZVa"
+    interview_id = request.args.get('interview_id')
     interview_list = db.getSingleInterview(interview_id)
     interview = interview_list[0]
     feedback_list = db.getFeedBack(interview_id)
@@ -88,7 +88,8 @@ def interviewReview():
     average_score = 80
     facial_score = db.countEmotionScore(interview_id)
     
-    name = current_user.username
+    # name = current_user.username
+    name = '謝維倫'
     interview_school = interview['college']
     interview_department = interview['department']
     overall_grade = feedback['rating']

@@ -12,6 +12,13 @@ matplotlib.use('Agg')
 
 home_view = Blueprint('home_view', __name__)
 
+@home_view.route('/admin')
+@login_required
+def admin():
+    student_list = db.getAllStudent()
+    teacher_list = db.getAllTeacher()
+    return render_template('adminDashboard.html', student_list=student_list, teacher_list=teacher_list)
+
 @home_view.route('/')
 # @login_required
 def index():

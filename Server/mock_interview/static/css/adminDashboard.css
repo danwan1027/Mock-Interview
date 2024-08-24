@@ -1,11 +1,3 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    margin-top: 7%;
-    padding: 20px;
-    display: flex;
-}
-
 .sidebar {
     width: 25%; /* Ensure the sidebar occupies 1/4 of the width */
     display: flex;
@@ -33,7 +25,6 @@ body {
     padding-top: 40px; /* Increased padding */
     padding-bottom: 30px; /* Increased padding */
     margin-bottom: 40px;
-    margin-left: 10%;
 }
 
 .header-controls {

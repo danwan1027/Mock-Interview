@@ -1,0 +1,7 @@
+.navbar {
+    height: 25%; 
+    background-image: url('../images/navbar_coffee.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}

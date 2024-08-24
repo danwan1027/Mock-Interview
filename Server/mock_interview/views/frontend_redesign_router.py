@@ -15,7 +15,7 @@ def add_numbers():
     return jsonify(result=result)
 
 @frontend_redesign_router.route('/adminDashboard')
-def admim_dashboard():
+def admin_dashboard():
     students = db.getAllStudent()
     teachers = db.getAllTeacher()
     return render_template('adminDashboard.html', students=students, teachers=teachers)

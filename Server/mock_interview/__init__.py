@@ -2,7 +2,6 @@ from flask import Flask, flash, redirect, url_for, abort
 from flask_login import LoginManager, current_user
 from functools import wraps
 from .models import firebase_func as db
-from flask_bootstrap import Bootstrap
 
 
 login_manager = LoginManager()
@@ -32,10 +31,6 @@ def create_app():
     app.config.from_object('config.development')
     # app.config.from_object('config.product')
     app.config.from_pyfile('config.py')
-
-    # bootstrap
-    bootstrap = Bootstrap(app)
-
 
     # login
     login_manager.init_app(app)

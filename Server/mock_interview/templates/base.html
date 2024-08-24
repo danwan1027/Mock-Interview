@@ -1,48 +1,39 @@
-{% extends "bootstrap/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block head %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
 
-{% block navbar %}
-<nav class="navbar navbar-default">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-        <!-- 透過url_for設定HOME連結綁定index -->
-      <a class="navbar-brand" href="{{ url_for('home_view.index')}}">HOME</a>
-    </div>
-
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <!-- 透過url_for設定LOGOUT連結綁定LOGOUT -->
-        <li><a href="{{ url_for('login_view.logout') }}">LOGOUT</a></li>
-        <!-- 透過url_for設定LOGIN連結綁定LOGIN -->
-        <li><a href="{{ url_for('login_view.login') }}">LOGIN</a></li>
-      </ul>
-
-    </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
-</nav>
-{% endblock navbar %}
+        <title>{% block title %}AI Interviewer{% endblock %}</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+        {% endblock %}
+    </head>
 
 
-{% block content %}
-    <div class="container">
-        <!-- 用來接後端傳來的flash-message -->
-        {% for message in get_flashed_messages() %}
-        <div class="alert alert-warning">
-          
-            <!-- 弄一個x的button，點擊之後讓訊息消失，可參考bootstrap說明 -->
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            {{ message }}
+    <body>
+        {% if current_user.is_authenticated %}
+            {% if current_user.role == 'admin' %}
+                {% include 'navbar/admin_navbar.html' %}
+            {% elif current_user.role == 'student' %}
+                {% include 'navbar/student_navbar.html' %}
+            {% else %}
+                {% include 'navbar/teacher_navbar.html' %}
+            {% endif %}
+        {% else %}
+            {% include 'navbar/guest_navbar.html' %}
+        {% endif %}
+
+        <div class="container-xl mb-4">
+            {% block content %}{% endblock %}
         </div>
-        {% endfor %}
+        
 
-        {% block page_content %}{% endblock %}
-    </div>
-{% endblock content %}
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    </body>
+</html>

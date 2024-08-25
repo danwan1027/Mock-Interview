@@ -17,7 +17,8 @@
 
 .container {
     background-color: #fff;
-    
+    margin-top:20px;
+
     border-radius: 20px; /* Increased border radius for a more rounded container */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding-left: 60px; /* Increased padding */

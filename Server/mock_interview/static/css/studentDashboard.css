@@ -1,24 +1,22 @@
-body {
+/* body {
     font-family: Arial, sans-serif;
     background-color: #f4f7fc;
     color: #333;
     margin: 0;
     padding: 0;
-    height: 100vh; /* Ensure the body takes up the full height of the viewport */
+    height: 100vh; 
     display: flex;
     justify-content: center;
     align-items: flex-end;
-}
+} */
 
 .container {
     display: grid;
     grid-template-columns: 1fr 5fr;
-    grid-template-rows: 1fr 1fr;
     grid-gap: 20px;
-       
-    height: 85%;
-    width: 95%; /* Adjust as necessary for your layout */
-    margin-bottom: 20px; /* Add some space from the bottom */
+    width:100%; 
+    margin-top:20px
+    
 }
 
 .overview, .records {
@@ -26,7 +24,7 @@ body {
     border-radius: 25px;
     box-shadow: 0 5px 15px rgba(214, 227, 255, 0.8); 
     padding: 20px 40px;
-    height: 90%;
+    height: 100%;
 }
 
 .overview {
@@ -42,6 +40,7 @@ body {
 
 .overview-item {
     text-align: center;
+    width:  50%;
     margin-bottom: 10px;
 }
 

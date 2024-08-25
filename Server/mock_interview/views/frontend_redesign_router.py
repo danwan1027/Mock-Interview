@@ -30,9 +30,9 @@ def student_dashboard():
     }
 
     interview_records = db.getHistory(current_user.id)
-    total_avg = db.getFeedbackRating(current_user.id)
-    eye_contact = db.getUserEye(current_user.id)
-    facial_expression = db.getUserEmotionScore(current_user.id)
+    # total_avg = db.getFeedbackRating(current_user.id)
+    # eye_contact = db.getUserEye(current_user.id)
+    # facial_expression = db.getUserEmotionScore(current_user.id)
     
     # Data for the charts
     trend_chart_data = {

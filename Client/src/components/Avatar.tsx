@@ -142,7 +142,7 @@ function Avatar() {
       .then((response) => response.text())
       .then((data) => {
         setImgSrc(""); // Clear the image source to stop displaying the video
-        window.location.href = `http://127.0.0.1:3001/interviewReview?interview_id=${interviewId}&?user_id=${userIdString}`;
+        window.location.href = `http://127.0.0.1:3001/interviewReview?interview_id=${interviewId}&user_id=${userIdString}`;
       })
       .catch((error) => console.error("Error ending camera:", error));
   };

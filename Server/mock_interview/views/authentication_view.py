@@ -23,12 +23,17 @@ def login():
                 return redirect(url_for('interviewer_view.dashboard'))
             else:
                 return redirect(url_for('frontend_redesign_router.student_dashboard'))
+
+            return redirect(url_for('home_view.index'))
+        else:
+            login_error = True
             
     return render_template('authentication/authentication.html',
-                            login_form=login,
-                            admin_form=admin_register,
-                            teacher_form=teacher_register,
-                            student_form=student_register)
+                                login_form=login,
+                                admin_form=admin_register,
+                                teacher_form=teacher_register,
+                                student_form=student_register,
+                                login_error=login_error)
 
 @authentication_view.route('/logout')
 @login_required

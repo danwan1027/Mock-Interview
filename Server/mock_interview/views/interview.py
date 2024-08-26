@@ -6,6 +6,7 @@ import dlib
 import numpy as np
 from deepface import DeepFace
 import pdfplumber
+import os
 from ..models import audio_func as audio
 import threading
 from flask_login import current_user
@@ -18,6 +19,9 @@ from ..views import rate_advice as ra
 
 
 interview = Blueprint('interview', __name__)
+
+views_dir = os.path.dirname(__file__)
+resume_path = os.path.join(views_dir, 'resume.pdf')
 
 @interview.route('/test', methods=['POST'])
 def test():
@@ -57,6 +61,7 @@ def nextQuestion():
     # resume = request.files['file']
     # resume_text = convert(resume)
     count = request.json.get('count')
+    count = count + 1
     if(count == 2):
         # question = gq.gensecond_question(school, department)
         question = "請問你認為清大的工業工程與管理學系有什麼吸引你的特質？"
@@ -68,7 +73,6 @@ def nextQuestion():
         question = "這一將會在資料庫中自動搜尋"
     
     question_id = db.addQuestions(department, school, interview_id, school + department, question, user_id)
-    count += 1
     
     return jsonify({"count": count, "question_id": question_id, "question": question})
 
@@ -97,11 +101,16 @@ def start_camera():
     global cap
     cap = cv2.VideoCapture(0)
     # user_id = current_user.id
-    user_id = "qfIwnqbenPXnZyydNYv7"
-    # interview_id = db.addInterview("國立中央大學", "資訊管理學系", 1, "test", user_id)
-    interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
-    department = request.json.get('department')
-    school = request.json.get('school')
+    user_id = request.form.get('user_id')
+    department = request.form.get('department')
+    school = request.form.get('school')
+    resume = request.files.get('resume')
+    resume_path = os.path.join(os.path.dirname(__file__), 'resume.pdf')
+    with open(resume_path, 'rb') as resume_file:
+        interview_id = db.addInterview(school, department, 1, resume, user_id)
+    
+    # interview_id = db.addInterview(school, department, 1, resume_content, user_id)
+    # interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
     
     # 產生第一個問題
     ## question = gq.genfirst_question(department)

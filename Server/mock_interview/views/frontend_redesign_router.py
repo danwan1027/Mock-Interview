@@ -1,4 +1,5 @@
-from flask_login import current_user
+from ..models import firebase_func as db
+from flask_login import current_user, login_user
 from ..models import firebase_func as db
 from flask import Blueprint, jsonify, render_template, request
 
@@ -22,6 +23,11 @@ def admin_dashboard():
 
 @frontend_redesign_router.route('/studentDashboard')
 def student_dashboard():
+    if request.args.get('user_id'):
+        user_id = request.args.get('user_id')
+    else:
+        if current_user.is_authenticated:
+            user_id = current_user.id
     # Data to be sent to the template
     overview_data = {
         'average': 75,
@@ -29,7 +35,7 @@ def student_dashboard():
         'practice_count': 8
     }
 
-    interview_records = db.getHistory(current_user.id)
+    interview_records = db.getHistory(user_id)
     # total_avg = db.getFeedbackRating(current_user.id)
     # eye_contact = db.getUserEye(current_user.id)
     # facial_expression = db.getUserEmotionScore(current_user.id)
@@ -56,7 +62,8 @@ def student_dashboard():
         overview_data=overview_data,
         interview_records=interview_records,
         trend_chart_data=trend_chart_data,
-        score_overview_chart_data=score_overview_chart_data
+        score_overview_chart_data=score_overview_chart_data,
+        user_id=user_id
     )
 
 
@@ -76,6 +83,11 @@ def interview_questioning():
 @frontend_redesign_router.route('/interviewReview')
 def interviewReview():
     interview_id = request.args.get('interview_id')
+    user_id = request.args.get('user_id')
+    user = db.get_user_by_id(user_id)
+    if(user):
+        login_user(user)
+    
     interview_list = db.getSingleInterview(interview_id)
     interview = interview_list[0]
     feedback_list = db.getFeedBack(interview_id)
@@ -114,6 +126,7 @@ def interviewReview():
     
     return render_template('interviewReview.html',
                            name=name,
+                           user_id=user_id,
                            interview_school=interview_school,
                            interview_department=interview_department,
                            eye_contact_review=eye_contact_review,

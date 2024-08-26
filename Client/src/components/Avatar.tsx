@@ -9,6 +9,8 @@ import "../interview_questioning.css";
 import { CanvasRender } from "../components/canvas-render";
 import { Interface } from "readline";
 import ListBeforeInterview from "./list_before_interview"; // Adjust the path based on where your component is located
+import { useLocation } from "react-router-dom";
+import { start } from "repl";
 
 function Avatar() {
   const [stream, setStream] = useState<MediaStream>();
@@ -31,14 +33,20 @@ function Avatar() {
   const [imgSrc, setImgSrc] = useState<string>("");
 
   // 前端紀錄面試資料
-  const [count, setCount] = useState<number>(0); // 這裡定義 count 狀態
+  const [count, setCount] = useState<number>(0);
   const [questionText, setQuestionText] = useState<string>(""); // 這裡定義 questionText 狀態
   const [interviewId, setInterviewId] = useState<string>("");
   const [questionId, setQuestionId] = useState<string>("");
 
   //面試校系
-  const [department, setDepartment] = useState<string>("");
-  const [school, setSchool] = useState<string>("");
+  const [department, setDepartment] = useState<string>('');
+  const [school, setSchool] = useState<string>('');
+  const [resume, setResume] = useState<File | null>(null);
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const userId = queryParams.get('user_id');
+  const userIdString = userId ? String(userId) : '';
 
   useEffect(() => {
     ///////////////////////////// talk with flask  /////////////////////////////
@@ -56,6 +64,16 @@ function Avatar() {
         console.error("There was an error fetching the greeting!", error);
       });
   }, []);
+
+  const handleActivate = (school: string, department: string, resume: File | null) => {
+    // startCamera(school, department, resume);
+    setSchool(school);
+    setDepartment(department);
+    setResume(resume);
+    activate(school, department, resume);
+  };
+
+
 
   const startRecording = async () => {
     try {
@@ -75,6 +93,7 @@ function Avatar() {
         body: JSON.stringify({
           question_id: questionId,
           interview_id: interviewId,
+          user_id: userIdString,
         }),
       });
     } catch (error) {
@@ -82,25 +101,32 @@ function Avatar() {
     }
   };
 
-  const startCamera = () => {
+  const startCamera = (school: string, department: string, resume: File | null) => {
+    const formData = new FormData();
+    formData.append("user_id", userIdString);
+    formData.append("school", school);
+    formData.append("department", department);
+    console.log("school", school);
+    console.log("department", department);
+    if (resume) {
+      formData.append("resume", resume);
+    }
+    setImgSrc("http://127.0.0.1:3001/video_feed");
     fetch("http://127.0.0.1:3001/start_camera", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ school: school, department: department }),
+      body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
         setInterviewId(data.interview_id);
         setQuestionText(data.question);
         setQuestionId(data.question_id);
-        setImgSrc("http://127.0.0.1:3001/video_feed");
       })
       .catch((error) => console.error("Error starting camera:", error));
   };
 
-  const endCamera = () => {
+  const endCamera = async () => {
+    await stopRecording();
     fetch("http://127.0.0.1:3001/end_interview", {
       method: "POST",
       headers: {
@@ -110,18 +136,20 @@ function Avatar() {
         interviewId: interviewId,
         school: school,
         department: department,
+        user_id: userIdString,
       }),
     })
       .then((response) => response.text())
       .then((data) => {
         setImgSrc(""); // Clear the image source to stop displaying the video
-        window.location.href = `http://127.0.0.1:3001/interviewReview?interview_id=${interviewId}`;
+        window.location.href = `http://127.0.0.1:3001/interviewReview?interview_id=${interviewId}&?user_id=${userIdString}`;
       })
       .catch((error) => console.error("Error ending camera:", error));
   };
 
   const nextquestion = async () => {
     await stopRecording(); // Call stopRecording before fetching next question
+    console.log("count", count);
     fetch("http://127.0.0.1:3001/next_question", {
       method: "POST",
       headers: {
@@ -132,6 +160,7 @@ function Avatar() {
         interviewId: interviewId,
         school: school,
         department: department,
+        user_id: userIdString,
       }),
     })
       .then((response) => response.json())
@@ -158,11 +187,9 @@ function Avatar() {
     }
   }
 
-  async function activate() {
+  async function activate(school: string, department: string, resume: File | null) {
     await updateToken();
-    setSchool("國立清華大學");
-    setDepartment("工業工程與工程管理學系");
-    startCamera();
+    startCamera(school, department, resume);
     setCount(count + 1);
 
     if (!avatar.current) {
@@ -252,7 +279,7 @@ function Avatar() {
 
   return (
     <div className="container">
-      {showListBeforeInterview && <ListBeforeInterview onActivate={activate} />}{" "}
+      {showListBeforeInterview && <ListBeforeInterview onActivate={handleActivate} />}{" "}
       {/* Conditionally render ListBeforeInterview */}
       {!showListBeforeInterview && (
         <div>
@@ -291,14 +318,14 @@ function Avatar() {
           {/* <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} />  */}
           <div className="button-container">
             <div>
-              <button className="btn" onClick={activate}>
+              {/*< button className="btn" onClick={() => handleActivate}>
                 啟動
-              </button>
+              </button>*/}
               <button className="btn" onClick={handleSpeak}>
-                開始
+                開始作答
               </button>
-              {/* <button className="btn" onClick={startRecording}>開始回答</button> */}
-              {/* <button className="btn" onClick={stopRecording}>結束回答</button> */}
+              {/* <button className="btn" onClick={startRecording}>開始回答</button>*/}
+              {/*<button className="btn" onClick={stopRecording}>結束回答</button>*/}
             </div>
             <div>
               {count !== 5 && (

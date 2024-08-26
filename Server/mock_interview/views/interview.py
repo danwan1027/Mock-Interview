@@ -105,9 +105,7 @@ def start_camera():
     department = request.form.get('department')
     school = request.form.get('school')
     resume = request.files.get('resume')
-    resume_path = os.path.join(os.path.dirname(__file__), 'resume.pdf')
-    with open(resume_path, 'rb') as resume_file:
-        interview_id = db.addInterview(school, department, 1, resume, user_id)
+    interview_id = db.addInterview(school, department, 1, resume, user_id)
     
     # interview_id = db.addInterview(school, department, 1, resume_content, user_id)
     # interview_id = "bQWxr4ucsCpU5WJ1Ovyv"

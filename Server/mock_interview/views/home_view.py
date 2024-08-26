@@ -17,14 +17,11 @@ home_view = Blueprint('home_view', __name__)
 def admin():
     student_list = db.getAllStudent()
     teacher_list = db.getAllTeacher()
-    return render_template('adminDashboard.html', student_list=student_list, teacher_list=teacher_list)
+    return render_template('dashboard/adminDashboard.html', student_list=student_list, teacher_list=teacher_list)
 
 @home_view.route('/')
-# @login_required
 def index():
-    # return render_template('error_handle/404.html')
-    return render_template('base.html')
-    # return render_template('index.html')
+    return render_template('index.html')
 
 
 @home_view.route('/home')

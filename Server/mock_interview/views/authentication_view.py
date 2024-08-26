@@ -11,23 +11,20 @@ def login():
     admin_register = register_form.AdminRegistrationForm()
     teacher_register = register_form.TeacherRegistrationForm()
     student_register = register_form.StudentRegistrationForm()
-    # if form.validate_on_submit():
-    user = db.get_user_by_email(login.email.data)
-    if user:
-        if user.check_password(login.password.data):
+    login_error = False
+    if request.method == 'POST':
+        user = db.get_user_by_email(login.email.data)
+        if user and user.check_password(login.password.data):
             login_user(user, login.remember_me.data)
             return redirect(url_for('home_view.index'))
-            # if user.role == 'admin':
-            #     return redirect(url_for('home_view.admin'))
-            # elif user.role == 'teacher':
-            #     return redirect(url_for('interviewer_view.dashboard'))
-            # else:
-            #     return redirect(url_for('home_view.dashboard'))
+        else:
+            login_error = True
     return render_template('authentication/authentication.html',
-                           login_form=login,
-                           admin_form=admin_register,
-                           teacher_form=teacher_register,
-                           student_form=student_register)
+                                login_form=login,
+                                admin_form=admin_register,
+                                teacher_form=teacher_register,
+                                student_form=student_register,
+                                login_error=login_error)
 
 @authentication_view.route('/logout')
 @login_required

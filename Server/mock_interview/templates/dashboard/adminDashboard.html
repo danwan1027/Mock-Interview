@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
+{% import "macros.html" as macros %}
 
 {% block head %}
     {{ super() }}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/adminDashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard/adminDashboard.css') }}">
 {% endblock %}
 
 {% block title %}Account Management{% endblock %}
@@ -25,7 +26,33 @@
                         <option value="oldest">Oldest</option>
                     </select>
                 </div>
-                <button class="add-button">Add</button>
+                <!-- ADD button -->
+                <button type="button" class="btn add-button" data-bs-toggle="modal" data-bs-target="#addStudent">
+                    新增
+                </button>
+                
+                <!-- ADD Modal -->
+                <div class="modal fade" id="addStudent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addStudentLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="addStudentLabel">新增學生</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="/student_register">
+                                {% for field in student_form %}
+                                    {{ macros.render_field(field) }}
+                                {% endfor %}
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">新增學生</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
             </div>
         </div>
         <table class="table-scroll">
@@ -69,7 +96,33 @@
                         <option value="oldest">Oldest</option>
                     </select>
                 </div>
-                <button class="add-button">Add</button>
+                <!-- ADD button -->
+                <button type="button" class="btn add-button" data-bs-toggle="modal" data-bs-target="#addTeacher">
+                    新增
+                </button>
+                
+                <!-- ADD Modal -->
+                <div class="modal fade" id="addTeacher" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addTeacherLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="addTeacherLabel">新增老師</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form method="POST" action="/teacher_register">
+                                {% for field in teacher_form %}
+                                    {{ macros.render_field(field) }}
+                                {% endfor %}
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">新增老師</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
             </div>
         </div>
         <table class="table-scroll">

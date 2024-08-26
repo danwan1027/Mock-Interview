@@ -1,6 +1,7 @@
 from ..models import firebase_func as db
 from flask_login import current_user, login_user
 from ..models import firebase_func as db
+from ..forms import register_form
 from flask import Blueprint, jsonify, render_template, request
 
 frontend_redesign_router = Blueprint('frontend_redesign_router', __name__)
@@ -17,9 +18,15 @@ def add_numbers():
 
 @frontend_redesign_router.route('/adminDashboard')
 def admin_dashboard():
+    student_register = register_form.StudentRegistrationForm()
+    teacher_register = register_form.TeacherRegistrationForm()
     students = db.getAllStudent()
     teachers = db.getAllTeacher()
-    return render_template('adminDashboard.html', students=students, teachers=teachers)
+    return render_template('dashboard/adminDashboard.html',
+                            students=students, 
+                            teachers=teachers,
+                            teacher_form=teacher_register,
+                            student_form=student_register)
 
 @frontend_redesign_router.route('/studentDashboard')
 def student_dashboard():
@@ -58,7 +65,7 @@ def student_dashboard():
     }
 
     return render_template(
-        'studentDashboard.html',
+        'dashboard/studentDashboard.html',
         overview_data=overview_data,
         interview_records=interview_records,
         trend_chart_data=trend_chart_data,

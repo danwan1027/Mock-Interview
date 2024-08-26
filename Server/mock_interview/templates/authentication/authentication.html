@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Interviewer Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <link rel="stylesheet" href="../../static/css/login.css">
     <script>
         function showLoginForm() {
@@ -100,6 +101,14 @@
                     <button class="toggle-button" onclick="selectRoleForm()">註冊</button>
                 </div>
                 <div class="form-container">
+                    
+                    {% if login_error %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>帳號或密碼錯誤!</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+
                     <form method="POST" action="/login">
                         {% for field in login_form %}
                             {{ macros.render_field(field) }}
@@ -109,6 +118,7 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
 </body>
 
 </html>

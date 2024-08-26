@@ -93,6 +93,7 @@ function Avatar() {
         body: JSON.stringify({
           question_id: questionId,
           interview_id: interviewId,
+          user_id: userIdString,
         }),
       });
     } catch (error) {
@@ -110,6 +111,7 @@ function Avatar() {
     if (resume) {
       formData.append("resume", resume);
     }
+    setImgSrc("http://127.0.0.1:3001/video_feed");
     fetch("http://127.0.0.1:3001/start_camera", {
       method: "POST",
       body: formData,
@@ -119,7 +121,6 @@ function Avatar() {
         setInterviewId(data.interview_id);
         setQuestionText(data.question);
         setQuestionId(data.question_id);
-        setImgSrc("http://127.0.0.1:3001/video_feed");
       })
       .catch((error) => console.error("Error starting camera:", error));
   };
@@ -134,7 +135,8 @@ function Avatar() {
       body: JSON.stringify({
         interviewId: interviewId,
         school: school,
-        department: department
+        department: department,
+        user_id: userIdString,
       }),
     })
       .then((response) => response.text())
@@ -158,6 +160,7 @@ function Avatar() {
         interviewId: interviewId,
         school: school,
         department: department,
+        user_id: userIdString,
       }),
     })
       .then((response) => response.json())

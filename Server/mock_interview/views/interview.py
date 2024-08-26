@@ -53,7 +53,7 @@ def convert(file):
 @interview.route('/next_question', methods=['POST'])
 def nextQuestion():
     # user_id = current_user.id
-    user_id = "qfIwnqbenPXnZyydNYv7"
+    user_id = request.json.get('user_id')
     department = request.json.get('department')
     school = request.json.get('school')
     interview_id = request.json.get('interviewId')
@@ -75,20 +75,6 @@ def nextQuestion():
     question_id = db.addQuestions(department, school, interview_id, school + department, question, user_id)
     
     return jsonify({"count": count, "question_id": question_id, "question": question})
-
-
-@interview.route('/start_interview')
-def start_interview():
-    user_id = current_user.id
-    department = request.json.get('department')
-    school = request.json.get('school')
-    resume = request.files.get('resume')
-    if resume is None:
-        return jsonify({'error': 'No resume file provided'}), 400
-    
-    interview_id = db.addInterview(school, department, 1, resume,user_id)
-    
-    return render_template('interview.html', interview_id=interview_id)
 
 
 @interview.route('/video_feed')
@@ -131,16 +117,7 @@ def start_recording():
     audio_thread = threading.Thread(target=run_audio)
     audio_thread.start()
     return "Start Recording"
-
-@interview.route('/just_end_camera')
-def just_end_camera():
-    global cap
-    if cap:
-        cap.release()
-        cap = None
-    return "Camera has been released", 200  # Returning a response with status code 200 (OK)
     
-
 @interview.route('/end_interview', methods=['POST'])
 def end_interview():
     global cap, total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count, total_frames, looking_at_camera_frames
@@ -151,7 +128,7 @@ def end_interview():
     
     interview_id = request.json.get('interviewId')
     # user_id = current_user.id # 使用current_user.id取得當前使用者的id
-    user_id = "qfIwnqbenPXnZyydNYv7"
+    user_id = request.json.get('user_id')
     department = request.json.get('department')
     school = request.json.get('school')
     schooldepartment = f"{school}{department}"
@@ -223,7 +200,7 @@ def stop_recording():
     # gpt_analysis = ra.gen_final_advice(audio_results['accumulated_transcript'])
     gpt_analysis = "這題回答的還不錯，有回答到問題的核心"
     # user_id = current_user.id
-    user_id = "qfIwnqbenPXnZyydNYv7"
+    user_id = request.json.get('user_id')
     interview_id = request.json.get('interview_id')
     question_id = request.json.get('question_id')
     score = randint(60, 100)

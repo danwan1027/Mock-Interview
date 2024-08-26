@@ -149,27 +149,28 @@ function Avatar() {
 
   const nextquestion = async () => {
     await stopRecording(); // Call stopRecording before fetching next question
+    const formData = new FormData();
+    formData.append("user_id", userIdString);
+    formData.append("school", school);
+    formData.append("department", department);
+    formData.append("interview_id", interviewId);
+    formData.append("count", count.toString());
     console.log("count", count);
+    if(resume){
+      formData.append("resume", resume);
+    }
     fetch("http://127.0.0.1:3001/next_question", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        count: count,
-        interviewId: interviewId,
-        school: school,
-        department: department,
-        user_id: userIdString,
-      }),
+      body: formData,
     })
       .then((response) => response.json())
       .then((data) => {
         setQuestionText(data.question);
         setQuestionId(data.question_id);
-        setCount(data.count);
       })
       .catch((error) => console.error("Error getting next question:", error));
+
+      setCount(count + 1);
   };
 
   async function fetchAccessToken() {

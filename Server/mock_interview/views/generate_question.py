@@ -113,9 +113,10 @@ def gensecond_question(school, department):
     
 
 # 生成第三個問題
-def genthird_question(text):
+def genthird_question(file):
     endpoint = "https://api.openai.com/v1/completions"
     prompts = load_genquestion_prompt()
+    text = convert(file)
     prompt = prompts["third_question"] + text
     headers = {
         "Content-Type": "application/json",

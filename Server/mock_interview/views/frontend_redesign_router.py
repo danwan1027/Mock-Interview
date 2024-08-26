@@ -30,11 +30,12 @@ def admin_dashboard():
 
 @frontend_redesign_router.route('/studentDashboard')
 def student_dashboard():
-    if request.args.get('user_id'):
-        user_id = request.args.get('user_id')
-    else:
-        if current_user.is_authenticated:
-            user_id = current_user.id
+    # if request.args.get('user_id'):
+    #     user_id = request.args.get('user_id')
+    # else:
+    #     if current_user.is_authenticated:
+    #         user_id = current_user.id
+    user_id = current_user.id
     # Data to be sent to the template
     overview_data = {
         'average': 75,
@@ -91,9 +92,9 @@ def interview_questioning():
 def interviewReview():
     interview_id = request.args.get('interview_id')
     user_id = request.args.get('user_id')
+    print('user_id:', user_id)
     user = db.get_user_by_id(user_id)
-    if(user):
-        login_user(user)
+    login_user(user, True)
     
     interview_list = db.getSingleInterview(interview_id)
     interview = interview_list[0]

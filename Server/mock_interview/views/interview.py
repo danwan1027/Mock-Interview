@@ -155,28 +155,30 @@ def convert(file):
 @interview.route('/next_question', methods=['POST'])
 def nextQuestion():
     # user_id = current_user.id
-    user_id = request.json.get('user_id')
-    department = request.json.get('department')
-    school = request.json.get('school')
-    interview_id = request.json.get('interviewId')
+    user_id = request.form.get('user_id')
+    department = request.form.get('department')
+    school = request.form.get('school')
+    interview_id = request.form.get('interview_id')
+    resume = request.files.get('resume')
     # interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
     # resume = request.files['file']
     # resume_text = convert(resume)
-    count = request.json.get('count')
-    count = count + 1
-    if(count == 2):
-        # question = gq.gensecond_question(school, department)
-        question = "請問你認為清大的工業工程與管理學系有什麼吸引你的特質？"
-    elif(count == 3):
-        # question = gq.genthird_question(resume_text)
-        question = "你在履歷中提到了你在工業工程與管理學系的經驗，可以談談你的經驗嗎？"
-    elif(count == 4 or count == 5):
+    count = request.form.get('count')
+    # count string to int
+    count = int(count)
+    if(count == 1):
+        question = gq.gensecond_question(school, department)
+        # question = "請問你認為清大的工業工程與管理學系有什麼吸引你的特質？"
+    elif(count == 2):
+        question = gq.genthird_question(resume)
+        # question = "你在履歷中提到了你在工業工程與管理學系的經驗，可以談談你的經驗嗎？"
+    elif(count == 3 or count == 4):
         # question = gq.history_question("國立清華大學", "工業工程與管理學系", count-3)
-        question = "這一將會在資料庫中自動搜尋"
+        question = "此題將在資料庫中自動搜索"
     
     question_id = db.addQuestions(department, school, interview_id, school + department, question, user_id)
     
-    return jsonify({"count": count, "question_id": question_id, "question": question})
+    return jsonify({"question_id": question_id, "question": question})
 
 
 @interview.route('/video_feed')
@@ -199,8 +201,8 @@ def start_camera():
     # interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
     
     # 產生第一個問題
-    ## question = gq.genfirst_question(department)
-    question = "請問你認為工業工程與管理學系能為社會帶來什麼？"
+    question = gq.genfirst_question(department)
+    # question = "請問你認為工業工程與管理學系能為社會帶來什麼？"
     schooldepartment = f"{school}{department}"
     question_id = db.addQuestions(department, school, interview_id, schooldepartment, question, user_id)
     

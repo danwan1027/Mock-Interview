@@ -1,5 +1,5 @@
 {% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="top">
     <div class="container-xl d-flex flex-wrap mb-4 mt-4">
         <a class="navbar-brand fw-bold fs-2 me-5" href="{{url_for('home_view.index')}}">AI 模擬面試系統</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -7,6 +7,17 @@
         </button>
     
         <div class="collapse navbar-collapse" id="navbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 fs-5 fw-bold">
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="#pricing-title">訂閱</a>
+                </li>
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="#FAQ-title">FAQ</a>
+                </li>
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="#contact-title">聯絡我們</a>
+                </li>
+            </ul>
             <ul class="navbar-nav mb-2 mb-lg-0 fs-5 fw-bold ms-auto">
                 <li class="nav-item me-3">
                     <a class="nav-link" href="{{url_for('authentication_view.login')}}">登入/註冊</a>

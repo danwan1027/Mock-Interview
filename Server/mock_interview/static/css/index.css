@@ -22,3 +22,9 @@
     min-width: 100%;
     height: 32rem;
 }
+
+.goTop {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+  }

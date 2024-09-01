@@ -8,6 +8,11 @@
             {{ field(class="form-group", **kwargs) }}
             <label>{{ field.label }}</label>
         </div>
+    {% elif field.name == 'profile_image' %}
+        <div class="form-group">
+            <label class="form-group">{{ field.label }}</label>
+            {{ field(class="form-control form-control-lg", **kwargs) }}
+        </div>
     {% elif field.name != 'csrf_token' %}
         <div class="form-group">
             <label class="form-group">{{ field.label }}</label>

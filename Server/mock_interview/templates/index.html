@@ -6,54 +6,344 @@
 {% endblock %}
 
 {% block content %}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="check" viewBox="0 0 16 16">
+    <title>Check</title>
+    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+  </symbol>
+</svg>
+
+<div class="goTop">
+  <a href="#top" class="goTopBtn jq-goTop">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"/>
+    </svg>
+  </a>
+</div>
+
 <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-indicators">
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
     <div class="carousel-inner">
-      <div class="carousel-item active">
-        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+        <div class="carousel-item active">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
 
-        <div class="container">
-          <div class="carousel-caption text-start">
-            <h1>Example headline.</h1>
-            <p>Some representative placeholder content for the first slide of the carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
+            <div class="container">
+                <div class="carousel-caption text-start">
+                    <h1>Example headline.</h1>
+                    <p>Some representative placeholder content for the first slide of the carousel.</p>
+                    <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>Another example headline.</h1>
+                    <p>Some representative placeholder content for the second slide of the carousel.</p>
+                    <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+
+            <div class="container">
+                <div class="carousel-caption text-end">
+                  <h1>One more for good measure.</h1>
+                  <p>Some representative placeholder content for the third slide of this carousel.</p>
+                  <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+<!-- pricing -->
+
+<div class="pricing-header p-3 mx-auto text-center" id="pricing-title">
+    <h1 class="display-4 fw-normal">訂閱</h1>
+    <p class="fs-5 text-muted">加入我們......</p>
+</div>
+
+<ul class="nav nav-tabs nav-fill mb-4" id="pricingTab">
+    <li class="nav-item">
+        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal-subscription" type="button" aria-controls="home" aria-selected="true">個人訂閱</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" id="school-tab" data-bs-toggle="tab" data-bs-target="#school-subscription" type="button" aria-controls="profile" aria-selected="false">學校訂閱</button>
+    </li>
+</ul>
+<div class="tab-content" id="pricingContent">
+  <div class="tab-pane fade show active" id="personal-subscription" aria-labelledby="personal-tab">
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center pricing-content" id="personal-subscription">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Basic</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$0<small class="text-muted fw-light">/月</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>智慧化生成題目</li>
+              <li>常錯題目集</li>
+            </ul>
+            <a href="{{url_for('authentication_view.login')}}" class="w-100 btn btn-lg btn-outline-primary">免費加入</a>
           </div>
         </div>
       </div>
-      <div class="carousel-item">
-        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
-
-        <div class="container">
-          <div class="carousel-caption">
-            <h1>Another example headline.</h1>
-            <p>Some representative placeholder content for the second slide of the carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">Pro</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$100<small class="text-muted fw-light">/月</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>零廣告</li>
+              <li>無限面試次數</li>
+            </ul>
+            <a href="{{url_for('authentication_view.login')}}" class="w-100 btn btn-lg btn-primary">加入我們</a>
           </div>
         </div>
       </div>
-      <div class="carousel-item">
-        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
-
-        <div class="container">
-          <div class="carousel-caption text-end">
-            <h1>One more for good measure.</h1>
-            <p>Some representative placeholder content for the third slide of this carousel.</p>
-            <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+          <div class="card-header py-3 text-white bg-primary border-primary">
+            <h4 class="my-0 fw-normal">Premium</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$150<small class="text-muted fw-light">/月</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+              <li>回覆修正</li>
+              <li>履歷健檢</li>
+            </ul>
+            <a href="{{url_for('authentication_view.login')}}" class="w-100 btn btn-lg btn-primary">加入我們</a>
           </div>
         </div>
       </div>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+
+    <h2 class="display-6 text-center mb-4">比較</h2>
+
+    <div class="table-responsive">
+      <table class="table text-center">
+        <thead>
+          <tr>
+            <th style="width: 34%;"></th>
+            <th style="width: 22%;">Basic</th>
+            <th style="width: 22%;">Pro</th>
+            <th style="width: 22%;">Premium</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <th scope="row" class="text-start">無限面試次數</th>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">零廣告</th>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">回覆修正</th>
+            <td></td>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">履歷健檢</th>
+            <td></td>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+
+  
+  <div class="tab-pane fade" id="school-subscription" aria-labelledby="school-tab">
+    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center pricing-content" id="school-subscription">
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal"> &lt;100使用者 </h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$50<small class="text-muted fw-light">每位使用者/年</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-outline-primary">聯絡我們</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm">
+          <div class="card-header py-3">
+            <h4 class="my-0 fw-normal">101~1000使用者</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$20<small class="text-muted fw-light">每位使用者/年</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">聯絡我們</button>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+          <div class="card-header py-3 text-white bg-primary border-primary">
+            <h4 class="my-0 fw-normal">&gt;1000使用者</h4>
+          </div>
+          <div class="card-body">
+            <h1 class="card-title pricing-card-title">$10<small class="text-muted fw-light">每位使用者/年</small></h1>
+            <ul class="list-unstyled mt-3 mb-4">
+            </ul>
+            <button type="button" class="w-100 btn btn-lg btn-primary">聯絡我們</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="display-6 text-center mb-4">比較</h2>
+
+    <div class="table-responsive">
+      <table class="table text-center">
+        <thead>
+          <tr>
+            <th style="width: 34%;"></th>
+            <th style="width: 22%;">Basic</th>
+            <th style="width: 22%;">Pro</th>
+            <th style="width: 22%;">Premium</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <th scope="row" class="text-start">無限面試次數</th>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">零廣告</th>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">回覆修正</th>
+            <td></td>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+          <tr>
+            <th scope="row" class="text-start">履歷健檢</th>
+            <td></td>
+            <td></td>
+            <td><svg class="bi" width="24" height="24"><use xlink:href="#check"/></svg></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+
+<div class="pricing-header p-3 mx-auto text-center" id="FAQ-title">
+  <h1 class="display-4 fw-normal">FAQ</h1>
+  <p class="fs-5 text-muted">我有疑問......</p>
+</div>
+
+<div class="accordion" id="FAQ">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="Q1">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#Q1-ans" aria-expanded="false" aria-controls="Q1-ans">
+        好用嗎?
+      </button>
+    </h2>
+    <div id="Q1-ans" class="accordion-collapse collapse" aria-labelledby="Q1" data-bs-parent="#FAQ">
+      <div class="accordion-body">
+        當然好用
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="Q2">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#Q2-ans" aria-expanded="false" aria-controls="Q2-ans">
+        厲害嗎?
+      </button>
+    </h2>
+    <div id="Q2-ans" class="accordion-collapse collapse" aria-labelledby="Q2" data-bs-parent="#FAQ">
+      <div class="accordion-body">
+        當然厲害
+      </div>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="Q3">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#Q3-ans" aria-expanded="false" aria-controls="Q3-ans">
+        值得嗎?
+      </button>
+    </h2>
+    <div id="Q3-ans" class="accordion-collapse collapse" aria-labelledby="Q3" data-bs-parent="#FAQ">
+      <div class="accordion-body">
+        當然值得
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- contact us -->
+
+<div class="pricing-header p-3 mx-auto text-center" id="contact-title">
+  <h1 class="display-4 fw-normal">聯絡我們</h1>
+  <p class="fs-5 text-muted">我想說......</p>
+</div>
+
+<form action="/contact_us" method="post">
+  <div class="row">
+    <div class="col">
+      <input type="text" class="form-control" name="name" placeholder="姓名" aria-label="name" required>
+    </div>
+    <div class="col">
+      <input type="email" class="form-control" name="email" placeholder="電子郵件" aria-label="email" required>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col">
+      <textarea class="form-control" name="content" rows="3" placeholder="想跟我們說甚麼?" aria-label="content" required></textarea>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col">
+      <button type="submit" class="btn btn-primary">提交</button>
+    </div>
+  </div>
+</form>
+
+
+
 {% endblock %}

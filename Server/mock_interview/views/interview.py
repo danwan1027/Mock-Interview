@@ -1,5 +1,5 @@
 from random import randint
-from flask import Blueprint, render_template, Response,jsonify, request, url_for
+from flask import Blueprint, render_template, Response,jsonify, request, url_for, g
 import cv2
 import os
 import dlib
@@ -14,9 +14,18 @@ from ..models import firebase_func as db
 from ..views import frontend_redesign_router as frr
 from ..views import generate_question as gq
 from ..views import rate_advice as ra
+import pyaudio
+import wave
+import threading
+from google.oauth2 import service_account
+from google.cloud import speech
 # from GPT import generate_question as gq
 # from ..models import face_detect
 
+# Set the path for the client file
+client_file = 'instance/mock-interview.json'
+credentials = service_account.Credentials.from_service_account_file(client_file)
+client = speech.SpeechClient(credentials = credentials)
 
 interview = Blueprint('interview', __name__)
 
@@ -41,6 +50,99 @@ def test():
 @interview.route('/interview')
 def index():
     return render_template('interview.html')
+
+class AudioRecorder:
+    def __init__(self):
+        self.CHUNK = 1024
+        self.FORMAT = pyaudio.paInt16
+        self.CHANNELS = 1
+        self.RATE = 44100
+        self.WAVE_OUTPUT_FILENAME = "output.wav"
+        self.recording = False
+        self.frames = []
+        self.audio = pyaudio.PyAudio()
+        self.stream = None
+        self.thread = None
+
+    def start_recording(self):
+        if not self.recording:
+            self.recording = True
+            self.frames = []
+            self.thread = threading.Thread(target=self._record)
+            self.thread.start()
+            return True
+        return False
+
+    def stop_recording(self):
+        if self.recording:
+            self.recording = False
+            self.thread.join()
+            self._save_audio()
+
+            audio_data = b''.join(self.frames)
+
+            audio = speech.RecognitionAudio(content=audio_data)
+
+            config = speech.RecognitionConfig(
+                encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+                sample_rate_hertz=self.RATE,
+                language_code='cmn-Hant-TW',
+                enable_automatic_punctuation=True
+            )
+
+            response = client.recognize(config=config, audio=audio)
+            if response.results:
+                recorded = response.results[0].alternatives[0].transcript
+                print("Recorded Text: " + recorded, flush=True)
+
+                # 將使用者的回答給gpt獲得建議和評分
+                # gpt_analysis = ra.gen_final_advice(audio_results['accumulated_transcript'])
+                gpt_analysis = "這題回答的還不錯，有回答到問題的核心"
+                # user_id = current_user.id
+                user_id = request.json.get('user_id')
+                interview_id = request.json.get('interview_id')
+                question_id = request.json.get('question_id')
+                score = randint(60, 100)
+
+                # 新增至資料庫
+                history_id = db.addQuestionHistory(gpt_analysis, question_id, user_id, recorded, score, interview_id)
+                db.addVoiceTranscriptions(len(recorded.split()), recorded, history_id)
+
+            return True
+        return False
+
+    def _record(self):
+        self.stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS,
+                                      rate=self.RATE, input=True,
+                                      frames_per_buffer=self.CHUNK)
+        while self.recording:
+            data = self.stream.read(self.CHUNK)
+            self.frames.append(data)
+        self.stream.stop_stream()
+        self.stream.close()
+
+    def _save_audio(self):
+        wf = wave.open(self.WAVE_OUTPUT_FILENAME, 'wb')
+        wf.setnchannels(self.CHANNELS)
+        wf.setsampwidth(self.audio.get_sample_size(self.FORMAT))
+        wf.setframerate(self.RATE)
+        wf.writeframes(b''.join(self.frames))
+        wf.close()
+
+recorder = AudioRecorder()
+
+@interview.route('/start_recording')
+def start_recording():
+    if recorder.start_recording():
+        return jsonify({"status": "Recording started"})
+    return jsonify({"status": "Already recording"})
+
+@interview.route('/stop_recording', methods=['POST'])
+def stop_recording():
+    if recorder.stop_recording():
+        return jsonify({"status": "Recording stopped", "file": recorder.WAVE_OUTPUT_FILENAME})
+    return jsonify({"status": "Not recording"})
+
 
 
 def convert(file):
@@ -103,20 +205,6 @@ def start_camera():
     question_id = db.addQuestions(department, school, interview_id, schooldepartment, question, user_id)
     
     return jsonify({"interview_id": interview_id, "question_id": question_id, "question": question})
-
-@interview.route('/start_recording')
-def start_recording():
-    # Audio
-    global audio_thread, audio_results
-    audio_results = {}
-    def run_audio():
-        global audio_results
-        
-        audio_results = audio.main()
-    
-    audio_thread = threading.Thread(target=run_audio)
-    audio_thread.start()
-    return "Start Recording"
     
 @interview.route('/end_interview', methods=['POST'])
 def end_interview():
@@ -180,36 +268,6 @@ def end_interview():
     
     return stats
 
-
-@interview.route('/stop_recording', methods=['POST'])
-def stop_recording():
-    global audio_thread, audio_results
-
-    audio.stop_event.set()
-    audio_thread.join()
-
-    # 音訊辨識的結果
-    # audio_results = {
-    #     "accumulated_transcript": 使用者的逐字稿
-    #     "word_count": 每一個音檔的字數
-    #     "total_words": 總字數
-    #     "recording_times": 總共錄了幾個音檔
-    # }
-
-    # 將使用者的回答給gpt獲得建議和評分
-    # gpt_analysis = ra.gen_final_advice(audio_results['accumulated_transcript'])
-    gpt_analysis = "這題回答的還不錯，有回答到問題的核心"
-    # user_id = current_user.id
-    user_id = request.json.get('user_id')
-    interview_id = request.json.get('interview_id')
-    question_id = request.json.get('question_id')
-    score = randint(60, 100)
-
-    # 新增至資料庫
-    history_id = db.addQuestionHistory(gpt_analysis, question_id, user_id, audio_results['accumulated_transcript'], score, interview_id)
-    db.addVoiceTranscriptions(audio_results['word_count'], audio_results['accumulated_transcript'], history_id)
-    
-    return audio_results['accumulated_transcript']
     
 cap = None
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')

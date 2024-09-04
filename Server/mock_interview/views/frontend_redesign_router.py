@@ -109,7 +109,7 @@ def interviewReview():
     facial_score = db.countEmotionScore(interview_id)
     
     # name = current_user.username
-    name = '謝維倫'
+    name = current_user.username
     interview_school = interview['college']
     interview_department = interview['department']
     overall_grade = feedback['rating']

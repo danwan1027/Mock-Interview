@@ -152,3 +152,29 @@ def history_question(school, department, n):
         return selected_question
     else:
         return "None"
+    
+    
+# 根據前一題的回答再生成新的問題
+def answer_question(question, response, school, department):
+    endpoint = "https://api.openai.com/v1/completions"
+    prompts = load_genquestion_prompt()
+    prompt = prompts["answer_question"] + school + department
+    prompt += "這是前一題的題目" + question
+    prompt += "這是使用者根據上一題題目的回答" + response
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"
+    }
+    data = {
+        "model": "gpt-3.5-turbo-instruct",
+        "prompt": prompt,
+        "max_tokens": 200
+    }
+
+    response = requests.post(endpoint, json=data, headers=headers)
+    if response.status_code == 200:
+        return response.json()["choices"][0]["text"]
+    else:
+        error_message = f"Failed to retrieve data: Status code {response.status_code}, Response: {response.text}"
+        print(error_message)
+        return None

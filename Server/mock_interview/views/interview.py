@@ -94,14 +94,14 @@ class AudioRecorder:
             if response.results:
                 recorded = response.results[0].alternatives[0].transcript
                 print("Recorded Text: " + recorded, flush=True)
-
-                # 將使用者的回答給gpt獲得建議和評分
-                # gpt_analysis = ra.gen_final_advice(audio_results['accumulated_transcript'])
-                gpt_analysis = "這題回答的還不錯，有回答到問題的核心"
-                # user_id = current_user.id
+                
                 user_id = request.json.get('user_id')
                 interview_id = request.json.get('interview_id')
                 question_id = request.json.get('question_id')
+                questionText = request.json.get('questionText')
+
+                # 將使用者的回答給gpt獲得建議和評分
+                gpt_analysis = ra.gen_record_advice(recorded, questionText)
                 score = randint(60, 100)
 
                 # 新增至資料庫

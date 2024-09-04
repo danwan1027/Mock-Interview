@@ -92,6 +92,7 @@ function Avatar() {
         },
         body: JSON.stringify({
           question_id: questionId,
+          questionText: questionText,
           interview_id: interviewId,
           user_id: userIdString,
         }),

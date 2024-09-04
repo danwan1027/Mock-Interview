@@ -48,6 +48,32 @@ def rate_advice():
     return render_template('result.html', advice = final_advice, score = interview_score)
 
 
+# 題目回答的分析
+def gen_record_advice(text, question_text):
+    endpoint = "https://api.openai.com/v1/completions"
+    prompts = load_genadvice_prompt()
+    prompt = prompts["record_advice"] + question_text
+    prompt += "，以下是面試者的回答: " + text
+    
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"
+    }
+    data = {
+        "model": "gpt-3.5-turbo-instruct",
+        "prompt": prompt,
+        "max_tokens": 200
+    }
+    
+    response = requests.post(endpoint, json=data, headers=headers)
+    if response.status_code == 200:
+        return response.json()["choices"][0]["text"]
+    else:bb
+        error_message = f"Failed to retrieve data: Status code {response.status_code}, Response: {response.text}"
+        print(error_message)
+        return None
+
+
 
 # 生成建議
 def gen_final_advice(stat):

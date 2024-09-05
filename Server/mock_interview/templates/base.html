@@ -1,39 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        {% block head %}
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    {% block head %}
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
+    <title>{% block title %}AI Interviewer{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    {% endblock %}
+</head>
 
-        <title>{% block title %}AI Interviewer{% endblock %}</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
-        {% endblock %}
-    </head>
-
-
-    <body>
-        {% if current_user.is_authenticated %}
-            {% if current_user.role == 'admin' %}
-                {% include 'navbar/admin_navbar.html' %}
-            {% elif current_user.role == 'student' %}
-                {% include 'navbar/student_navbar.html' %}
-            {% else %}
-                {% include 'navbar/teacher_navbar.html' %}
-            {% endif %}
+<body>
+    {% if current_user.is_authenticated %}
+        {% if current_user.role == 'admin' %}
+            {% include 'navbar/admin_navbar.html' %}
+        {% elif current_user.role == 'student' %}
+            {% include 'navbar/student_navbar.html' %}
         {% else %}
-            {% include 'navbar/guest_navbar.html' %}
+            {% include 'navbar/teacher_navbar.html' %}
         {% endif %}
+    {% else %}
+        {% include 'navbar/guest_navbar.html' %}
+    {% endif %}
 
-        <div class="container-xl mb-4 mt-4">
-            {% block content %}{% endblock %}
-        </div>
-        
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
-    </body>
+    <div class="container-xl mb-4 mt-4">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- Common JavaScript files -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    
+    {% block scripts %}
+    {% endblock %}
+</body>
 </html>

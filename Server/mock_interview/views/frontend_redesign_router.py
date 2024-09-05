@@ -28,6 +28,19 @@ def admin_dashboard():
                             teacher_form=teacher_register,
                             student_form=student_register)
 
+@frontend_redesign_router.route('/teacherDashboard')
+def teacher_dashboard():
+    student_register = register_form.StudentRegistrationForm()
+    teacher_register = register_form.TeacherRegistrationForm()
+    students = db.getAllStudent()
+    teachers = db.getAllTeacher()
+    return render_template('dashboard/teacherDashboard.html',
+                            students=students, 
+                            teachers=teachers,
+                            teacher_form=teacher_register,
+                            student_form=student_register)
+    
+    
 @frontend_redesign_router.route('/studentDashboard')
 def student_dashboard():
     # if request.args.get('user_id'):

@@ -107,8 +107,7 @@ class AudioRecorder:
                 # 新增至資料庫
                 history_id = db.addQuestionHistory(gpt_analysis, question_id, user_id, recorded, score, interview_id)
                 db.addVoiceTranscriptions(len(recorded.split()), recorded, history_id)
-
-            return True
+            return jsonify({"response": recorded})
         return False
 
     def _record(self):
@@ -160,13 +159,19 @@ def nextQuestion():
     school = request.form.get('school')
     interview_id = request.form.get('interview_id')
     resume = request.files.get('resume')
-    # interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
-    # resume = request.files['file']
-    # resume_text = convert(resume)
+    randombool = request.form.get('randombool')
     count = request.form.get('count')
     # count string to int
     count = int(count)
-    if(count == 1):
+    
+    # 如果randombool為true
+    question_text = request.form.get('question_text')
+    response = request.form.get('response')
+    if(randombool == "true"):
+        question = gq.answer_question(question_text, response, school, department)
+        count = count - 1
+        randombool = "false"
+    elif(count == 1):
         question = gq.gensecond_question(school, department)
         # question = "請問你認為清大的工業工程與管理學系有什麼吸引你的特質？"
     elif(count == 2):
@@ -176,9 +181,14 @@ def nextQuestion():
         # question = gq.history_question("國立清華大學", "工業工程與管理學系", count-3)
         question = "此題將在資料庫中自動搜索"
     
+    if(count == 1 or count == 2):
+        # 50% 機率把randombool設為True
+        if(randint(0, 1) == 1):
+            randombool = "true"
+    
     question_id = db.addQuestions(department, school, interview_id, school + department, question, user_id)
     
-    return jsonify({"question_id": question_id, "question": question})
+    return jsonify({"question_id": question_id, "question": question, "randombool": randombool})
 
 
 @interview.route('/video_feed')

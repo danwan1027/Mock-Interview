@@ -155,12 +155,12 @@ def history_question(school, department, n):
     
     
 # 根據前一題的回答再生成新的問題
-def answer_question(question, response, school, department):
+def genanswer_question(question, response, school, department):
     endpoint = "https://api.openai.com/v1/completions"
     prompts = load_genquestion_prompt()
     prompt = prompts["answer_question"] + school + department
-    prompt += "這是前一題的題目" + question
-    prompt += "這是使用者根據上一題題目的回答" + response
+    prompt += "，這是前一題的題目: " + question
+    prompt += "，這是使用者根據上一題題目的回答: " + response
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"

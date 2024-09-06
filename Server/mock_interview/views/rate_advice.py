@@ -68,7 +68,7 @@ def gen_record_advice(text, question_text):
     response = requests.post(endpoint, json=data, headers=headers)
     if response.status_code == 200:
         return response.json()["choices"][0]["text"]
-    else:bb
+    else:
         error_message = f"Failed to retrieve data: Status code {response.status_code}, Response: {response.text}"
         print(error_message)
         return None

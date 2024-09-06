@@ -37,6 +37,9 @@ function Avatar() {
   const [questionText, setQuestionText] = useState<string>(""); // 這裡定義 questionText 狀態
   const [interviewId, setInterviewId] = useState<string>("");
   const [questionId, setQuestionId] = useState<string>("");
+  const [response, setResponse] = useState<string>("");
+  // 隨機判應是否要追問
+  const [randombool, setRandombool] = useState<string>("false");
 
   //面試校系
   const [department, setDepartment] = useState<string>('');
@@ -96,7 +99,11 @@ function Avatar() {
           interview_id: interviewId,
           user_id: userIdString,
         }),
-      });
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setResponse(data.response);
+        });
     } catch (error) {
       console.error("Error ending recording:", error);
     }
@@ -156,6 +163,10 @@ function Avatar() {
     formData.append("department", department);
     formData.append("interview_id", interviewId);
     formData.append("count", count.toString());
+    formData.append("randombool", randombool);
+    // answer_question會用到的參數
+    formData.append("question_text", questionText);
+    formData.append("response", response);
     console.log("count", count);
     if(resume){
       formData.append("resume", resume);
@@ -168,6 +179,7 @@ function Avatar() {
       .then((data) => {
         setQuestionText(data.question);
         setQuestionId(data.question_id);
+        setRandombool(data.randombool);
       })
       .catch((error) => console.error("Error getting next question:", error));
 

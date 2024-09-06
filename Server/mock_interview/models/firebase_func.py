@@ -755,3 +755,10 @@ def getUserEmotionScore(user_id: str):
         emotion_score.append(countEmotionScore(inter.to_dict()['interview_id']))
     
     return emotion_score
+
+
+# 用interview_id和question_id找到對應的question_history，再透過question_history的history_id找到對應的voice_transcriptions
+def getVoiceTranscriptions(interview_id: str, question_id: str):
+    question_history_ref = db.collection('Question_history').where('interview_id', '==', interview_id).where('question_id', '==', question_id).stream()
+    # 繼續找到對應的voice_transcriptions
+    

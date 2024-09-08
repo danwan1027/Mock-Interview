@@ -20,7 +20,7 @@ def login():
             if user.role == 'admin':
                 return redirect(url_for('home_view.admin'))
             elif user.role == 'teacher':
-                return redirect(url_for('interviewer_view.dashboard'))
+                return redirect(url_for('frontend_redesign_router.teacher_dashboard'))
             else:
                 return redirect(url_for('frontend_redesign_router.student_dashboard'))
 

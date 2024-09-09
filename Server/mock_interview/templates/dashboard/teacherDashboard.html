@@ -56,7 +56,7 @@
 
                         <div class="modal-body">
                             <div>sdcsd</div>
-                            <form method="POST" action="/student_register">
+                            <form method="POST" action="/student_register_by_teacher" enctype="multipart/form-data">
                                 {% for field in student_form %}
                                     {{ macros.render_field(field) }}
                                 {% endfor %}
@@ -91,10 +91,8 @@
                     <td class="right-align">
                         <span class="edit-link">Edit</span>
                         <span class="delete-link">Delete</span>
-                        
                     </td>
                 </tr>
-                
                 {% endfor %}
             </tbody>
 

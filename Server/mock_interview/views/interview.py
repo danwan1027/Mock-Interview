@@ -107,8 +107,8 @@ class AudioRecorder:
                 # 新增至資料庫
                 history_id = db.addQuestionHistory(gpt_analysis, question_id, user_id, recorded, score, interview_id)
                 db.addVoiceTranscriptions(len(recorded.split()), recorded, history_id)
-            return jsonify({"response": recorded})
-        return False
+            return recorded
+        return "False"
 
     def _record(self):
         self.stream = self.audio.open(format=self.FORMAT, channels=self.CHANNELS,
@@ -138,9 +138,8 @@ def start_recording():
 
 @interview.route('/stop_recording', methods=['POST'])
 def stop_recording():
-    if recorder.stop_recording():
-        return jsonify({"status": "Recording stopped", "file": recorder.WAVE_OUTPUT_FILENAME})
-    return jsonify({"status": "Not recording"})
+    record_text = recorder.stop_recording()
+    return jsonify({"record_text": record_text})
 
 
 
@@ -167,10 +166,21 @@ def nextQuestion():
     # 如果randombool為true
     question_text = request.form.get('question_text')
     response = request.form.get('response')
+    
+    # randombool = "false"
+    
+    # if(count == 1 or count == 2 or count == 3):
+    #     50% 機率把randombool設為True
+    #     if(randint(0, 1) == 1):
+    #         randombool = "true"
+    
+    if(randombool == "false" or count != 3 or count != 4):
+        randombool = "true"
+    else:
+        randombool = "false"
+    
     if(randombool == "true"):
         question = gq.answer_question(question_text, response, school, department)
-        count = count - 1
-        randombool = "false"
     elif(count == 1):
         question = gq.gensecond_question(school, department)
         # question = "請問你認為清大的工業工程與管理學系有什麼吸引你的特質？"
@@ -178,13 +188,8 @@ def nextQuestion():
         question = gq.genthird_question(resume)
         # question = "你在履歷中提到了你在工業工程與管理學系的經驗，可以談談你的經驗嗎？"
     elif(count == 3 or count == 4):
-        # question = gq.history_question("國立清華大學", "工業工程與管理學系", count-3)
-        question = "此題將在資料庫中自動搜索"
-    
-    if(count == 1 or count == 2):
-        # 50% 機率把randombool設為True
-        if(randint(0, 1) == 1):
-            randombool = "true"
+        question = gq.history_question("國立清華大學", "工業工程與管理學系", count-3)
+        # question = "此題將在資料庫中自動搜索"
     
     question_id = db.addQuestions(department, school, interview_id, school + department, question, user_id)
     

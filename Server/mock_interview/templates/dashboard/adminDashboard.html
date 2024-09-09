@@ -39,8 +39,9 @@
                         <h5 class="modal-title" id="addStudentLabel">新增學生</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+
                         <div class="modal-body">
-                            <form method="POST" action="/student_register">
+                            <form method="POST" action="/student_register_by_teacher" enctype="multipart/form-data">
                                 {% for field in student_form %}
                                     {{ macros.render_field(field) }}
                                 {% endfor %}
@@ -110,7 +111,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form method="POST" action="/teacher_register">
+                            <form method="POST" action="/teacher_register_by_admin" enctype="multipart/form-data">
                                 {% for field in teacher_form %}
                                     {{ macros.render_field(field) }}
                                 {% endfor %}

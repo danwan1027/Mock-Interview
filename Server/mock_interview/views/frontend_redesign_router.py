@@ -32,10 +32,10 @@ def admin_dashboard():
 def teacher_dashboard():
     student_register = register_form.StudentRegistrationForm()
     teacher_register = register_form.TeacherRegistrationForm()
-    students = db.getAllStudent()
+    students = db.getStudentByTeacherEmail(current_user.id)
     teachers = db.getAllTeacher()
     return render_template('dashboard/teacherDashboard.html',
-                            students=students, 
+                            student_list=students, 
                             teachers=teachers,
                             teacher_form=teacher_register,
                             student_form=student_register)

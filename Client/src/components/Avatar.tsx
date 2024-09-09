@@ -102,7 +102,7 @@ function Avatar() {
       })
         .then((response) => response.json())
         .then((data) => {
-          setResponse(data.response);
+          setResponse(data.record_text);
         });
     } catch (error) {
       console.error("Error ending recording:", error);
@@ -180,10 +180,11 @@ function Avatar() {
         setQuestionText(data.question);
         setQuestionId(data.question_id);
         setRandombool(data.randombool);
+        if (data.randombool === "false") {
+          setCount(count + 1);
+        }
       })
       .catch((error) => console.error("Error getting next question:", error));
-
-      setCount(count + 1);
   };
 
   async function fetchAccessToken() {
@@ -300,7 +301,9 @@ function Avatar() {
           {debug}
 
           <div className="question">{questionText}</div>
-          <div>第{count}題</div>
+          {/* 顯示第幾題，若randombool為true則顯示此題為追問題*/}
+          {randombool === "true" && <div>根據上題追問</div>}
+          {randombool === "false" && <div>第{count}題</div>}
 
           <div className="images">
             <div className="image_frame">

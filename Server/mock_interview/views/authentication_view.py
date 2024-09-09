@@ -20,7 +20,7 @@ def login():
             if user.role == 'admin':
                 return redirect(url_for('home_view.admin'))
             elif user.role == 'teacher':
-                return redirect(url_for('interviewer_view.dashboard'))
+                return redirect(url_for('frontend_redesign_router.teacher_dashboard'))
             else:
                 return redirect(url_for('frontend_redesign_router.student_dashboard'))
 
@@ -76,4 +76,54 @@ def student_register():
     department = request.form['department']
     teacher = request.form['teacher']
     db.addUser(username, password, email, role, profile_image, student_id, classroom, seat_number, school, department, teacher)
-    return "success"
+    user = db.get_user_by_email(email)
+    login_user(user, True)
+    
+    return redirect(url_for('frontend_redesign_router.student_dashboard'))
+
+
+@authentication_view.route('/student_register_by_teacher', methods=['POST'])
+def student_register_by_teacher():
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+    role = 'student'
+    profile_image = request.files['profile_image']
+    school = request.form['school']
+    student_id = request.form['student_id']
+    classroom = request.form['classroom']
+    seat_number = request.form['seat_number']
+    department = request.form['department']
+    teacher = request.form['teacher']
+    db.addUser(username, password, email, role, profile_image, student_id, classroom, seat_number, school, department, teacher)
+    
+    return redirect(url_for('frontend_redesign_router.teacher_dashboard'))
+
+
+@authentication_view.route('/teacher_register_by_admin', methods=['POST'])
+def teacher_register_by_admin():
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+    role = 'teacher'
+    profile_image = request.files['profile_image']
+    school = request.form['school']
+    db.addUser(username, password, email, role, profile_image, school=school)
+    return redirect(url_for('home_view.admin'))
+
+@authentication_view.route('/student_register_by_admin', methods=['POST'])
+def student_register_by_admin():
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+    role = 'student'
+    profile_image = request.files['profile_image']
+    school = request.form['school']
+    student_id = request.form['student_id']
+    classroom = request.form['classroom']
+    seat_number = request.form['seat_number']
+    department = request.form['department']
+    teacher = request.form['teacher']
+    db.addUser(username, password, email, role, profile_image, student_id, classroom, seat_number, school, department, teacher)
+    
+    return redirect(url_for('home_view.admin'))

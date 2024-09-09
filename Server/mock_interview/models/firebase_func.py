@@ -757,8 +757,31 @@ def getUserEmotionScore(user_id: str):
     return emotion_score
 
 
-# 用interview_id和question_id找到對應的question_history，再透過question_history的history_id找到對應的voice_transcriptions
-def getVoiceTranscriptions(interview_id: str, question_id: str):
-    question_history_ref = db.collection('Question_history').where('interview_id', '==', interview_id).where('question_id', '==', question_id).stream()
-    # 繼續找到對應的voice_transcriptions
+def getStudentByTeacherEmail(user_id: str):
+    # get teacher email
+    teacher = get_user_by_id(user_id)
+    teacher_email = teacher.email
+    
+    student_ref = db.collection('Users').where('role', '==', 'student').where('teacher', '==', teacher_email).stream()
+    student = []
+    
+    for stu in student_ref:
+        stu_data = stu.to_dict()
+        student.append({
+            'user_id': stu_data['user_id'],
+            'username': stu_data['username'],
+            'email': stu_data['email'],
+            'role': stu_data['role'],
+            'profile_image': stu_data['profile_image'],
+            'created_at': stu_data['created_at'],
+            'school': stu_data['school'],
+            'classroom': stu_data['classroom'],
+            'seat_number': stu_data['seat_number'],
+            'department': stu_data['department'],
+            'teacher': stu_data['teacher'],
+            'student_id': stu_data['student_id'],
+        })
+        
+    return student
+    
     

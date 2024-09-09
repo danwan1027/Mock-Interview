@@ -167,12 +167,17 @@ def nextQuestion():
     question_text = request.form.get('question_text')
     response = request.form.get('response')
     
-    randombool = "false"
+    # randombool = "false"
     
-    if(count == 1 or count == 2 or count == 3):
-        # 50% 機率把randombool設為True
-        if(randint(0, 1) == 1):
-            randombool = "true"
+    # if(count == 1 or count == 2 or count == 3):
+    #     50% 機率把randombool設為True
+    #     if(randint(0, 1) == 1):
+    #         randombool = "true"
+    
+    if(randombool == "false"):
+        randombool = "true"
+    else:
+        randombool = "false"
     
     if(randombool == "true"):
         question = gq.answer_question(question_text, response, school, department)

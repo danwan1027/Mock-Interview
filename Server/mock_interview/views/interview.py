@@ -174,7 +174,7 @@ def nextQuestion():
     #     if(randint(0, 1) == 1):
     #         randombool = "true"
     
-    if(randombool == "false" or count != 3 or count != 4):
+    if(randombool == "false"):
         randombool = "true"
     else:
         randombool = "false"
@@ -188,8 +188,8 @@ def nextQuestion():
         question = gq.genthird_question(resume)
         # question = "你在履歷中提到了你在工業工程與管理學系的經驗，可以談談你的經驗嗎？"
     elif(count == 3 or count == 4):
-        question = gq.history_question("國立清華大學", "工業工程與管理學系", count-3)
-        # question = "此題將在資料庫中自動搜索"
+        #question = gq.history_question("國立清華大學", "工業工程與管理學系", count-3)
+        question = "此題將在資料庫中自動搜索"
     
     question_id = db.addQuestions(department, school, interview_id, school + department, question, user_id)
     

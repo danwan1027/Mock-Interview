@@ -16,7 +16,7 @@
     {% elif field.name != 'csrf_token' %}
         <div class="form-group">
             <label class="form-group">{{ field.label }}</label>
-            {{ field(**kwargs) }}
+            {{ field(class="form-control form-control-lg", **kwargs) }}
         </div>
     {% endif %}
 {% endmacro %}

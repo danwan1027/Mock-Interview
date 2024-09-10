@@ -43,13 +43,15 @@
                         <div class="modal-body">
                             <form method="POST" action="/student_register_by_teacher" enctype="multipart/form-data">
                                 {% for field in student_form %}
-                                    {{ macros.render_field(field) }}
+                                    {% if field.type != 'SubmitField' %}
+                                        {{ macros.render_field(field, id="student_" + field.name) }}
+                                    {% endif %}
                                 {% endfor %}
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                    <input type="submit" class="btn btn-primary" data-bs-dismiss="modal" value="新增學生">
+                                </div>
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">新增學生</button>
                         </div>
                     </div>
                     </div>
@@ -113,14 +115,17 @@
                         <div class="modal-body">
                             <form method="POST" action="/teacher_register_by_admin" enctype="multipart/form-data">
                                 {% for field in teacher_form %}
-                                    {{ macros.render_field(field) }}
+                                    {% if field.type != 'SubmitField' %}
+                                        {{ macros.render_field(field, id="teacher_" + field.name) }}
+                                    {% endif %}
                                 {% endfor %}
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                    <input type="submit" class="btn btn-primary" data-bs-dismiss="modal" value="新增老師">
+                                </div>
                             </form>
                         </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">新增老師</button>
-                        </div>
+                        
                     </div>
                     </div>
                 </div>

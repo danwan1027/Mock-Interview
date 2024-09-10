@@ -18,7 +18,7 @@ def login():
             login_user(user, login.remember_me.data)
             # return redirect(url_for('home_view.index'))
             if user.role == 'admin':
-                return redirect(url_for('home_view.admin'))
+                return redirect(url_for('frontend_redesign_router.admin_dashboard'))
             elif user.role == 'teacher':
                 return redirect(url_for('frontend_redesign_router.teacher_dashboard'))
             else:
@@ -49,7 +49,10 @@ def admin_register():
     role = 'admin'
     profile_image = request.files['profile_image']
     db.addUser(username, password, email, role, profile_image)
-    return "success"
+    user = db.get_user_by_email(email)
+    login_user(user, True)
+    
+    return redirect(url_for('frontend_redesign_router.admin_dashboard'))
 
 @authentication_view.route('/teacher_register', methods=['POST'])
 def teacher_register():
@@ -60,7 +63,10 @@ def teacher_register():
     profile_image = request.files['profile_image']
     school = request.form['school']
     db.addUser(username, password, email, role, profile_image, school=school)
-    return "success"
+    user = db.get_user_by_email(email)
+    login_user(user, True)
+    
+    return redirect(url_for('frontend_redesign_router.teacher_dashboard'))
 
 @authentication_view.route('/student_register', methods=['POST'])
 def student_register():
@@ -109,7 +115,7 @@ def teacher_register_by_admin():
     profile_image = request.files['profile_image']
     school = request.form['school']
     db.addUser(username, password, email, role, profile_image, school=school)
-    return redirect(url_for('home_view.admin'))
+    return redirect(url_for('frontend_redesign_router.admin_dashboard'))
 
 @authentication_view.route('/student_register_by_admin', methods=['POST'])
 def student_register_by_admin():
@@ -126,4 +132,4 @@ def student_register_by_admin():
     teacher = request.form['teacher']
     db.addUser(username, password, email, role, profile_image, student_id, classroom, seat_number, school, department, teacher)
     
-    return redirect(url_for('home_view.admin'))
+    return redirect(url_for('frontend_redesign_router.admin_dashboard'))

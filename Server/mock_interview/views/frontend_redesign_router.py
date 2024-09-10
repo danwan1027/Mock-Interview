@@ -23,8 +23,8 @@ def admin_dashboard():
     students = db.getAllStudent()
     teachers = db.getAllTeacher()
     return render_template('dashboard/adminDashboard.html',
-                            students=students, 
-                            teachers=teachers,
+                            student_list=students, 
+                            teacher_list=teachers,
                             teacher_form=teacher_register,
                             student_form=student_register)
 

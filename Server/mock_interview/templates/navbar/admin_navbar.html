@@ -1,7 +1,10 @@
 {% block navbar %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <div class="container-xl d-flex flex-wrap mb-4 mt-4">
-        <a class="navbar-brand fw-bold fs-2 me-5" href="{{url_for('home_view.index')}}">AI 模擬面試系統</a>
+        <a class="navbar-brand fw-bold fs-2 me-5" href="{{url_for('home_view.index')}}">
+            <img src="../../static/images/metaview-logo.svg" alt="logo" width="110" height="55" class="d-inline-block align-text-top">
+            MetaView
+        </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>

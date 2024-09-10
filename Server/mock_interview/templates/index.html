@@ -15,7 +15,7 @@
 
 <div class="goTop">
   <a href="#top" class="goTopBtn jq-goTop">
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5"/>
     </svg>
   </a>
@@ -26,43 +26,60 @@
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
     </div>
     <div class="carousel-inner">
         <div class="carousel-item active">
+            <img src="../static/images/homepageInterview.jpg" class="d-block w-100" alt="image">
             <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
 
             <div class="container">
                 <div class="carousel-caption text-start">
-                    <h1>Example headline.</h1>
-                    <p>Some representative placeholder content for the first slide of the carousel.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
+                    <h1>MetaView</h1>
+                    <p>最強大的AI模擬面試系統，協助使用者全面練習應答，快速提升面試表現</p>
+                    <p><a class="btn btn-lg btn-primary" href="{{url_for('authentication_view.login')}}">現在就開始</a></p>
                 </div>
             </div>
         </div>
 
         <div class="carousel-item">
+            <img src="../static/images/digitalAnalysis.jpg" class="d-block w-100" alt="image">
             <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
 
             <div class="container">
                 <div class="carousel-caption">
-                    <h1>Another example headline.</h1>
-                    <p>Some representative placeholder content for the second slide of the carousel.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+                    <h1>數位孿生</h1>
+                    <p>鏡像真實世界數據，用於模擬與優化</p>
+                    <p><a class="btn btn-lg btn-primary" href="{{url_for('authentication_view.login')}}">了解更多</a></p>
                 </div>
             </div>
         </div>
 
         <div class="carousel-item">
+            <img src="../static/images/facial-recognition.jpg" class="d-block w-100" alt="image">
             <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
 
             <div class="container">
                 <div class="carousel-caption text-end">
-                  <h1>One more for good measure.</h1>
-                  <p>Some representative placeholder content for the third slide of this carousel.</p>
-                  <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
+                  <h1>臉部表情偵測</h1>
+                  <p>即時偵測臉部表情變化，評估情緒狀態</p>
+                  <p><a class="btn btn-lg btn-primary" href="{{url_for('authentication_view.login')}}">加入我們</a></p>
                 </div>
             </div>
         </div>
+
+        <div class="carousel-item">
+          <img src="../static/images/Voiceanalysis.jpg" class="d-block w-100" alt="image">
+          <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777"/></svg>
+
+          <div class="container">
+              <div class="carousel-caption">
+                  <h1>語音分析</h1>
+                  <p>記錄使用者回答，進行評估與反饋</p>
+                  <p><a class="btn btn-lg btn-primary" href="{{url_for('authentication_view.login')}}">了解更多</a></p>
+              </div>
+          </div>
+      </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -281,36 +298,36 @@
   <div class="accordion-item">
     <h2 class="accordion-header" id="Q1">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#Q1-ans" aria-expanded="false" aria-controls="Q1-ans">
-        好用嗎?
+        MetaView是如何幫助學生準備大學面試的？
       </button>
     </h2>
     <div id="Q1-ans" class="accordion-collapse collapse" aria-labelledby="Q1" data-bs-parent="#FAQ">
       <div class="accordion-body">
-        當然好用
+        MetaView利用多模態技術，通過數位孿生模擬真實面試場景，讓學生在虛擬環境中練習應對問題。同時，系統會分析學生的表情和語音，提供個人回饋，幫助提升他們的表現和自信心。
       </div>
     </div>
   </div>
   <div class="accordion-item">
     <h2 class="accordion-header" id="Q2">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#Q2-ans" aria-expanded="false" aria-controls="Q2-ans">
-        厲害嗎?
+        MetaView是否適用於不同科系的面試準備？
       </button>
     </h2>
     <div id="Q2-ans" class="accordion-collapse collapse" aria-labelledby="Q2" data-bs-parent="#FAQ">
       <div class="accordion-body">
-        當然厲害
+        MetaView系統可以根據不同大學和科系的面試要求進行定制，模擬不同專業的面試問題，從而幫助學生更好地針對所申請的學系進行準備。
       </div>
     </div>
   </div>
   <div class="accordion-item">
     <h2 class="accordion-header" id="Q3">
       <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#Q3-ans" aria-expanded="false" aria-controls="Q3-ans">
-        值得嗎?
+        如何使用MetaView來提升面試技巧？
       </button>
     </h2>
     <div id="Q3-ans" class="accordion-collapse collapse" aria-labelledby="Q3" data-bs-parent="#FAQ">
       <div class="accordion-body">
-        當然值得
+        學生只需登入系統並選擇所需模擬的面試場景，系統將自動生成問題，並實時分析他們的回應表現。通過多次練習和系統反饋，學生能夠快速識別自己的弱點並進行改善，有效提升面試技巧。
       </div>
     </div>
   </div>

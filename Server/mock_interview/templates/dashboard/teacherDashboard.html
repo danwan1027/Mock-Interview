@@ -24,6 +24,7 @@
             <canvas id="myDoughnutChart"></canvas>
         </div>
     </div>
+    
     <!-- Student Section -->
     <div class="container">
         <div class="header-controls">
@@ -44,7 +45,7 @@
                 <button type="button" class="btn add-button" data-bs-toggle="modal" data-bs-target="#addStudent">
                     新增
                 </button>
-
+                
                 <!-- ADD Modal -->
                 <div class="modal fade" id="addStudent" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addStudentLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -55,21 +56,21 @@
                         </div>
 
                         <div class="modal-body">
-                            <div>sdcsd</div>
                             <form method="POST" action="/student_register_by_teacher" enctype="multipart/form-data">
                                 {% for field in student_form %}
-                                    {{ macros.render_field(field) }}
+                                    {% if field.type != 'SubmitField' %}
+                                        {{ macros.render_field(field, id="student_" + field.name) }}
+                                    {% endif %}
                                 {% endfor %}
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                    <input type="submit" class="btn btn-primary" data-bs-dismiss="modal" value="新增學生">
+                                </div>
                             </form>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">新增學生</button>
                         </div>
                     </div>
                     </div>
                 </div>
-                
             </div>
         </div>
         <table class="table-scroll">
@@ -82,7 +83,6 @@
                 </tr>
             </thead>
             <tbody>
-
                 {% for student in student_list %}
                 <tr>
                     <td class="student-name">{{ student.username }}</td>
@@ -95,10 +95,9 @@
                 </tr>
                 {% endfor %}
             </tbody>
-
         </table>
-        
-    </div>
+    </div>   
+    
 </div>
 {% endblock %}
 

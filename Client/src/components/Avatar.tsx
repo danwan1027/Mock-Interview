@@ -298,7 +298,7 @@ function Avatar() {
       {/* Conditionally render ListBeforeInterview */}
       {!showListBeforeInterview && (
         <div>
-          {debug}
+          {/* {debug} */}
 
           <div className="question">{questionText}</div>
           {/* 顯示第幾題，若randombool為true則顯示此題為追問題*/}

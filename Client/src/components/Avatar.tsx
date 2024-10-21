@@ -51,6 +51,9 @@ function Avatar() {
   const userId = queryParams.get('user_id');
   const userIdString = userId ? String(userId) : '';
 
+  //題目朗誦或開始回答
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
   useEffect(() => {
     ///////////////////////////// talk with flask  /////////////////////////////
     fetch("http://127.0.0.1:3001/api/hello")
@@ -256,7 +259,6 @@ function Avatar() {
   }
 
   async function handleSpeak() {
-    await startRecording();
     if (!initialized || !avatar.current) {
       setDebug("Avatar API not initialized");
       return;
@@ -268,6 +270,8 @@ function Avatar() {
       .catch((e) => {
         setDebug(e.message);
       });
+
+      setIsSpeaking(true);
   }
 
   useEffect(() => {
@@ -335,14 +339,15 @@ function Avatar() {
           {/* <input className="InputField" placeholder='Type something for the avatar to say' value={text} onChange={(v) => setText(v.target.value)} />  */}
           <div className="button-container">
             <div>
-              {/*< button className="btn" onClick={() => handleActivate}>
-                啟動
-              </button>*/}
-              <button className="btn" onClick={handleSpeak}>
-                開始作答
-              </button>
-              {/* <button className="btn" onClick={startRecording}>開始回答</button>*/}
-              {/*<button className="btn" onClick={stopRecording}>結束回答</button>*/}
+              {!isSpeaking ? (
+                <button className="btn" onClick={handleSpeak}>
+                  題目朗誦
+                </button>
+              ) : (
+                <button className="btn" onClick={startRecording}>
+                  開始作答
+                </button>
+              )}
             </div>
             <div>
               {count !== 5 && (

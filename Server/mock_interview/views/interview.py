@@ -158,42 +158,30 @@ def nextQuestion():
     school = request.form.get('school')
     interview_id = request.form.get('interview_id')
     resume = request.files.get('resume')
-    randombool = request.form.get('randombool')
     count = request.form.get('count')
     # count string to int
     count = int(count)
     
-    # 如果randombool為true
+    # 追問
     question_text = request.form.get('question_text')
     response = request.form.get('response')
+    askbool = request.form.get('askbool')
     
-    # randombool = "false"
-    
-    # if(count == 1 or count == 2 or count == 3):
-    #     50% 機率把randombool設為True
-    #     if(randint(0, 1) == 1):
-    #         randombool = "true"
-    
-    if(randombool == "false"):
-        randombool = "true"
-    else:
-        randombool = "false"
-    
-    if(randombool == "true"):
+    if(askbool == "false"):
         question = gq.answer_question(question_text, response, school, department)
-    elif(count == 1):
-        question = gq.gensecond_question(school, department)
+    # elif(count == 1):
+        # question = gq.gensecond_question(school, department)
         # question = "請問你認為清大的工業工程與管理學系有什麼吸引你的特質？"
-    elif(count == 2):
+    elif(count == 1):
         question = gq.genthird_question(resume)
         # question = "你在履歷中提到了你在工業工程與管理學系的經驗，可以談談你的經驗嗎？"
-    elif(count == 3 or count == 4):
+    # elif(count == 3 or count == 4):
         # question = gq.history_question("國立清華大學", "工業工程與管理學系", count-3)
-        question = "此題將在資料庫中自動搜索"
+        # question = "此題將在資料庫中自動搜索"
     
     question_id = db.addQuestions(department, school, interview_id, school + department, question, user_id)
     
-    return jsonify({"question_id": question_id, "question": question, "randombool": randombool})
+    return jsonify({"question_id": question_id, "question": question, "askbool": askbool})
 
 
 @interview.route('/video_feed')
@@ -216,7 +204,7 @@ def start_camera():
     # interview_id = "bQWxr4ucsCpU5WJ1Ovyv"
     
     # 產生第一個問題
-    question = gq.genfirst_question(department)
+    question = gq.gensecond_question(school, department)
     # question = "請問你認為工業工程與管理學系能為社會帶來什麼？"
     schooldepartment = f"{school}{department}"
     question_id = db.addQuestions(department, school, interview_id, schooldepartment, question, user_id)

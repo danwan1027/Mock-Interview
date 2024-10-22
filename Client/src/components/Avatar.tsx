@@ -38,8 +38,8 @@ function Avatar() {
   const [interviewId, setInterviewId] = useState<string>("");
   const [questionId, setQuestionId] = useState<string>("");
   const [response, setResponse] = useState<string>("");
-  // 隨機判應是否要追問
-  const [randombool, setRandombool] = useState<string>("false");
+  // 用來判斷是否為追問題
+  const [askbool, setAskbool] = useState<string>("false");
 
   //面試校系
   const [department, setDepartment] = useState<string>('');
@@ -53,6 +53,7 @@ function Avatar() {
 
   //題目朗誦或開始回答
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isRecording, setIsRecording] = useState(true);
 
   useEffect(() => {
     ///////////////////////////// talk with flask  /////////////////////////////
@@ -107,9 +108,12 @@ function Avatar() {
         .then((data) => {
           setResponse(data.record_text);
         });
+        console.log("count", count);
     } catch (error) {
       console.error("Error ending recording:", error);
     }
+
+    setIsRecording(false);
   };
 
   const startCamera = (school: string, department: string, resume: File | null) => {
@@ -137,7 +141,7 @@ function Avatar() {
   };
 
   const endCamera = async () => {
-    await stopRecording();
+    // await stopRecording();
     fetch("http://127.0.0.1:3001/end_interview", {
       method: "POST",
       headers: {
@@ -159,19 +163,18 @@ function Avatar() {
   };
 
   const nextquestion = async () => {
-    await stopRecording(); // Call stopRecording before fetching next question
+    // await stopRecording(); all stopRecording before fetching next question
     const formData = new FormData();
     formData.append("user_id", userIdString);
     formData.append("school", school);
     formData.append("department", department);
     formData.append("interview_id", interviewId);
     formData.append("count", count.toString());
-    formData.append("randombool", randombool);
+    formData.append("askbool", askbool);
     // answer_question會用到的參數
     formData.append("question_text", questionText);
     formData.append("response", response);
-    console.log("count", count);
-    if(resume){
+    if (resume) {
       formData.append("resume", resume);
     }
     fetch("http://127.0.0.1:3001/next_question", {
@@ -180,14 +183,20 @@ function Avatar() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setQuestionText(data.question);
-        setQuestionId(data.question_id);
-        setRandombool(data.randombool);
-        if (data.randombool === "false") {
+        if(askbool === "true"){
+          setAskbool("false");
           setCount(count + 1);
         }
+        else{
+          setAskbool("true");
+        }
+        setQuestionText(data.question);
+        setQuestionId(data.question_id);
       })
       .catch((error) => console.error("Error getting next question:", error));
+
+    setIsSpeaking(false);
+    setIsRecording(true);
   };
 
   async function fetchAccessToken() {
@@ -271,7 +280,7 @@ function Avatar() {
         setDebug(e.message);
       });
 
-      setIsSpeaking(true);
+    setIsSpeaking(true);
   }
 
   useEffect(() => {
@@ -306,8 +315,8 @@ function Avatar() {
 
           <div className="question">{questionText}</div>
           {/* 顯示第幾題，若randombool為true則顯示此題為追問題*/}
-          {randombool === "true" && <div>根據上題追問</div>}
-          {randombool === "false" && <div>第{count}題</div>}
+          {askbool === "true" && <div>根據上題追問</div>}
+          {askbool === "false" && <div>第{count}題</div>}
 
           <div className="images">
             <div className="image_frame">
@@ -349,18 +358,29 @@ function Avatar() {
                 </button>
               )}
             </div>
-            <div>
-              {count !== 5 && (
-                <button className="btn" onClick={nextquestion}>
-                  下一題
+            {isRecording && (
+              <div>
+                <button className="btn" onClick={stopRecording}>
+                  停止錄音
                 </button>
+              </div>
+            )}
+
+              {/* 確保停止錄音後才會顯示這兩個按鈕 */}
+              {!isRecording && count !== 2 && (
+                <div>
+                  <button className="btn" onClick={nextquestion}>
+                    下一題
+                  </button>
+                </div>
               )}
-              {count === 5 && (
-                <button className="btn" onClick={endCamera}>
-                  結束
-                </button>
+              {!isRecording && count === 2 && askbool === "false" && (
+                <div>
+                  <button className="btn" onClick={endCamera}>
+                    結束
+                  </button>
+                </div>
               )}
-            </div>
           </div>
         </div>
       )}

@@ -178,6 +178,89 @@ def gen_score(advice):
         error_message = f"Failed to retrieve data: Status code {response.status_code}, Response: {response.text}"
         print(error_message)
         return None
+    
+    
+# 生成整體回答內容的建議
+def gen_allanswer_advice(question1, question2, answer1, answer2):
+    endpoint = "https://api.openai.com/v1/completions"
+    prompts = load_genadvice_prompt()
+    prompt = prompts["allanswer_advice"] + question1 + "，以下是面試者對第一題的回答: " + answer1
+    prompt += "，以下是面試的第二題題目: " + answer2 + "，以下是面試者對第二題的問題: " + question2
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"
+    }
+    data = {
+        "model": "gpt-3.5-turbo-instruct",
+        "prompt": prompt,
+        "max_tokens": 100
+    }
+    
+    response = requests.post(endpoint, json=data, headers=headers)
+    if response.status_code == 200:
+        return response.json()["choices"][0]["text"]
+    else:
+        error_message = f"Failed to retrieve data: Status code {response.status_code}, Response: {response.text}"
+        print(error_message)
+        return None
+    
+    
+# 生成面試情緒的建議
+def gen_emotion_advice(total_emotion_count, angry_percent, disgust_percent, fear_percent, happy_percent, sad_percent, surprise_percent, neutral_percent):
+    endpoint = "https://api.openai.com/v1/completions"
+    prompts = load_genadvice_prompt()
+    prompt = prompts["emotion_advice"] + total_emotion_count
+    prompt += "，憤怒的情緒: " + angry_percent + "%"
+    prompt += "，噁心的情緒: " + disgust_percent + "%"
+    prompt += "，恐懼的情緒: " + fear_percent + "%"
+    prompt += "，高興的情緒: " + happy_percent + "%"
+    prompt += "，悲傷的情緒: " + sad_percent + "%"
+    prompt += "，驚訝的情緒: " + surprise_percent + "%"
+    prompt += "，中性的情緒: " + neutral_percent + "%"
+    prompt += "。請根據你認為一個面試者應該有的情緒來給予評價，不一定要給出正面的評價，多以檢討錯誤的態度。"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"
+    }
+    data = {
+        "model": "gpt-3.5-turbo-instruct",
+        "prompt": prompt,
+        "max_tokens": 100
+    }
+    
+    response = requests.post(endpoint, json=data, headers=headers)
+    if response.status_code == 200:
+        return response.json()["choices"][0]["text"]
+    else:
+        error_message = f"Failed to retrieve data: Status code {response.status_code}, Response: {response.text}"
+        print(error_message)
+        return None
+
+
+
+# 生成眼睛專注的建議
+def gen_eye_gaze_advice(percentage_looking_at_camera):
+    endpoint = "https://api.openai.com/v1/completions"
+    prompts = load_genadvice_prompt()
+    prompt = prompts["eye_gaze"] + percentage_looking_at_camera + "%"
+    prompt += "。請根據你認為一個面試者應該有的專注度來給予評價，若低於75%的專注度就是不夠專注，低於60%就要給予嚴厲的批評。"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {os.getenv('OPENAI_API_KEY')}"
+    }
+    data = {
+        "model": "gpt-3.5-turbo-instruct",
+        "prompt": prompt,
+        "max_tokens": 100
+    }
+    
+    response = requests.post(endpoint, json=data, headers=headers)
+    if response.status_code == 200:
+        return response.json()["choices"][0]["text"]
+    else:
+        error_message = f"Failed to retrieve data: Status code {response.status_code}, Response: {response.text}"
+        print(error_message)
+        return None
 
 
 # 載入生成建議的prompt

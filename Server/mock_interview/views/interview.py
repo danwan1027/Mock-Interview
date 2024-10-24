@@ -254,21 +254,36 @@ def end_interview():
     total_emotion_count, angry_count, disgust_count, fear_count, happy_count, sad_count, surprise_count, neutral_count = (0, 0, 0, 0, 0, 0, 0, 0)
     total_frames = 0
     looking_at_camera_frames = 0
+    
+    # 把stats每個參數轉string
+    str_total_emotion_count = str(stats['total_emotion_count'])
+    str_angry_percent = str(stats['angry_percent'])
+    str_disgust_percent = str(stats['disgust_percent'])
+    str_fear_percent = str(stats['fear_percent'])
+    str_happy_percent = str(stats['happy_percent'])
+    str_sad_percent = str(stats['sad_percent'])
+    str_surprise_percent = str(stats['surprise_percent'])
+    str_neutral_percent = str(stats['neutral_percent'])
+    str_percentage_looking_at_camera = str(stats['percentage_looking_at_camera'])
+    
+    
 
     # genearate advice
-    # emotion_advice = ra.gen_emotion_advice(stats)
-    # eye_gaze_advice = ra.gen_eye_gaze_advice(stats)
+    emotion_advice = ra.gen_emotion_advice(str_total_emotion_count, str_angry_percent, str_disgust_percent, str_fear_percent, str_happy_percent, str_sad_percent, str_surprise_percent, str_neutral_percent)
+    eye_gaze_advice = ra.gen_eye_gaze_advice(str_percentage_looking_at_camera)
     # final_advice = ra.gen_final_advice(emotion_advice, eye_gaze_advice)
-    emotion_advice = "可以以更嚴肅但不失親切的態度面對，且更好的把緊張和恐懼的心理隱藏起來"
-    eye_gaze_advice = "可以更專注地看面試官，建議不要有過多的眼神迴避，聽取面試官的問題時可以看著面試官的眼睛"
+    # emotion_advice = "可以以更嚴肅但不失親切的態度面對，且更好的把緊張和恐懼的心理隱藏起來"
+    # eye_gaze_advice = "可以更專注地看面試官，建議不要有過多的眼神迴避，聽取面試官的問題時可以看著面試官的眼睛"
     final_advice = "總體來說表現還是不錯的，可以在多提升自己的專注度，在專業知識方面也回答得不錯"
+    
+    feedback_rate = randint(70, 100)
     
     
     #完成面試後將資料上傳到資料庫
     ##---------上傳資料庫---------
     db.addEmotionRecognition(stats['total_emotion_count'], emotion_advice, stats['percentage_looking_at_camera'], interview_id, stats['total_emotion_count'], stats['angry_percent'], stats['disgust_percent'], stats['fear_percent'], stats['happy_percent'], stats['sad_percent'], stats['surprise_percent'], stats['neutral_percent'])
     db.addEyeGaze(1, True, "test", eye_gaze_advice, interview_id, stats['percentage_looking_at_camera'])
-    db.addFeedback(final_advice, 75, interview_id, user_id)
+    db.addFeedback(final_advice, feedback_rate, interview_id, user_id)
     ##---------上傳資料庫---------
     
     return stats

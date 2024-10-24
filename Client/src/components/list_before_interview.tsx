@@ -50,6 +50,7 @@ interface ListBeforeInterviewProps {
                         <label><input type="radio" id="department5" name="department" value="生物科技學系" onChange={handleDepartmentChange} />生物科技學系</label>
                         <label><input type="radio" id="department6" name="department" value="應用化學系" onChange={handleDepartmentChange} />應用化學系</label>
                         <label><input type="radio" id="department7" name="department" value="電子物理學系" onChange={handleDepartmentChange} />電子物理學系</label>
+                        <label><input type="radio" id="department8" name="department" value="資訊工程軟體工程系" onChange={handleDepartmentChange} /> 資訊工程軟體工程系</label>
                     </ul>
                 </div>
                 <div className="list">

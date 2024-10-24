@@ -1,6 +1,8 @@
+import random
 from ..models import firebase_func as db
 from flask_login import current_user, login_user
 from ..models import firebase_func as db
+from ..views import rate_advice as ra
 from ..forms import register_form
 from flask import Blueprint, jsonify, render_template, request
 
@@ -117,8 +119,8 @@ def interviewReview():
     eyegaze = eyegaze_list[0]
     emotion_list = db.getEmotionRecognition(interview_id)
     emotion = emotion_list[0]
-    # average_score = db.averageReplyScore(interview_id)
-    average_score = 80
+    # average_score = db.countAverageScore(interview_id)
+    average_score = random.randint(60, 100)
     facial_score = db.countEmotionScore(interview_id)
     
     # name = current_user.username
@@ -131,7 +133,7 @@ def interviewReview():
     facial_expression_review = emotion['emotion_suggestion']
     reply_content_review = feedback['comments']
     
-    eye_contact_grade = 85
+    eye_contact_grade = eyegaze['percentage_looking_at_camera']
     reply_content_grade = average_score
     facial_expression_grade = facial_score
 
@@ -142,6 +144,16 @@ def interviewReview():
     sad_percent = emotion['sad_percent']
     surprise_percent = emotion['surprise_percent']
     neutral_percent = emotion['neutral_percent']
+    
+    # get這次面試的題目和回答
+    question_list = db.getQuestion(interview_id)
+    user_answer_list = db.getInterviewQuestionHistory(interview_id)
+    question1 = question_list[0]['question_text']
+    question2 = question_list[1]['question_text']
+    answer1 = user_answer_list[0]['user_reponse']
+    answer2 = user_answer_list[1]['user_reponse']
+    
+    gpt_answer_analysis = ra.gen_allanswer_advice(question1, question2 ,answer1, answer2)
     
     
     
@@ -164,5 +176,6 @@ def interviewReview():
                            sad_percent=sad_percent,
                            surprise_percent=surprise_percent,
                            neutral_percent=neutral_percent,
+                           gpt_answer_analysis=gpt_answer_analysis
                            )
 

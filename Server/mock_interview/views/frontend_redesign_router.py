@@ -121,7 +121,8 @@ def interviewReview():
     emotion = emotion_list[0]
     # average_score = db.countAverageScore(interview_id)
     average_score = random.randint(60, 100)
-    facial_score = db.countEmotionScore(interview_id)
+    # facial_score = db.countEmotionScore(interview_id)
+    facial_score = 100 - emotion['surprise_percent'] - emotion['sad_percent']
     
     # name = current_user.username
     name = current_user.username

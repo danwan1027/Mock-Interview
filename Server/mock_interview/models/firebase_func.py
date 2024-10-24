@@ -238,7 +238,7 @@ def delInterview(interview_id:str):
 
 
 # Emotion_Recognition
-# 新增Emotion_Recognition
+# 新增Emotion_Recognition 
 def addEmotionRecognition(emotion:str, emotion_suggestion:str, intensity:str, interview_id:str, 
                           total_emotion_count:int, angry_percent:int, disgust_percent:int, fear_percent:int,
                           happy_percent:int, sad_percent:int, surprise_percent:int, neutral_percent:int):
